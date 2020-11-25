@@ -4,89 +4,114 @@ import io.rdbc.sapi._
 import operators._
 
 
-class Insert(data: QueryData) {
+object InsertStages {
 
-  def into(table: String) = {
-    new InsertKeyValue(
-      data.addTmpl(s"INSERT INTO $table")
-    )
+  trait Into {
+    def into(table: String): ColsOrKeyValue
+  }
+
+  trait ColsOrKeyValue {
+    def columns(args: String*): Values
+    def data(args: (String, Any)*): OnConflict
+    def data(args: Map[String, Any]): OnConflict
+  }
+
+  trait Values {
+    def values(query: SelectStages.Ready): OnConflict
+    def values(args: Any*): OnConflict
+    def values(args: List[Any]): OnConflict
+  }
+
+  trait OnConflict extends Ready {
+    def onConflict: OnConflictDo
+    def onConflict(col: String): OnConflictDo
+    def onConflictOnConstraint(const: String): OnConflictDo
+  }
+
+  trait OnConflictDo {
+    def doNothing: Ready
+    def doUpdate(args: (String, Any)*): Ready
+    def doUpdate(args: List[(String, Any)]): Ready
+  }
+
+  trait Ready {
+    def sql: SqlWithParams
+    def print: Unit
   }
 }
 
 
-class InsertKeyValue(data: QueryData) {
+import InsertStages._
 
-  def columns(args: String*) = {
-    new InsertValues(
-      data.addTmpl(
-        s"(%s)".format(
-          args.mkString(", ")
-        )
+
+class Insert(data: QueryData) extends Into
+                                 with ColsOrKeyValue
+                                 with Values
+                                 with OnConflict
+                                 with OnConflictDo
+                                 with Ready {
+
+  def next(tmpl: String): Insert = new Insert(data.add(tmpl))
+
+  def next(tmpl: String, args: Seq[Any]): Insert = new Insert(data.add(tmpl, args))
+
+  def next(part: Part): Insert = new Insert(data.add(part))
+
+  // into
+
+  def into(table: String): ColsOrKeyValue = next(s"INSERT INTO $table")
+
+  // columns
+
+  def columns(args: String*): Values = {
+    next(
+      s"(%s)".format(
+        args.mkString(", ")
       )
     )
   }
 
-  def values(args: (String, Any)*): InsertOnConflict = values(args.toMap)
+  // values
 
-  def values(args: Map[String, Any]) = {
+  def data(args: (String, Any)*): OnConflict = values(args.toMap)
+
+  def data(args: Map[String, Any]) = {
     
     val tmpl = "(%s) VALUES (%s)".format(
       args.keys.mkString(", "),
       Vector.fill(args.size)("?").mkString(", ")
     )
 
-    new InsertOnConflict(
-      data.addData(tmpl, args.values.toVector)
-    )
-  }
-}
-
-
-class InsertValues(data: QueryData) {
-
-  def values(query: NestedSelect) = {
-    new InsertOnConflict(
-      data.addPart(query.asNested)
-    )
+    next(tmpl, args.values.toVector)
   }
 
-  def values(args: Any*): InsertOnConflict = values(args.toList)
+  def values(query: SelectStages.Ready): OnConflict = next(query.asNested)
 
-  def values(args: List[Any]) = {
-    new InsertOnConflict(
-      data.addData(
-        "VALUES (%s)".format(Vector.fill(args.size)("?").mkString(", ")),
-        args.toVector
-      )
+  def values(args: Any*): OnConflict = values(args.toList)
+
+  def values(args: List[Any]): OnConflict = {
+    next(
+      "VALUES (%s)".format(Vector.fill(args.size)("?").mkString(", ")),
+      args.toVector
     )
   }
-}
 
+  // on conflict
 
-class InsertOnConflict(val data: QueryData) extends InsertExec(data) {
-
-  def onConflict: InsertOnConflictDo = add("ON CONFLICT")
+  def onConflict: OnConflictDo = next("ON CONFLICT")
   
-  def onConflict(col: String): InsertOnConflictDo = add(s"ON CONFLICT ($col)")
+  def onConflict(col: String): OnConflictDo = next(s"ON CONFLICT ($col)")
 
-  def onConflictOnConstraint(const: String): InsertOnConflictDo =
-    add(s"ON CONFLICT ON CONSTRAINT ($const)")
+  def onConflictOnConstraint(const: String): OnConflictDo =
+    next(s"ON CONFLICT ON CONSTRAINT ($const)")
 
-  private def add(tmpl: String) = new InsertOnConflictDo(data.addTmpl(tmpl))
-}
+  // on conflict do
 
+  def doNothing: Ready = next("DO NOTHING")
 
-class InsertOnConflictDo(val data: QueryData) {
+  def doUpdate(args: (String, Any)*): Ready = doUpdate(args.toList)
 
-  def doNothing: InsertExec = {
-    new InsertExec(
-      data.addTmpl("DO NOTHING")
-    )
-  }
-
-  def doUpdate(args: (String, Any)*): InsertExec = doUpdate(args.toList)
-
-  def doUpdate(args: List[(String, Any)]) = {
+  def doUpdate(args: List[(String, Any)]): Ready = {
     
     val changes = args.map {
       case (key, Inc(amount)) => Arg(s"$key = $key + $amount", None)
@@ -95,23 +120,13 @@ class InsertOnConflictDo(val data: QueryData) {
       case (key, value) => Arg(s"$key = ?", Some(value))
     }
 
-    new InsertExec(
-      data.addData(
-        "DO UPDATE SET " + changes.map(_.tmpl).mkString(", "),
-        changes.map(_.arg).flatten
-      )
+    next(
+      "DO UPDATE SET " + changes.map(_.tmpl).mkString(", "),
+      changes.map(_.arg).flatten
     )
   }
-}
-
-
-class InsertExec(data: QueryData) {
 
   def sql: SqlWithParams = data.sql
-
-  def toPart: Part = data.toPart
-
-  def asNested: Part = data.asNested
 
   def print: Unit = {
     sql match {

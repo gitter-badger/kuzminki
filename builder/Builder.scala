@@ -3,6 +3,7 @@ package kuzminki
 import scala.collection.mutable.ArrayBuffer
 import io.rdbc.sapi._
 import operators._
+import columns._
 
 
 case class Arg(tmpl: String, arg: Option[Any])
@@ -19,11 +20,11 @@ object QueryData {
 
 case class QueryData(parts: Vector[Part]) {
   
-  def addPart(part: Part) = QueryData(parts :+ part)
+  def add(part: Part) = QueryData(parts :+ part)
 
-  def addTmpl(tmpl: String) = QueryData(parts :+ Part(tmpl))
+  def add(tmpl: String) = QueryData(parts :+ Part(tmpl))
 
-  def addData(tmpl: String, args: Seq[Any]) = QueryData(parts :+ Part(tmpl, args))
+  def add(tmpl: String, args: Seq[Any]) = QueryData(parts :+ Part(tmpl, args))
 
   def sql = SqlWithParams(parts.map(_.tmpl).mkString(" "), parts.map(_.args).flatten)
 
@@ -35,9 +36,9 @@ case class QueryData(parts: Vector[Part]) {
 
 object Builder {
   
-  def select(args: String*) = new Select(QueryData.init).columns(args.toList.map(ColName(_)))
+  def select(args: String*) = new Select(QueryData.init).columns(args.toList.map(Col(_)))
 
-  def select(args: List[TableCol]) = new Select(QueryData.init).columns(args)
+  def select(args: List[Col]) = new Select(QueryData.init).columns(args)
 
   def insert = new Insert(QueryData.init)
 

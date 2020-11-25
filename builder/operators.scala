@@ -1,6 +1,39 @@
 package kuzminki
 
 
+object columns {
+
+  sealed trait Column {
+    def render: String
+  }
+
+  case object All extends Column {
+    def render = "*"
+  }
+
+  case class Col(name: String) extends Column {
+    def as(alias: String) = ColAs(name, alias)
+    def render = name
+  }
+
+  case class ColAs(name: String, alias: String) extends Column {
+    def render = s"$name $alias"
+  }
+
+  case class Sum(name: String) extends Column {
+    def render = s"SUM($name)"
+  }
+
+  case class Max(name: String) extends Column {
+    def render = s"MAX($name)"
+  }
+
+  case class Min(name: String) extends Column {
+    def render = s"Min($name)"
+  }
+}
+
+
 object operators {
 
   sealed trait QueryTable
@@ -8,13 +41,6 @@ object operators {
     def as(alias: String) = TableNameAs(name, alias)
   }
   case class TableNameAs(name: String, alias: String) extends QueryTable
-
-  sealed trait TableCol
-  case object AllCols extends TableCol
-  case class ColName(name: String) extends TableCol {
-    def as(alias: String) = ColNameAs(name, alias)
-  }
-  case class ColNameAs(name: String, alias: String) extends TableCol
 
   sealed trait Cond
   case class Eq(value: Any) extends Cond
@@ -25,12 +51,18 @@ object operators {
   case class Lte(value: Any) extends Cond
   case class Like(value: String) extends Cond
 
-  sealed trait Change
-  case class Inc(amount: Int) extends Change
-  case class Dec(amount: Int) extends Change
-  case class Raw(value: String) extends Change
+  sealed trait UpdateChange
+  case class Inc(amount: Int) extends UpdateChange
+  case class Dec(amount: Int) extends UpdateChange
+  case class Raw(value: String) extends UpdateChange
 
-  sealed trait Sort
-  case class Asc(col: String) extends Sort
-  case class Desc(col: String) extends Sort
+  sealed trait SelectOrder
+  case class Asc(col: String) extends SelectOrder
+  case class Desc(col: String) extends SelectOrder
 }
+
+
+
+
+
+

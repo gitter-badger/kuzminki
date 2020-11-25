@@ -4,21 +4,52 @@ import io.rdbc.sapi._
 import operators._
 
 
-class Update(data: QueryData) {
+object UpdateStages {
 
-  def table(table: String) = {
-    new UpdateChanges(
-      data.addTmpl(s"UPDATE $table")
-    )
+  trait Table {
+    def table(table: String): Change
+  }
+
+  trait Change {
+    def set(args: (String, Any)*): Condition
+    def set(args: List[(String, Any)]): Condition
+  }
+
+  trait Condition {
+    def where(args: (String, Cond)*): Ready
+    def where(args: List[(String, Cond)]): Ready
+  }
+
+  trait Ready {
+    def sql: SqlWithParams
+    def print: Unit
   }
 }
 
 
-class UpdateChanges(data: QueryData) {
+import UpdateStages._
 
-  def set(args: (String, Any)*): UpdateWhere = set(args.toList)
 
-  def set(args: List[(String, Any)]) = {
+class Update(data: QueryData) extends Table
+                                 with Change
+                                 with Condition
+                                 with Ready {
+
+  def next(tmpl: String) = new Update(data.add(tmpl))
+
+  def next(tmpl: String, args: Seq[Any]) = new Update(data.add(tmpl, args))
+
+  def next(part: Part) = new Update(data.add(part))
+
+  // table
+
+  def table(table: String): Change = next(s"UPDATE $table")
+
+  // change
+
+  def set(args: (String, Any)*): Condition = set(args.toList)
+
+  def set(args: List[(String, Any)]): Condition = {
 
     val changes = args.map {
       case (key, Inc(amount)) => Arg(s"$key = $key + $amount", None)
@@ -27,21 +58,17 @@ class UpdateChanges(data: QueryData) {
       case (key, value) => Arg(s"$key = ?", Some(value))
     }
 
-    new UpdateWhere(
-      data.addData(
-        "SET " + changes.map(_.tmpl).mkString(", "),
-        changes.map(_.arg).flatten
-      )
+    next(
+      "SET " + changes.map(_.tmpl).mkString(", "),
+      changes.map(_.arg).flatten
     )
   }
-}
 
+  // condition
 
-class UpdateWhere(data: QueryData) {
+  def where(args: (String, Cond)*): Ready = where(args.toList)
 
-  def where(args: (String, Cond)*): UpdateExec = where(args.toList)
-
-  def where(args: List[(String, Cond)]) = {
+  def where(args: List[(String, Cond)]): Ready = {
 
     val conds = args.map {
       case (key, Eq(value)) => Arg(s"$key = ?", Some(value))
@@ -54,23 +81,15 @@ class UpdateWhere(data: QueryData) {
       case (key, op) => throw new KuzminkiException(s"invalid operator ($key -> $op)")
     }
 
-    new UpdateExec(
-      data.addData(
-        "WHERE " + conds.map(_.tmpl).mkString(" AND "),
-        conds.map(_.arg).flatten
-      )
+    next(
+      "WHERE " + conds.map(_.tmpl).mkString(" AND "),
+      conds.map(_.arg).flatten
     )
   }
-}
 
-
-class UpdateExec(data: QueryData) {
+  // ready
 
   def sql: SqlWithParams = data.sql
-
-  def toPart: Part = data.toPart
-
-  def asNested: Part = data.asNested
 
   def print: Unit = {
     sql match {
