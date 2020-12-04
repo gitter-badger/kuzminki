@@ -8,17 +8,19 @@ import kuzminki.{ Part, PartCollector }
 
 case class WhereCond(name: String) {
 
-  def samasem(value: Any): Part = Part.create(s"$name = ?", value)
+  //def samasem(value: Any): Part = Part.create(s"$name = ?", value)
 
-  //def ===(value: Any): Part = matches(value)
+  def matches(value: Any): Part = Part.create(s"$name = ?", value)
+
+  def ===(value: Any): Part = matches(value)
 
   def gt(value: Any): Part = Part.create(s"$name > ?", value)
 
-  //def >(value: Any): Part = gt(value)
+  def >(value: Any): Part = gt(value)
 
   def lt(value: Any): Part = Part.create(s"$name < ?", value)
 
-  //def <(value: Any): Part = lt(value)
+  def <(value: Any): Part = lt(value)
 }
 
 
@@ -86,8 +88,8 @@ object CondsTest extends App {
 
   print(
     where(
-      _.col("id" samasem 44)
-      .and("age" lt 35)
+      _.col("id" === 44)
+      .and("age" < 35)
     ).parts.toPart.tmpl
   )
   

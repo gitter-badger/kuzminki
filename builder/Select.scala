@@ -42,22 +42,24 @@ object SelectStages {
 
   trait WhereOrGroup extends Where {
     def groupBy(args: Col*): Having
-    def groupBy(args: List[Col]): Having
+    def groupByList(args: List[Col]): Having
   }
 
   trait Having extends OrderBy {
-    def having(args: (String, Cond)*): OrderBy
-    def having(args: List[(String, Cond)]): OrderBy
+    def having(sub: FilteringStart => Filtering): OrderBy
+    def havingAll(args: Part*): OrderBy
+    def havingList(args: List[Part]): OrderBy
   }
 
   trait Where extends OrderBy {
-    def where(args: (String, Cond)*): OrderBy
-    def where(args: List[(String, Cond)]): OrderBy
+    def where(sub: FilteringStart => Filtering): OrderBy
+    def whereAll(args: Part*): OrderBy
+    def whereList(args: List[Part]): OrderBy
   }
 
   trait OrderBy extends OffsetLimit {
     def orderBy(args: SelectOrder*): OffsetLimit
-    def orderBy(args: List[SelectOrder]): OffsetLimit
+    def orderByList(args: List[SelectOrder]): OffsetLimit
   }
 
   trait OffsetLimit extends Limit {
@@ -95,6 +97,8 @@ class Select(parts: PartCollector) extends Columns
 
   def next(tmpl: String, args: Seq[Any]): Select = new Select(parts.add(tmpl, args))
 
+  def next(parts: PartCollector): Select = new Select(parts)
+
   // columns
 
   def columns(args: String*): From = columns(args.toList.map(Col(_)))
@@ -107,30 +111,31 @@ class Select(parts: PartCollector) extends Columns
 
   // from
 
-  def from(table: String): WhereOrJoin = next(s"FROM table")
+  def from(table: String): WhereOrJoin = next(s"FROM $table")
 
   def from(table: String, alias: String): WhereOrJoin = next(s"FROM $table $alias")
 
   // where
 
-  def where(args: (String, Cond)*): OrderBy = where(args.toList)
-
-  def where(args: List[(String, Cond)]): OrderBy = {
-    
-    def conds = args.map {
-      case (key, Eq(value)) => Arg(s"$key = ?", Some(value))
-      case (key, Not(value)) => Arg(s"$key != ?", Some(value))
-      case (key, Gt(value)) => Arg(s"$key > ?", Some(value))
-      case (key, Gte(value)) => Arg(s"$key >= ?", Some(value))
-      case (key, Lt(value)) => Arg(s"$key < ?", Some(value))
-      case (key, Lte(value)) => Arg(s"$key <= ?", Some(value))
-      case (key, Like(value)) => Arg(s"$key LIKE ?", Some(value))
-      case (key, op) => throw new KuzminkiException(s"invalid operator ($key -> $op)")
-    }
-
+  def where(sub: FilteringStart => Filtering): OrderBy = {
     next(
-      "WHERE " + conds.map(_.tmpl).mkString(" AND "),
-      conds.map(_.arg).flatten
+      sub(
+        Filtering.continue(
+          parts.add("WHERE")
+        )
+      ).parts
+    )
+  }
+
+  def whereAll(args: Part*): OrderBy = whereList(args.toList)
+
+  def whereList(args: List[Part]): OrderBy = {
+    next(
+      parts
+        .add("WHERE")
+        .extend(
+          PartCollector.join(Part.create("AND"), args)
+        )
     )
   }
 
@@ -174,9 +179,9 @@ class Select(parts: PartCollector) extends Columns
 
   // group by
 
-  def groupBy(args: Col*): Having = groupBy(args.toList)
+  def groupBy(args: Col*): Having = groupByList(args.toList)
 
-  def groupBy(args: List[Col]): Having = {
+  def groupByList(args: List[Col]): Having = {
     next(
       "GROUP BY " + args.map(_.render).mkString(", ")
     )
@@ -184,39 +189,36 @@ class Select(parts: PartCollector) extends Columns
 
   // having
 
-  def having(args: (String, Cond)*): OrderBy = where(args.toList)
-
-  def having(args: List[(String, Cond)]): OrderBy = {
-    
-    def conds = args.map {
-      case (key, Eq(value)) => Arg(s"$key = ?", Some(value))
-      case (key, Not(value)) => Arg(s"$key != ?", Some(value))
-      case (key, Gt(value)) => Arg(s"$key > ?", Some(value))
-      case (key, Gte(value)) => Arg(s"$key >= ?", Some(value))
-      case (key, Lt(value)) => Arg(s"$key < ?", Some(value))
-      case (key, Lte(value)) => Arg(s"$key <= ?", Some(value))
-      case (key, Like(value)) => Arg(s"$key LIKE ?", Some(value))
-      case (key, op) => throw new KuzminkiException(s"invalid operator ($key -> $op)")
-    }
-
+  def having(sub: FilteringStart => Filtering): OrderBy = {
     next(
-      "HAVING " + conds.map(_.tmpl).mkString(" AND "),
-      conds.map(_.arg).flatten
+      sub(
+        Filtering.continue(
+          parts.add("HAVING")
+        )
+      ).parts
+    )
+  }
+
+  def havingAll(args: Part*): OrderBy = whereList(args.toList)
+
+  def havingList(args: List[Part]): OrderBy = {
+    next(
+      parts
+        .add("HAVING")
+        .extend(
+          PartCollector.join(Part.create("AND"), args)
+        )
     )
   }
 
   // order by
 
-  def orderBy(args: SelectOrder*): OffsetLimit = orderBy(args.toList)
+  def orderBy(args: SelectOrder*): OffsetLimit = orderByList(args.toList)
 
-  def orderBy(args: List[SelectOrder]): OffsetLimit = {
-    
-    val sorts = args.map {
-      case Asc(col) => s"$col ASC"
-      case Desc(col) => s"$col DESC"
-    }
-    
-    next("ORDER BY " + sorts.mkString(", "))
+  def orderByList(args: List[SelectOrder]): OffsetLimit = {
+    next(
+      "ORDER BY " + args.map(_.render).mkString(", ")
+    )
   }
 
   // offset

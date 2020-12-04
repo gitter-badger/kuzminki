@@ -63,9 +63,15 @@ object operators {
   case class Dec(amount: Int) extends UpdateChange
   case class Raw(value: String) extends UpdateChange
 
-  sealed trait SelectOrder
-  case class Asc(col: String) extends SelectOrder
-  case class Desc(col: String) extends SelectOrder
+  sealed trait SelectOrder {
+    def render: String
+  }
+  case class Asc(col: String) extends SelectOrder {
+    def render = s"$col ASC"
+  }
+  case class Desc(col: String) extends SelectOrder {
+    def render = s"$col DESC"
+  }
 }
 
 
