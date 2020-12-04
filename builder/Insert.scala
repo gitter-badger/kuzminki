@@ -44,18 +44,18 @@ object InsertStages {
 import InsertStages._
 
 
-class Insert(data: QueryData) extends Into
-                                 with ColsOrKeyValue
-                                 with Values
-                                 with OnConflict
-                                 with OnConflictDo
-                                 with Ready {
+class Insert(parts: PartCollector) extends Into
+                                      with ColsOrKeyValue
+                                      with Values
+                                      with OnConflict
+                                      with OnConflictDo
+                                      with Ready {
 
-  def next(tmpl: String): Insert = new Insert(data.add(tmpl))
+  def next(tmpl: String): Insert = new Insert(parts.add(tmpl))
 
-  def next(tmpl: String, args: Seq[Any]): Insert = new Insert(data.add(tmpl, args))
+  def next(tmpl: String, args: Seq[Any]): Insert = new Insert(parts.add(tmpl, args))
 
-  def next(part: Part): Insert = new Insert(data.add(part))
+  def next(part: Part): Insert = new Insert(parts.add(part))
 
   // into
 
@@ -77,7 +77,7 @@ class Insert(data: QueryData) extends Into
 
   def data(args: Map[String, Any]) = {
     
-    val tmpl = "(%s) VALUES (%s)".format(
+    def tmpl = "(%s) VALUES (%s)".format(
       args.keys.mkString(", "),
       Vector.fill(args.size)("?").mkString(", ")
     )
@@ -113,7 +113,7 @@ class Insert(data: QueryData) extends Into
 
   def doUpdate(args: List[(String, Any)]): Ready = {
     
-    val changes = args.map {
+    def changes = args.map {
       case (key, Inc(amount)) => Arg(s"$key = $key + $amount", None)
       case (key, Dec(amount)) => Arg(s"$key = $key - $amount", None)
       case (key, Raw(str)) => Arg(s"$key = $str", None)
@@ -126,7 +126,7 @@ class Insert(data: QueryData) extends Into
     )
   }
 
-  def sql: SqlWithParams = data.sql
+  def sql: SqlWithParams = parts.sql
 
   def print: Unit = {
     sql match {

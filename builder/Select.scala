@@ -79,21 +79,21 @@ object SelectStages {
 import SelectStages._
 
 
-class Select(data: QueryData) extends Columns
-                              with From
-                              with WhereOrJoin
-                              with JoinOn
-                              with WhereOrGroup
-                              with Having
-                              with Where
-                              with OrderBy
-                              with OffsetLimit
-                              with Limit
-                              with Ready {
+class Select(parts: PartCollector) extends Columns
+                                      with From
+                                      with WhereOrJoin
+                                      with JoinOn
+                                      with WhereOrGroup
+                                      with Having
+                                      with Where
+                                      with OrderBy
+                                      with OffsetLimit
+                                      with Limit
+                                      with Ready {
 
-  def next(tmpl: String) = new Select(data.add(tmpl))
+  def next(tmpl: String): Select = new Select(parts.add(tmpl))
 
-  def next(tmpl: String, args: Seq[Any]) = new Select(data.add(tmpl, args))
+  def next(tmpl: String, args: Seq[Any]): Select = new Select(parts.add(tmpl, args))
 
   // columns
 
@@ -117,7 +117,7 @@ class Select(data: QueryData) extends Columns
 
   def where(args: List[(String, Cond)]): OrderBy = {
     
-    val conds = args.map {
+    def conds = args.map {
       case (key, Eq(value)) => Arg(s"$key = ?", Some(value))
       case (key, Not(value)) => Arg(s"$key != ?", Some(value))
       case (key, Gt(value)) => Arg(s"$key > ?", Some(value))
@@ -188,7 +188,7 @@ class Select(data: QueryData) extends Columns
 
   def having(args: List[(String, Cond)]): OrderBy = {
     
-    val conds = args.map {
+    def conds = args.map {
       case (key, Eq(value)) => Arg(s"$key = ?", Some(value))
       case (key, Not(value)) => Arg(s"$key != ?", Some(value))
       case (key, Gt(value)) => Arg(s"$key > ?", Some(value))
@@ -229,11 +229,11 @@ class Select(data: QueryData) extends Columns
 
   // exec
 
-  def sql: SqlWithParams = data.sql
+  def sql: SqlWithParams = parts.sql
 
-  def toPart: Part = data.toPart
+  def toPart: Part = parts.toPart
 
-  def asNested: Part = data.asNested
+  def asNested: Part = parts.asNested
 
   def print: Unit = {
     sql match {

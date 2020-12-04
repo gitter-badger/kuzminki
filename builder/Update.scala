@@ -11,11 +11,11 @@ object UpdateStages {
   }
 
   trait Change {
-    def set(args: (String, Any)*): Condition
-    def set(args: List[(String, Any)]): Condition
+    def set(args: (String, Any)*): Where
+    def set(args: List[(String, Any)]): Where
   }
 
-  trait Condition {
+  trait Where {
     def where(args: (String, Cond)*): Ready
     def where(args: List[(String, Cond)]): Ready
   }
@@ -30,16 +30,16 @@ object UpdateStages {
 import UpdateStages._
 
 
-class Update(data: QueryData) extends Table
-                                 with Change
-                                 with Condition
-                                 with Ready {
+class Update(parts: PartCollector) extends Table
+                                     with Change
+                                     with Where
+                                     with Ready {
 
-  def next(tmpl: String) = new Update(data.add(tmpl))
+  def next(tmpl: String) = new Update(parts.add(tmpl))
 
-  def next(tmpl: String, args: Seq[Any]) = new Update(data.add(tmpl, args))
+  def next(tmpl: String, args: Seq[Any]) = new Update(parts.add(tmpl, args))
 
-  def next(part: Part) = new Update(data.add(part))
+  def next(part: Part) = new Update(parts.add(part))
 
   // table
 
@@ -47,9 +47,9 @@ class Update(data: QueryData) extends Table
 
   // change
 
-  def set(args: (String, Any)*): Condition = set(args.toList)
+  def set(args: (String, Any)*): Where = set(args.toList)
 
-  def set(args: List[(String, Any)]): Condition = {
+  def set(args: List[(String, Any)]): Where = {
 
     val changes = args.map {
       case (key, Inc(amount)) => Arg(s"$key = $key + $amount", None)
@@ -89,7 +89,7 @@ class Update(data: QueryData) extends Table
 
   // ready
 
-  def sql: SqlWithParams = data.sql
+  def sql: SqlWithParams = parts.sql
 
   def print: Unit = {
     sql match {

@@ -1,5 +1,12 @@
 package kuzminki
 
+/*
+class Col(name: String) {
+
+
+} 
+*/
+
 
 object columns {
 
