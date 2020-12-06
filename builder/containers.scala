@@ -43,32 +43,33 @@ object containers {
     def render = s"$name $alias"
   }
 
+  // order
+
   sealed trait SelectOrder {
     def render: String
   }
-  case class Asc(col: String) extends SelectOrder {
-    def render = s"$col ASC"
+
+  case class DefaultOrder(name: String) extends SelectOrder {
+    def render = s"$name ASC"
+    def asc = Asc(name)
+    def desc = Desc(name)
   }
-  case class Desc(col: String) extends SelectOrder {
-    def render = s"$col DESC"
+
+  case class Asc(name: String) extends SelectOrder {
+    def render = s"$name ASC"
   }
+
+  case class Desc(name: String) extends SelectOrder {
+    def render = s"$name DESC"
+  }
+
+  // changes
 
   sealed trait UpdateChange
   case class Inc(amount: Int) extends UpdateChange
   case class Dec(amount: Int) extends UpdateChange
   case class Raw(value: String) extends UpdateChange
 
-
-
-  sealed trait Cond
-  case class Eq(value: Any) extends Cond
-  case class Not(value: Any) extends Cond
-  case class Gt(value: Any) extends Cond
-  case class Gte(value: Any) extends Cond
-  case class Lt(value: Any) extends Cond
-  case class Lte(value: Any) extends Cond
-  case class Like(value: String) extends Cond
-  
 
   
 

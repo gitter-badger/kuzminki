@@ -10,6 +10,8 @@ object implicits {
 
     implicit val stringToTableName: String => TableName = name => TableName(name)
     implicit val tupleToTableNameAlias: Tuple2[String, String] => TableNameAlias = pair => TableNameAlias(pair._1, pair._2)
+
+    implicit val stringToDefaultOrder: String => DefaultOrder = name => DefaultOrder(name)
 }
 
 
