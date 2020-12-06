@@ -8,8 +8,8 @@ import columns._
 object SelectStages {
 
   trait Columns {
-    def columns(args: String*): From
-    def columns(args: List[Col]): From
+    def columns(args: Column*): From
+    def columnsList(args: List[Column]): From
   }
 
   trait From extends Ready {
@@ -47,13 +47,13 @@ object SelectStages {
 
   trait Having extends OrderBy {
     def having(sub: FilteringStart => Filtering): OrderBy
-    def havingAll(args: Part*): OrderBy
+    def having(args: Part*): OrderBy
     def havingList(args: List[Part]): OrderBy
   }
 
   trait Where extends OrderBy {
     def where(sub: FilteringStart => Filtering): OrderBy
-    def whereAll(args: Part*): OrderBy
+    def where(args: Part*): OrderBy
     def whereList(args: List[Part]): OrderBy
   }
 
@@ -101,11 +101,11 @@ class Select(parts: PartCollector) extends Columns
 
   // columns
 
-  def columns(args: String*): From = columns(args.toList.map(Col(_)))
+  def columns(cols: Column*): From = columnsList(cols.toList)
 
-  def columns(args: List[Col]): From = {
+  def columnsList(cols: List[Column]): From = {
     next(
-      args.map(_.render).mkString(", ")
+      cols.map(_.render).mkString(", ")
     )
   }
 
@@ -127,15 +127,12 @@ class Select(parts: PartCollector) extends Columns
     )
   }
 
-  def whereAll(args: Part*): OrderBy = whereList(args.toList)
+  def where(args: Part*): OrderBy = whereList(args.toList)
 
   def whereList(args: List[Part]): OrderBy = {
     next(
-      parts
-        .add("WHERE")
-        .extend(
-          PartCollector.join(Part.create("AND"), args)
-        )
+      "WHERE " + args.map(_.tmpl).mkString(" AND "),
+      args.map(_.args).flatten
     )
   }
 
@@ -199,15 +196,12 @@ class Select(parts: PartCollector) extends Columns
     )
   }
 
-  def havingAll(args: Part*): OrderBy = whereList(args.toList)
+  def having(args: Part*): OrderBy = whereList(args.toList)
 
   def havingList(args: List[Part]): OrderBy = {
     next(
-      parts
-        .add("HAVING")
-        .extend(
-          PartCollector.join(Part.create("AND"), args)
-        )
+      "HAVING " + args.map(_.tmpl).mkString(" AND "),
+      args.map(_.args).flatten
     )
   }
 

@@ -36,7 +36,7 @@ object columns {
   }
 
   case class Min(name: String) extends Column {
-    def render = s"Min($name)"
+    def render = s"MIN($name)"
   }
 }
 

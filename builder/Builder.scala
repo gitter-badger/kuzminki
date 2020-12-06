@@ -25,21 +25,6 @@ object PartCollector {
   def create(part: Part) = PartCollector(Vector(part))
 
   def start(tmpl: String) = create(Part.create(tmpl))
-
-  def join(glue: Part, items: List[Part]): Seq[Part] = {
-    
-    @tailrec
-    def connect(old: List[Part], joined: Seq[Part]): Seq[Part] = {
-      old match {
-        case head :: tail =>
-          connect(tail, joined ++ Seq(head, glue))
-        case Nil =>
-          joined.dropRight(1)
-      }
-    }
-
-    connect(items, Seq.empty[Part])
-  }
 }
 
 
@@ -63,11 +48,24 @@ case class PartCollector(parts: Vector[Part]) {
 
 object Builder {
   
-  def select(args: String*) = new Select(PartCollector.start("SELECT")).columns(args.toList.map(Col(_)))
+  def select(cols: Column*) = new Select(PartCollector.start("SELECT")).columnsList(cols.toList)
 
-  def select(args: List[Col]) = new Select(PartCollector.start("SELECT")).columns(args)
+  def select(cols: List[Column]) = new Select(PartCollector.start("SELECT")).columnsList(cols)
 
   def insert = new Insert(PartCollector.init)
 
   def update(table: String) = new Update(PartCollector.init).table(table)
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

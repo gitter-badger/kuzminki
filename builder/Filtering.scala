@@ -2,6 +2,10 @@ package kuzminki
 
 
 object implicits {
+
+    import kuzminki.columns.{ Column, Col }
+
+    implicit val stringToColumn: String => Column = name => Col(name)
     implicit val stringToFilter: String => Filter = name => Filter(name)
 }
 
@@ -14,9 +18,9 @@ object Filtering {
 
 trait Filtering {
   def and(part: Part): Filtering
-  def andMore(sub: FilteringStart => Filtering): Filtering
+  def and(sub: FilteringStart => Filtering): Filtering
   def or(part: Part): Filtering
-  def orMore(sub: FilteringStart => Filtering): Filtering
+  def or(sub: FilteringStart => Filtering): Filtering
   def parts: PartCollector
 }
 
@@ -45,13 +49,13 @@ case class FilteringChain(parts: PartCollector) extends Filtering
 
   def and(part: Part): Filtering = next("AND", part)
 
-  def andMore(sub: FilteringStart => Filtering): Filtering = {
+  def and(sub: FilteringStart => Filtering): Filtering = {
     next("AND", wrapped(sub))
   }
 
   def or(part: Part): Filtering = next("OR", part)
 
-  def orMore(sub: FilteringStart => Filtering): Filtering = {
+  def or(sub: FilteringStart => Filtering): Filtering = {
     next("OR", wrapped(sub))
   }
 }
