@@ -1,14 +1,7 @@
 package kuzminki
 
-/*
-class Col(name: String) {
 
-
-} 
-*/
-
-
-object columns {
+object containers {
 
   sealed trait Column {
     def render: String
@@ -19,8 +12,8 @@ object columns {
   }
 
   case class Col(name: String) extends Column {
-    def as(alias: String) = ColAs(name, alias)
     def render = name
+    def as(alias: String) = ColAs(name, alias)
   }
 
   case class ColAs(name: String, alias: String) extends Column {
@@ -38,30 +31,17 @@ object columns {
   case class Min(name: String) extends Column {
     def render = s"MIN($name)"
   }
-}
 
-
-object operators {
-
-  sealed trait QueryTable
-  case class TableName(name: String) extends QueryTable {
-    def as(alias: String) = TableNameAs(name, alias)
+  sealed trait TableRef {
+    def render: String
   }
-  case class TableNameAs(name: String, alias: String) extends QueryTable
-
-  sealed trait Cond
-  case class Eq(value: Any) extends Cond
-  case class Not(value: Any) extends Cond
-  case class Gt(value: Any) extends Cond
-  case class Gte(value: Any) extends Cond
-  case class Lt(value: Any) extends Cond
-  case class Lte(value: Any) extends Cond
-  case class Like(value: String) extends Cond
-
-  sealed trait UpdateChange
-  case class Inc(amount: Int) extends UpdateChange
-  case class Dec(amount: Int) extends UpdateChange
-  case class Raw(value: String) extends UpdateChange
+  case class TableName(name: String) extends TableRef {
+    def render = name
+    def alias(alias: String) = TableNameAlias(name, alias)
+  }
+  case class TableNameAlias(name: String, alias: String) extends TableRef {
+    def render = s"$name $alias"
+  }
 
   sealed trait SelectOrder {
     def render: String
@@ -72,6 +52,27 @@ object operators {
   case class Desc(col: String) extends SelectOrder {
     def render = s"$col DESC"
   }
+
+  sealed trait UpdateChange
+  case class Inc(amount: Int) extends UpdateChange
+  case class Dec(amount: Int) extends UpdateChange
+  case class Raw(value: String) extends UpdateChange
+
+
+
+  sealed trait Cond
+  case class Eq(value: Any) extends Cond
+  case class Not(value: Any) extends Cond
+  case class Gt(value: Any) extends Cond
+  case class Gte(value: Any) extends Cond
+  case class Lt(value: Any) extends Cond
+  case class Lte(value: Any) extends Cond
+  case class Like(value: String) extends Cond
+  
+
+  
+
+  
 }
 
 

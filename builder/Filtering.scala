@@ -3,10 +3,13 @@ package kuzminki
 
 object implicits {
 
-    import kuzminki.columns.{ Column, Col }
+    import kuzminki.containers._
 
-    implicit val stringToColumn: String => Column = name => Col(name)
+    implicit val stringToColumn: String => Col = name => Col(name)
     implicit val stringToFilter: String => Filter = name => Filter(name)
+
+    implicit val stringToTableName: String => TableName = name => TableName(name)
+    implicit val tupleToTableNameAlias: Tuple2[String, String] => TableNameAlias = pair => TableNameAlias(pair._1, pair._2)
 }
 
 

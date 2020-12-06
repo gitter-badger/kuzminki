@@ -1,8 +1,7 @@
 package kuzminki
 
 import io.rdbc.sapi._
-import operators._
-import columns._
+import containers._
 
 
 object SelectStages {
@@ -13,27 +12,18 @@ object SelectStages {
   }
 
   trait From extends Ready {
-    def from(table: String): WhereOrJoin
-    def from(table: String, alias: String): WhereOrJoin
+    def from(table: TableRef): WhereOrJoin
   }
 
   trait WhereOrJoin extends WhereOrGroup {
-    def join(table: String): JoinOn
-    def join(table: String, alias: String): JoinOn
-    def innerJoin(table: String): JoinOn
-    def innerJoin(table: String, alias: String): JoinOn
-    def leftJoin(table: String): JoinOn
-    def leftJoin(table: String, alias: String): JoinOn
-    def leftOuterJoin(table: String): JoinOn
-    def leftOuterJoin(table: String, alias: String): JoinOn
-    def rightJoin(table: String): JoinOn
-    def rightJoin(table: String, alias: String): JoinOn
-    def rightOuterJoin(table: String): JoinOn
-    def rightOuterJoin(table: String, alias: String): JoinOn
-    def fullOuterJoin(table: String): JoinOn
-    def fullOuterJoin(table: String, alias: String): JoinOn
-    def crossJoin(table: String): JoinOn
-    def crossJoin(table: String, alias: String): JoinOn
+    def join(table: TableRef): JoinOn
+    def innerJoin(table: TableRef): JoinOn
+    def leftJoin(table: TableRef): JoinOn
+    def leftOuterJoin(table: TableRef): JoinOn
+    def rightJoin(table: TableRef): JoinOn
+    def rightOuterJoin(table: TableRef): JoinOn
+    def fullOuterJoin(table: TableRef): JoinOn
+    def crossJoin(table: TableRef): JoinOn
   }
 
   trait JoinOn extends WhereOrGroup {
@@ -111,9 +101,7 @@ class Select(parts: PartCollector) extends Columns
 
   // from
 
-  def from(table: String): WhereOrJoin = next(s"FROM $table")
-
-  def from(table: String, alias: String): WhereOrJoin = next(s"FROM $table $alias")
+  def from(table: TableRef): WhereOrJoin = next(s"FROM ${table.render}")
 
   // where
 
@@ -138,37 +126,37 @@ class Select(parts: PartCollector) extends Columns
 
   // cond
 
-  def join(table: String): JoinOn = next(s"INNER JOIN $table")
+  def join(table: TableRef): JoinOn = next(s"INNER JOIN ${table.render}")
 
-  def join(table: String, alias: String): JoinOn = next(s"INNER JOIN $table $alias")
+  //def join(table: String, alias: String): JoinOn = next(s"INNER JOIN $table $alias")
 
-  def innerJoin(table: String): JoinOn = next(s"INNER JOIN $table")
+  def innerJoin(table: TableRef): JoinOn = next(s"INNER JOIN ${table.render}")
 
-  def innerJoin(table: String, alias: String): JoinOn = next(s"INNER JOIN $table $alias")
+  //def innerJoin(table: String, alias: String): JoinOn = next(s"INNER JOIN $table $alias")
 
-  def leftJoin(table: String): JoinOn = next(s"LEFT JOIN $table")
+  def leftJoin(table: TableRef): JoinOn = next(s"LEFT JOIN ${table.render}")
 
-  def leftJoin(table: String, alias: String): JoinOn = next(s"LEFT JOIN $table $alias")
+  //def leftJoin(table: String, alias: String): JoinOn = next(s"LEFT JOIN $table $alias")
 
-  def leftOuterJoin(table: String): JoinOn = next(s"LEFT OUTER JOIN $table")
+  def leftOuterJoin(table: TableRef): JoinOn = next(s"LEFT OUTER JOIN ${table.render}")
 
-  def leftOuterJoin(table: String, alias: String): JoinOn = next(s"LEFT OUTER JOIN $table $alias")
+  //def leftOuterJoin(table: String, alias: String): JoinOn = next(s"LEFT OUTER JOIN $table $alias")
 
-  def rightJoin(table: String): JoinOn = next(s"RIGHT JOIN $table")
+  def rightJoin(table: TableRef): JoinOn = next(s"RIGHT JOIN ${table.render}")
 
-  def rightJoin(table: String, alias: String): JoinOn = next(s"RIGHT JOIN $table $alias")
+  //def rightJoin(table: String, alias: String): JoinOn = next(s"RIGHT JOIN $table $alias")
 
-  def rightOuterJoin(table: String): JoinOn = next(s"RIGHT OUTER JOIN $table")
+  def rightOuterJoin(table: TableRef): JoinOn = next(s"RIGHT OUTER JOIN ${table.render}")
 
-  def rightOuterJoin(table: String, alias: String): JoinOn = next(s"RIGHT OUTER JOIN $table $alias")
+  //def rightOuterJoin(table: String, alias: String): JoinOn = next(s"RIGHT OUTER JOIN $table $alias")
 
-  def fullOuterJoin(table: String): JoinOn = next(s"FULL OUTER JOIN $table")
+  def fullOuterJoin(table: TableRef): JoinOn = next(s"FULL OUTER JOIN ${table.render}")
 
-  def fullOuterJoin(table: String, alias: String): JoinOn = next(s"FULL OUTER JOIN $table $alias")
+  //def fullOuterJoin(table: String, alias: String): JoinOn = next(s"FULL OUTER JOIN $table $alias")
 
-  def crossJoin(table: String): JoinOn = next(s"CROSS JOIN $table")
+  def crossJoin(table: TableRef): JoinOn = next(s"CROSS JOIN ${table.render}")
 
-  def crossJoin(table: String, alias: String): JoinOn = next(s"CROSS JOIN $table $alias")
+  //def crossJoin(table: String, alias: String): JoinOn = next(s"CROSS JOIN $table $alias")
 
   // join on
 

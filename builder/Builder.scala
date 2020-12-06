@@ -3,8 +3,8 @@ package kuzminki
 import scala.annotation.tailrec
 import scala.collection.mutable.ArrayBuffer
 import io.rdbc.sapi._
-import operators._
-import columns._
+import kuzminki.containers._
+import kuzminki.implicits._
 
 
 case class Arg(tmpl: String, arg: Option[Any])
@@ -54,7 +54,7 @@ object Builder {
 
   def insert = new Insert(PartCollector.init)
 
-  def update(table: String) = new Update(PartCollector.init).table(table)
+  def update(table: TableName) = new Update(PartCollector.init).table(table)
 }
 
 

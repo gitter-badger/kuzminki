@@ -1,13 +1,13 @@
 package kuzminki
 
 import io.rdbc.sapi._
-import operators._
+import containers._
 
 
 object UpdateStages {
 
   trait Table {
-    def table(table: String): Change
+    def table(table: TableName): Change
   }
 
   trait Change {
@@ -31,9 +31,9 @@ import UpdateStages._
 
 
 class Update(parts: PartCollector) extends Table
-                                     with Change
-                                     with Where
-                                     with Ready {
+                                      with Change
+                                      with Where
+                                      with Ready {
 
   def next(tmpl: String) = new Update(parts.add(tmpl))
 
@@ -43,7 +43,7 @@ class Update(parts: PartCollector) extends Table
 
   // table
 
-  def table(table: String): Change = next(s"UPDATE $table")
+  def table(table: TableName): Change = next(s"UPDATE ${table.render}")
 
   // change
 

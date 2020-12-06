@@ -1,17 +1,17 @@
 package kuzminki
 
 import io.rdbc.sapi._
-import operators._
+import containers._
 
 
 object InsertStages {
 
   trait Into {
-    def into(table: String): ColsOrKeyValue
+    def into(table: TableName): ColsOrKeyValue
   }
 
   trait ColsOrKeyValue {
-    def columns(args: String*): Values
+    def columns(args: Col*): Values
     def data(args: (String, Any)*): OnConflict
     def data(args: Map[String, Any]): OnConflict
   }
@@ -59,14 +59,14 @@ class Insert(parts: PartCollector) extends Into
 
   // into
 
-  def into(table: String): ColsOrKeyValue = next(s"INSERT INTO $table")
+  def into(table: TableName): ColsOrKeyValue = next(s"INSERT INTO ${table.render}")
 
   // columns
 
-  def columns(args: String*): Values = {
+  def columns(cols: Col*): Values = {
     next(
       s"(%s)".format(
-        args.mkString(", ")
+        cols.map(_.render).mkString(", ")
       )
     )
   }
