@@ -128,35 +128,19 @@ class Select(parts: PartCollector) extends Columns
 
   def join(table: TableRef): JoinOn = next(s"INNER JOIN ${table.render}")
 
-  //def join(table: String, alias: String): JoinOn = next(s"INNER JOIN $table $alias")
-
   def innerJoin(table: TableRef): JoinOn = next(s"INNER JOIN ${table.render}")
-
-  //def innerJoin(table: String, alias: String): JoinOn = next(s"INNER JOIN $table $alias")
 
   def leftJoin(table: TableRef): JoinOn = next(s"LEFT JOIN ${table.render}")
 
-  //def leftJoin(table: String, alias: String): JoinOn = next(s"LEFT JOIN $table $alias")
-
   def leftOuterJoin(table: TableRef): JoinOn = next(s"LEFT OUTER JOIN ${table.render}")
-
-  //def leftOuterJoin(table: String, alias: String): JoinOn = next(s"LEFT OUTER JOIN $table $alias")
 
   def rightJoin(table: TableRef): JoinOn = next(s"RIGHT JOIN ${table.render}")
 
-  //def rightJoin(table: String, alias: String): JoinOn = next(s"RIGHT JOIN $table $alias")
-
   def rightOuterJoin(table: TableRef): JoinOn = next(s"RIGHT OUTER JOIN ${table.render}")
-
-  //def rightOuterJoin(table: String, alias: String): JoinOn = next(s"RIGHT OUTER JOIN $table $alias")
 
   def fullOuterJoin(table: TableRef): JoinOn = next(s"FULL OUTER JOIN ${table.render}")
 
-  //def fullOuterJoin(table: String, alias: String): JoinOn = next(s"FULL OUTER JOIN $table $alias")
-
   def crossJoin(table: TableRef): JoinOn = next(s"CROSS JOIN ${table.render}")
-
-  //def crossJoin(table: String, alias: String): JoinOn = next(s"CROSS JOIN $table $alias")
 
   // join on
 

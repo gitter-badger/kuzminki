@@ -16,8 +16,9 @@ object UpdateStages {
   }
 
   trait Where {
-    def where(args: (String, Cond)*): Ready
-    def where(args: List[(String, Cond)]): Ready
+    def where(sub: FilteringStart => Filtering): Ready
+    def where(args: Part*): Ready
+    def whereList(args: List[Part]): Ready
   }
 
   trait Ready {
@@ -40,6 +41,8 @@ class Update(parts: PartCollector) extends Table
   def next(tmpl: String, args: Seq[Any]) = new Update(parts.add(tmpl, args))
 
   def next(part: Part) = new Update(parts.add(part))
+
+  def next(parts: PartCollector) = new Update(parts)
 
   // table
 
@@ -66,24 +69,22 @@ class Update(parts: PartCollector) extends Table
 
   // condition
 
-  def where(args: (String, Cond)*): Ready = where(args.toList)
+  def where(sub: FilteringStart => Filtering): Ready = {
+    next(
+      sub(
+        Filtering.continue(
+          parts.add("WHERE")
+        )
+      ).parts
+    )
+  }
 
-  def where(args: List[(String, Cond)]): Ready = {
+  def where(conds: Part*): Ready = whereList(conds.toList)
 
-    val conds = args.map {
-      case (key, Eq(value)) => Arg(s"$key = ?", Some(value))
-      case (key, Not(value)) => Arg(s"$key != ?", Some(value))
-      case (key, Gt(value)) => Arg(s"$key > ?", Some(value))
-      case (key, Gte(value)) => Arg(s"$key >= ?", Some(value))
-      case (key, Lt(value)) => Arg(s"$key < ?", Some(value))
-      case (key, Lte(value)) => Arg(s"$key <= ?", Some(value))
-      case (key, Like(value)) => Arg(s"$key LIKE ?", Some(value))
-      case (key, op) => throw new KuzminkiException(s"invalid operator ($key -> $op)")
-    }
-
+  def whereList(conds: List[Part]): Ready = {
     next(
       "WHERE " + conds.map(_.tmpl).mkString(" AND "),
-      conds.map(_.arg).flatten
+      conds.map(_.args).flatten
     )
   }
 
@@ -98,4 +99,13 @@ class Update(parts: PartCollector) extends Table
     }
   }
 }
+
+
+
+
+
+
+
+
+
 
