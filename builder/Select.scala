@@ -71,37 +71,39 @@ object SelectStages {
 import SelectStages._
 
 
-class Select(parts: PartCollector) extends Columns
-                                      with From
-                                      with WhereOrJoin
-                                      with JoinOn
-                                      with WhereOrGroup
-                                      with Having
-                                      with Where
-                                      with OrderBy
-                                      with OffsetLimit
-                                      with Limit
-                                      with Ready {
+class Select(parts: Collector) extends Columns
+                                  with From
+                                  with WhereOrJoin
+                                  with JoinOn
+                                  with WhereOrGroup
+                                  with Having
+                                  with Where
+                                  with OrderBy
+                                  with OffsetLimit
+                                  with Limit
+                                  with Ready {
 
-  def next(tmpl: String): Select = new Select(parts.add(tmpl))
+  def next(section: Section): Select = new Select(parts.add(section))
 
-  def next(tmpl: String, args: Seq[Any]): Select = new Select(parts.add(tmpl, args))
+  def next(tmpl: String): Select = next(Part.create(tmpl))
 
-  def next(parts: PartCollector): Select = new Select(parts)
+  def next(part: Part): Select = next(parts.add(part))
+
+  def next(addedParts: PartCollector): Select = new Select(parts)
 
   // columns
 
-  def columns(cols: Column*): From = columnsList(cols.toList)
-
-  def columnsList(cols: List[Column]): From = {
+  def columns(cols: Column*): From = {
     next(
       cols.map(_.render).mkString(", ")
     )
   }
 
+  def columnsList(cols: List[Column]): From = columns(cols: _*)
+
   // from
 
-  def from(table: TableRef): WhereOrJoin = next(s"FROM ${table.render}")
+  def from(table: TableRef): WhereOrJoin = next(SelectSec(table))
 
   // where
 
@@ -115,14 +117,9 @@ class Select(parts: PartCollector) extends Columns
     )
   }
 
-  def where(args: Part*): OrderBy = whereList(args.toList)
+  def where(conds: Part*): OrderBy = next(WhereSec(conds))
 
-  def whereList(args: List[Part]): OrderBy = {
-    next(
-      "WHERE " + args.map(_.tmpl).mkString(" AND "),
-      args.map(_.args).flatten
-    )
-  }
+  def whereList(conds: List[Part]): OrderBy = next(WhereSec(conds))
 
   // cond
 
@@ -148,13 +145,13 @@ class Select(parts: PartCollector) extends Columns
 
   // group by
 
-  def groupBy(args: Col*): Having = groupByList(args.toList)
-
-  def groupByList(args: List[Col]): Having = {
+  def groupBy(cols: Col*): Having = {
     next(
-      "GROUP BY " + args.map(_.render).mkString(", ")
+      "GROUP BY " + cols.map(_.render).mkString(", ")
     )
   }
+
+  def groupByList(cols: List[Col]): Having = groupBy(cols: _*)
 
   // having
 
@@ -168,24 +165,23 @@ class Select(parts: PartCollector) extends Columns
     )
   }
 
-  def having(args: Part*): OrderBy = whereList(args.toList)
-
-  def havingList(args: List[Part]): OrderBy = {
+  def having(conds: Part*): OrderBy = {
     next(
-      "HAVING " + args.map(_.tmpl).mkString(" AND "),
-      args.map(_.args).flatten
+      Clause("HAVING ", " AND ", conds)
     )
   }
+
+  def havingList(conds: List[Part]): OrderBy = having(conds: _*)
 
   // order by
 
-  def orderBy(args: SelectOrder*): OffsetLimit = orderByList(args.toList)
-
-  def orderByList(args: List[SelectOrder]): OffsetLimit = {
+  def orderBy(cols: SelectOrder*): OffsetLimit = {
     next(
-      "ORDER BY " + args.map(_.render).mkString(", ")
+      "ORDER BY " + cols.map(_.render).mkString(", ")
     )
   }
+
+  def orderByList(cols: List[SelectOrder]): OffsetLimit = orderBy(cols: _*)
 
   // offset
 

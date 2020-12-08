@@ -12,7 +12,7 @@ object UpdateStages {
 
   trait Change {
     def set(args: (String, Any)*): Where
-    def set(args: List[(String, Any)]): Where
+    def setList(args: List[(String, Any)]): Where
   }
 
   trait Where {
@@ -31,18 +31,16 @@ object UpdateStages {
 import UpdateStages._
 
 
-class Update(parts: PartCollector) extends Table
+class Update(parts: Collector) extends Table
                                       with Change
                                       with Where
                                       with Ready {
 
-  def next(tmpl: String) = new Update(parts.add(tmpl))
+  def next(tmpl: String): Update = next(Part.create(tmpl))
 
-  def next(tmpl: String, args: Seq[Any]) = new Update(parts.add(tmpl, args))
+  def next(part: Part): Update = next(parts.add(part))
 
-  def next(part: Part) = new Update(parts.add(part))
-
-  def next(parts: PartCollector) = new Update(parts)
+  def next(addedParts: Collector): Update = new Update(addedParts)
 
   // table
 
@@ -50,22 +48,13 @@ class Update(parts: PartCollector) extends Table
 
   // change
 
-  def set(args: (String, Any)*): Where = set(args.toList)
-
-  def set(args: List[(String, Any)]): Where = {
-
-    val changes = args.map {
-      case (key, Inc(amount)) => Arg(s"$key = $key + $amount", None)
-      case (key, Dec(amount)) => Arg(s"$key = $key - $amount", None)
-      case (key, Raw(str)) => Arg(s"$key = $str", None)
-      case (key, value) => Arg(s"$key = ?", Some(value))
-    }
-
+  def set(changes: (Col, Any)*): Where = { 
     next(
-      "SET " + changes.map(_.tmpl).mkString(", "),
-      changes.map(_.arg).flatten
+      Clause("SET ", ", ", changes.map(Modification.render))
     )
   }
+
+  def setList(changes: List[(Col, Any)]): Where = set(changes: _*)
 
   // condition
 
@@ -79,14 +68,13 @@ class Update(parts: PartCollector) extends Table
     )
   }
 
-  def where(conds: Part*): Ready = whereList(conds.toList)
-
-  def whereList(conds: List[Part]): Ready = {
+  def where(conds: Part*): Ready = {
     next(
-      "WHERE " + conds.map(_.tmpl).mkString(" AND "),
-      conds.map(_.args).flatten
+      Clause("WHERE", ", " + conds)
     )
   }
+
+  def whereList(conds: List[Part]): Ready = where(conds: _*)
 
   // ready
 

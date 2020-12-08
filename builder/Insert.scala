@@ -19,7 +19,7 @@ object InsertStages {
   trait Values {
     def values(query: SelectStages.Ready): OnConflict
     def values(args: Any*): OnConflict
-    def values(args: List[Any]): OnConflict
+    def valuesList(args: List[Any]): OnConflict
   }
 
   trait OnConflict extends Ready {
@@ -30,8 +30,8 @@ object InsertStages {
 
   trait OnConflictDo {
     def doNothing: Ready
-    def doUpdate(args: (String, Any)*): Ready
-    def doUpdate(args: List[(String, Any)]): Ready
+    def doUpdate(args: (Col, Any)*): Ready
+    def doUpdateList(args: List[(String, Any)]): Ready
   }
 
   trait Ready {
@@ -44,18 +44,18 @@ object InsertStages {
 import InsertStages._
 
 
-class Insert(parts: PartCollector) extends Into
+class Insert(parts: Collector) extends Into
                                       with ColsOrKeyValue
                                       with Values
                                       with OnConflict
                                       with OnConflictDo
                                       with Ready {
 
-  def next(tmpl: String): Insert = new Insert(parts.add(tmpl))
+  def next(tmpl: String): Insert = next(parts.add(tmpl))
 
-  def next(tmpl: String, args: Seq[Any]): Insert = new Insert(parts.add(tmpl, args))
+  def next(part: Part): Insert = next(parts.add(part))
 
-  def next(part: Part): Insert = new Insert(parts.add(part))
+  def next(addedParts: Collector): Insert = new Insert(addedParts)
 
   // into
 
@@ -87,14 +87,16 @@ class Insert(parts: PartCollector) extends Into
 
   def values(query: SelectStages.Ready): OnConflict = next(query.asNested)
 
-  def values(args: Any*): OnConflict = values(args.toList)
-
-  def values(args: List[Any]): OnConflict = {
+  def values(args: Any*): OnConflict = {
     next(
-      "VALUES (%s)".format(Vector.fill(args.size)("?").mkString(", ")),
-      args.toVector
+      Part.create(
+        "VALUES (%s)".format(Vector.fill(args.size)("?").mkString(", ")),
+        args
+      )
     )
   }
+
+  def valuesList(args: List[Any]): OnConflict = values(args: _*)
 
   // on conflict
 
@@ -109,22 +111,13 @@ class Insert(parts: PartCollector) extends Into
 
   def doNothing: Ready = next("DO NOTHING")
 
-  def doUpdate(args: (String, Any)*): Ready = doUpdate(args.toList)
-
-  def doUpdate(args: List[(String, Any)]): Ready = {
-    
-    def changes = args.map {
-      case (key, Inc(amount)) => Arg(s"$key = $key + $amount", None)
-      case (key, Dec(amount)) => Arg(s"$key = $key - $amount", None)
-      case (key, Raw(str)) => Arg(s"$key = $str", None)
-      case (key, value) => Arg(s"$key = ?", Some(value))
-    }
-
+  def doUpdate(changes: (Col, Any)*): Where = { 
     next(
-      "DO UPDATE SET " + changes.map(_.tmpl).mkString(", "),
-      changes.map(_.arg).flatten
+      Clause("SET", ", ", changes.map(Modification.render))
     )
   }
+
+  def doUpdateList(changes: List[(Col, Any)]): Where = doUpdate(changes: _*)
 
   def sql: SqlWithParams = parts.sql
 

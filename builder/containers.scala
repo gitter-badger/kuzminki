@@ -65,10 +65,32 @@ object containers {
 
   // changes
 
-  sealed trait UpdateChange
-  case class Inc(amount: Int) extends UpdateChange
-  case class Dec(amount: Int) extends UpdateChange
-  case class Raw(value: String) extends UpdateChange
+  object Modification {
+    def render(change: (Col, Any)): Part = {
+      change match {
+        case (col, mod: Modification) =>
+          mod.toPart(col)
+        case (col, value) =>
+          Part.create(s"${col.render} = ?", value)
+      }
+    }
+  }
+
+  sealed trait Modification {
+    def toPart(col: Col): Part
+  }
+
+  case class Increment(amount: Int) extends Modification {
+    def toPart(col: Col) = {
+      Part.create(s"${col.render} = ${col.render} + $amount")
+    }
+  }
+
+  case class Decrement(amount: Int) extends Modification {
+    def toPart(col: Col) = {
+      Part.create(s"${col.render} = ${col.render} - $amount")
+    }
+  }
 
 
   
