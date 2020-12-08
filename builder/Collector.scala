@@ -10,6 +10,13 @@ object RenderedPart {
 }
 
 
+trait Renderable {
+  def render: String
+  def wrapped: String
+}
+
+// section
+
 trait Section {
   def render: RenderedPart
   def wrapped: RenderedPart
@@ -203,7 +210,7 @@ case class InsertColumnsSec(columns: Seq[Col]) extends MultiPart {
 }
 
 
-case class InsertDataSec(pairs: Seq[(Col, Any)]) extends MultiPart {
+case class InsertDataSec(pairs: Map[(Col, Any)]) extends Section {
   def parts = pairs
   def expression = "(%s)"
   def oneLineGlue = ", "

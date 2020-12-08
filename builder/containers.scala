@@ -32,6 +32,37 @@ object containers {
     def render = s"MIN($name)"
   }
 
+  // condition
+
+  case class Cond(name: Sting, op: String, args: Seq[Any]) extends Renderable {
+    def render = "%s = ?".format(name)
+    def wrap = "%s = ?".format(Renderable.wrapped(name))
+    def where = WhereCond(this)
+    def and = AndCond(this)
+    def or = OrCond(this)
+  }
+
+  trait DirectiveCond {
+    def cond: Cond
+    def directive: String
+    def render = directive + " " + cond.render
+    def wrapped = directive + " " cond.wrap 
+  }
+
+  case class WhereCond(cond: Cond) extends Renderable with DirectiveCond {
+    def directive = "WHERE"
+  }
+
+  case class AndCond(cond: Cond) extends Renderable {
+    def directive = "AND"
+  }
+
+  case class OrCond(cond: Cond) extends Renderable {
+    def directive = "OR" 
+  } 
+
+  // table
+
   sealed trait TableRef {
     def render: String
   }

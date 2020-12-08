@@ -38,10 +38,6 @@ class Update(parts: Collector) extends Table
 
   def next(section: section): Update = new Update(parts.add(section))
 
-  def next(tmpl: String): Update = next(Part.create(tmpl))
-
-  def next(part: Part): Update = next(parts.add(part))
-
   def next(addedParts: Collector): Update = new Update(addedParts)
 
   // table
@@ -50,13 +46,9 @@ class Update(parts: Collector) extends Table
 
   // change
 
-  def set(changes: (Col, Any)*): Where = { 
-    next(
-      Clause("SET ", ", ", changes.map(Modification.render))
-    )
-  }
+  def set(changes: Change*): Where = next(UpdateSetSec(changes))
 
-  def setList(changes: List[(Col, Any)]): Where = set(changes: _*)
+  def setList(changes: List[(Col, Any)]): Where = next(UpdateSetSec(changes))
 
   // condition
 
@@ -70,13 +62,9 @@ class Update(parts: Collector) extends Table
     )
   }
 
-  def where(conds: Part*): Ready = {
-    next(
-      Clause("WHERE", ", " + conds)
-    )
-  }
+  def where(conds: Part*): Ready = next(WhereAllSec(conds))
 
-  def whereList(conds: List[Part]): Ready = where(conds: _*)
+  def whereList(conds: List[Part]): Ready = next(WhereAllSec(conds))
 
   // ready
 

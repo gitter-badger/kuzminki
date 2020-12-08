@@ -12,6 +12,7 @@ object implicits {
     implicit val tupleToTableNameAlias: Tuple2[String, String] => TableNameAlias = pair => TableNameAlias(pair._1, pair._2)
 
     implicit val stringToDefaultOrder: String => DefaultOrder = name => DefaultOrder(name)
+    implicit val tupleToChange: Tuple2[String, Any] => Change = pair => Change(Col(pair._1), Change.wrap(pair._2))
 }
 
 
@@ -35,30 +36,24 @@ trait FilteringStart {
 }
 
 
-case class FilteringChain(parts: PartCollector) extends Filtering
+case class FilteringChain(conds: FilteringCollector) extends Filtering
                                                    with FilteringStart{
 
-  private def next(op: String, part: Part) = {
-    FilteringChain(
-      parts.extend(
-        Seq(Part.create(op), part)
-      )
-    )
-  }
+  private def next(cond: DirectiveCond) = FilteringChain(conds.add(cond))
 
   private def wrapped(sub: FilteringStart => Filtering): Part = {
     sub(Filtering.init).parts.asNested
   }
 
-  def col(part: Part): Filtering = FilteringChain(parts.add(part))
+  def col(cond: Cond): Filtering = next(cond.where)
 
-  def and(part: Part): Filtering = next("AND", part)
+  def and(cond: Cond): Filtering = next(cond.and)
 
   def and(sub: FilteringStart => Filtering): Filtering = {
     next("AND", wrapped(sub))
   }
 
-  def or(part: Part): Filtering = next("OR", part)
+  def or(part: Part): Filtering = next(cond.or)
 
   def or(sub: FilteringStart => Filtering): Filtering = {
     next("OR", wrapped(sub))
