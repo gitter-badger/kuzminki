@@ -117,41 +117,37 @@ class Select(parts: Collector) extends Columns
     )
   }
 
-  def where(conds: Part*): OrderBy = next(WhereSec(conds))
+  def where(conds: Part*): OrderBy = next(WhereAllSec(conds))
 
-  def whereList(conds: List[Part]): OrderBy = next(WhereSec(conds))
+  def whereList(conds: List[Part]): OrderBy = next(WhereAllSec(conds))
 
   // cond
 
-  def join(table: TableRef): JoinOn = next(s"INNER JOIN ${table.render}")
+  def join(table: TableRef): JoinOn = next(InnerJoinSec(table))
 
-  def innerJoin(table: TableRef): JoinOn = next(s"INNER JOIN ${table.render}")
+  def innerJoin(table: TableRef): JoinOn = next(InnerJoinSec(table))
 
-  def leftJoin(table: TableRef): JoinOn = next(s"LEFT JOIN ${table.render}")
+  def leftJoin(table: TableRef): JoinOn = next(LeftJoinSec(table))
 
-  def leftOuterJoin(table: TableRef): JoinOn = next(s"LEFT OUTER JOIN ${table.render}")
+  def leftOuterJoin(table: TableRef): JoinOn = next(LeftOuterJoinSec(table))
 
-  def rightJoin(table: TableRef): JoinOn = next(s"RIGHT JOIN ${table.render}")
+  def rightJoin(table: TableRef): JoinOn = next(RightJoinSec(table))
 
-  def rightOuterJoin(table: TableRef): JoinOn = next(s"RIGHT OUTER JOIN ${table.render}")
+  def rightOuterJoin(table: TableRef): JoinOn = next(RightOuterJoinSec(table))
 
-  def fullOuterJoin(table: TableRef): JoinOn = next(s"FULL OUTER JOIN ${table.render}")
+  def fullOuterJoin(table: TableRef): JoinOn = next(JoinSec(table))
 
-  def crossJoin(table: TableRef): JoinOn = next(s"CROSS JOIN ${table.render}")
+  def crossJoin(table: TableRef): JoinOn = next(JoinSec(table))
 
   // join on
 
-  def on(leftCol: String, rightCol: String): WhereOrGroup = next(s"ON $leftCol = $rightCol")
+  def on(leftCol: Col, rightCol: Col): WhereOrGroup = next(JoinOnSec(leftCol, rightCol))
 
   // group by
 
-  def groupBy(cols: Col*): Having = {
-    next(
-      "GROUP BY " + cols.map(_.render).mkString(", ")
-    )
-  }
+  def groupBy(cols: Col*): Having = next(GroupBySec(cols))
 
-  def groupByList(cols: List[Col]): Having = groupBy(cols: _*)
+  def groupByList(cols: List[Col]): Having = next(GroupBySec(cols))
 
   // having
 
@@ -165,31 +161,23 @@ class Select(parts: Collector) extends Columns
     )
   }
 
-  def having(conds: Part*): OrderBy = {
-    next(
-      Clause("HAVING ", " AND ", conds)
-    )
-  }
+  def having(conds: Part*): OrderBy = next(HavingSec(conds))
 
-  def havingList(conds: List[Part]): OrderBy = having(conds: _*)
+  def havingList(conds: List[Part]): OrderBy = next(HavingSec(conds))
 
   // order by
 
-  def orderBy(cols: SelectOrder*): OffsetLimit = {
-    next(
-      "ORDER BY " + cols.map(_.render).mkString(", ")
-    )
-  }
+  def orderBy(cols: SelectOrder*): OffsetLimit = next(OrderBySec(cols))
 
-  def orderByList(cols: List[SelectOrder]): OffsetLimit = orderBy(cols: _*)
+  def orderByList(cols: List[SelectOrder]): OffsetLimit = next(OrderBySec(cols))
 
   // offset
 
-  def offset(num: Int): Limit = next(s"OFFSET $num")
+  def offset(num: Int): Limit = next(OffsetSec(num))
 
   // limit
 
-  def limit(num: Int): Ready = next(s"LIMIT $num")
+  def limit(num: Int): Ready = next(LimitSec(num))
 
   // exec
 

@@ -18,11 +18,6 @@ trait Section {
 }
 
 
-trait NoRender extends Section {
-  def expression: String
-}
-
-
 trait SingleArg extends Section {
   def arg: Any
   def expression: String
@@ -30,6 +25,15 @@ trait SingleArg extends Section {
   def wrapped = render
   def indented = render + "\n" 
   def args = Seq(arg)
+}
+
+
+trait TextOnly extends Section {
+  def expression: String
+  def render = expression
+  def wrapped = expression
+  def indented = expression + "\n" 
+  def args = Seq.empty[Any]
 }
 
 
@@ -83,15 +87,53 @@ case class FromSec(table: TableRef) extends SinglePart {
 }
 
 
-case class JoinSec(joinHow: String, table: TableRef) extends SinglePart {
+case class InnerJoinSec(table: TableRef) extends SinglePart {
   def part = table
-  def expression = joinHow + " %s"
+  def expression = "INNER JOIN %s"
 }
 
 
-case class OnSec(table: TableRef) extends SinglePart {
+case class LeftJoinSec(table: TableRef) extends SinglePart {
   def part = table
-  def expression = "ON %s"
+  def expression = "LEFT JOIN %s"
+}
+
+
+case class LeftOuterJoinSec(table: TableRef) extends SinglePart {
+  def part = table
+  def expression = "LEFT OUTER JOIN %s"
+}
+
+
+case class RightJoinSec(table: TableRef) extends SinglePart {
+  def part = table
+  def expression = "RIGHT JOIN %s"
+}
+
+
+case class RightOuterJoinSec(table: TableRef) extends SinglePart {
+  def part = table
+  def expression = "RIGHT OUTER JOIN %s"
+}
+
+
+case class FullOuterJoinSec(table: TableRef) extends SinglePart {
+  def part = table
+  def expression = "FULL OUTER JOIN %s"
+}
+
+
+case class CrossJoinSec(table: TableRef) extends SinglePart {
+  def part = table
+  def expression = "CROSS JOIN %s"
+}
+
+
+case class OnSec(leftCol: Col, rightCol: Col) extends Section {
+  def render = leftCol.render + " = " + rightCol.render
+  def wrapped = leftCol.wrap + " = " + rightCol.wrap
+  def indented = render + "\n"
+  def args = Seq.empty[Any]
 }
 
 
@@ -138,7 +180,7 @@ case class UpdateSec(table: TableRef) extends SinglePart {
 }
 
 
-case class SetSec(changes: Seq[Change]) extends MultiPart {
+case class UpdateSetSec(changes: Seq[Change]) extends MultiPart {
   def parts = changes
   def expression = "SET %s"
   def oneLineGlue = ", "
@@ -154,19 +196,76 @@ case class InsertIntoSec(table: TableRef) extends SinglePart {
 
 
 case class InsertColumnsSec(columns: Seq[Col]) extends MultiPart {
-  def parts = conds
+  def parts = columns
   def expression = "(%s)"
   def oneLineGlue = ", "
   def multiLineGlue = ",\n "
 }
 
 
-case class InsertDataSec(columns: Seq[(Col, Any)]) extends MultiPart {
-  def parts = conds
+case class InsertDataSec(pairs: Seq[(Col, Any)]) extends MultiPart {
+  def parts = pairs
   def expression = "(%s)"
   def oneLineGlue = ", "
   def multiLineGlue = ",\n "
 }
+
+
+case class InsertNestedSec(nested: SelectStages.Ready) extends Section {
+  def render = nested.render
+  def wrapped = nested.wrapped
+  def indented = nested.indented
+  def args = nested.args
+}
+
+
+case class InsertValuesSec(values: Seq[Any]) extends Section {
+  def render = "VALUES (%s)".format(Vector.fill(args.size)("?").mkString(", "))
+  def wrapped = render
+  def indented = render + "\n"
+  def args = values
+}
+
+
+object InsertOnConflictSec extends Section {
+  def render = "ON CONFLICT"
+  def wrapped = render
+  def indented = render + "\n"
+  def args = Seq.empty[Any]
+}
+
+
+case class InsertOnConflictColumnSec(col: Col) extends SinglePart {
+  def part = col
+  def expression = "ON CONFLICT (%s)"
+}
+
+
+case class InsertOnConflictOnConstraintSec(const: Col) extends SinglePart {
+  def part = const
+  def expression = "ON CONFLICT ON CONSTRAINT (%s)"
+}
+
+
+object InsertDoNothingSec extends Section {
+  def render = "DO NOTHING"
+  def wrapped = render
+  def indented = render + "\n"
+  def args = Seq.empty[Any]
+}
+
+
+case class InsertDoUpdate(changes: Seq[Change]) {
+  def parts = changes
+  def expression = "DO UPDATE SET %s"
+  def oneLineGlue = ", "
+  def multiLineGlue = ",\n              "
+}
+
+
+
+
+
 
 // -----
 

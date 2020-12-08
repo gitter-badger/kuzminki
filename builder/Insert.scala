@@ -51,73 +51,40 @@ class Insert(parts: Collector) extends Into
                                       with OnConflictDo
                                       with Ready {
 
-  def next(tmpl: String): Insert = next(parts.add(tmpl))
+  def next(section: section): Insert = new Insert(parts.add(section))
 
-  def next(part: Part): Insert = next(parts.add(part))
+  def into(table: TableName): ColsOrKeyValue = next(InsertIntoSec(table))
 
-  def next(addedParts: Collector): Insert = new Insert(addedParts)
-
-  // into
-
-  def into(table: TableName): ColsOrKeyValue = next(s"INSERT INTO ${table.render}")
-
-  // columns
-
-  def columns(cols: Col*): Values = {
-    next(
-      s"(%s)".format(
-        cols.map(_.render).mkString(", ")
-      )
-    )
-  }
+  def columns(cols: Col*): Values = next(InsertColumnsSec(cols))
 
   // values
 
-  def data(args: (String, Any)*): OnConflict = values(args.toMap)
+  def data(args: (Col, Any)*): OnConflict = values(args.toMap)
 
-  def data(args: Map[String, Any]) = {
+  def data(args: Map[Col, Any]) = columns(args.keys).values(args.values)
     
-    def tmpl = "(%s) VALUES (%s)".format(
-      args.keys.mkString(", "),
-      Vector.fill(args.size)("?").mkString(", ")
-    )
 
-    next(tmpl, args.values.toVector)
-  }
+  def values(query: SelectStages.Ready): OnConflict = next(InsertNestedSec(query))
 
-  def values(query: SelectStages.Ready): OnConflict = next(query.asNested)
+  def values(args: Any*): OnConflict = next(InsertValuesSec(args))
 
-  def values(args: Any*): OnConflict = {
-    next(
-      Part.create(
-        "VALUES (%s)".format(Vector.fill(args.size)("?").mkString(", ")),
-        args
-      )
-    )
-  }
-
-  def valuesList(args: List[Any]): OnConflict = values(args: _*)
+  def valuesList(args: List[Any]): OnConflict = next(InsertValuesSec(args))
 
   // on conflict
 
-  def onConflict: OnConflictDo = next("ON CONFLICT")
+  def onConflict: OnConflictDo = next(InsertOnConflictSec)
   
-  def onConflict(col: String): OnConflictDo = next(s"ON CONFLICT ($col)")
+  def onConflict(col: Col): OnConflictDo = next(InsertOnConflictColumnSec(col))
 
-  def onConflictOnConstraint(const: String): OnConflictDo =
-    next(s"ON CONFLICT ON CONSTRAINT ($const)")
+  def onConflictOnConstraint(const: Col): OnConflictDo = next(InsertOnConflictOnConstraintSec(const))
 
   // on conflict do
 
-  def doNothing: Ready = next("DO NOTHING")
+  def doNothing: Ready = next(InsertOnConflictSec) = next(InsertDoNothingSec)
 
-  def doUpdate(changes: (Col, Any)*): Where = { 
-    next(
-      Clause("SET", ", ", changes.map(Modification.render))
-    )
-  }
+  def doUpdate(changes: Change*): Where = next(InsertDoUpdate(changes))
 
-  def doUpdateList(changes: List[(Col, Any)]): Where = doUpdate(changes: _*)
+  def doUpdateList(changes: List[Change]): Where = next(InsertDoUpdate(changes))
 
   def sql: SqlWithParams = parts.sql
 

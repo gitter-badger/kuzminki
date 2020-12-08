@@ -32,9 +32,11 @@ import UpdateStages._
 
 
 class Update(parts: Collector) extends Table
-                                      with Change
-                                      with Where
-                                      with Ready {
+                                  with Change
+                                  with Where
+                                  with Ready {
+
+  def next(section: section): Update = new Update(parts.add(section))
 
   def next(tmpl: String): Update = next(Part.create(tmpl))
 
@@ -44,7 +46,7 @@ class Update(parts: Collector) extends Table
 
   // table
 
-  def table(table: TableName): Change = next(s"UPDATE ${table.render}")
+  def table(table: TableName): Change = next(UpdateSec(table))
 
   // change
 
