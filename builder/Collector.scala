@@ -1,7 +1,7 @@
 package kuzminki
 
 
-case class RenderedPart(tmpl: String, args: Seq[Any])
+case class RenderedPart(template: String, args: Seq[Any])
 
 
 object RenderedPart {
@@ -12,15 +12,17 @@ object RenderedPart {
 
 trait Renderable {
   def render: String
-  def wrapped: String
+  def wrap: String
+  def pretty: String
+  def args: Seq[Any]
 }
 
 // section
 
 trait Section {
-  def render: RenderedPart
-  def wrapped: RenderedPart
-  def indented: RenderedPart
+  def render: String
+  def wrapp: String
+  def pretty: String
   def args: Seq[Any]
 }
 
@@ -29,8 +31,8 @@ trait SingleArg extends Section {
   def arg: Any
   def expression: String
   def render = expression + " ?"
-  def wrapped = render
-  def indented = render + "\n" 
+  def wrap = render
+  def pretty = render + "\n" 
   def args = Seq(arg)
 }
 
@@ -38,8 +40,8 @@ trait SingleArg extends Section {
 trait TextOnly extends Section {
   def expression: String
   def render = expression
-  def wrapped = expression
-  def indented = expression + "\n" 
+  def wrap = expression
+  def pretty = expression + "\n" 
   def args = Seq.empty[Any]
 }
 
@@ -47,12 +49,9 @@ trait TextOnly extends Section {
 trait SinglePart extends Render {
   def part: Renderable
   def expression: String
-  def assemble(pick: Renderable => String): String = {
-    expression + " " + pick()
-  }
-  def render = assemble(_.render)
-  def wrapped = assemble(_.wrap)
-  def indented = render + "\n"
+  def render = expression.format(part.render)
+  def wrap = expression.format(part.wrap)
+  def pretty = expression.format(part.wrap)
   def args = part.args
 }
 
@@ -68,8 +67,8 @@ trait MultiPart extends Render {
     )
   }
   def render = assemble(_.render, oneLineGlue)
-  def wrapped = assemble(_.wrap, multiLineGlue)
-  def indented = assemble(_.render, multiLineGlue) + "\n"
+  def wrap = assemble(_.wrap, oneLineGlue)
+  def pretty = assemble(_.render, multiLineGlue) + "\n"
   def args = parts.map(_.args).flatten
 }
 
@@ -80,58 +79,50 @@ trait NoArgs {
 
 // Select
 
-case class SelectSec(cols: Seq[ColumnRef]) extends MultiPart {
-  def parts = cols
+case class SelectSec(parts: Seq[ColumnRef]) extends MultiPart {
   def expression = "SELECT %s"
   def oneLineGlue: " AND "
   def multiLineGlue: "\n  AND"
 }
 
 
-case class FromSec(table: TableRef) extends SinglePart {
+case class FromSec(part: TableRef) extends SinglePart {
   def part = table
   def expression = "FROM $s"
 }
 
 
-case class InnerJoinSec(table: TableRef) extends SinglePart {
-  def part = table
+case class InnerJoinSec(part: TableRef) extends SinglePart {
   def expression = "INNER JOIN %s"
 }
 
 
-case class LeftJoinSec(table: TableRef) extends SinglePart {
-  def part = table
+case class LeftJoinSec(part: TableRef) extends SinglePart {
   def expression = "LEFT JOIN %s"
 }
 
 
-case class LeftOuterJoinSec(table: TableRef) extends SinglePart {
-  def part = table
+case class LeftOuterJoinSec(part: TableRef) extends SinglePart {
   def expression = "LEFT OUTER JOIN %s"
 }
 
 
-case class RightJoinSec(table: TableRef) extends SinglePart {
-  def part = table
+case class RightJoinSec(part: TableRef) extends SinglePart {
   def expression = "RIGHT JOIN %s"
 }
 
 
-case class RightOuterJoinSec(table: TableRef) extends SinglePart {
-  def part = table
+case class RightOuterJoinSec(part: TableRef) extends SinglePart {
   def expression = "RIGHT OUTER JOIN %s"
 }
 
 
-case class FullOuterJoinSec(table: TableRef) extends SinglePart {
-  def part = table
+case class FullOuterJoinSec(part: TableRef) extends SinglePart {
   def expression = "FULL OUTER JOIN %s"
 }
 
 
-case class CrossJoinSec(table: TableRef) extends SinglePart {
-  def part = table
+case class CrossJoinSec(part: TableRef) extends SinglePart {
   def expression = "CROSS JOIN %s"
 }
 
@@ -144,51 +135,54 @@ case class OnSec(leftCol: Col, rightCol: Col) extends Section {
 }
 
 
-case class WhereAllSec(conds: Seq[Cond]) extends MultiPart {
-  def parts = cols
+case class WhereChainSec(part: NestedFilters) extends SinglePart {
+  def expression = "WHERE %s"
+}
+
+
+case class WhereAllSec(parts: Seq[Cond]) extends MultiPart {
   def expression = "WHERE %s"
   def oneLineGlue = " AND "
   def multiLineGlue = "\n  AND "
 }
 
 
-case class HavingAllSec(conds: Seq[Cond]) extends MultiPart {
-  def parts = cols
+case class HavingChainSec(part: NestedFilters) extends SinglePart {
+  def expression = "HAVING %s"
+}
+
+
+case class HavingAllSec(parts: Seq[Cond]) extends MultiPart {
   def expression = "HAVING %s"
   def oneLineGlue = " AND "
   def multiLineGlue = "\n  AND "
 }
 
 
-case class OrderBySec(conds: Seq[SelectOrder]) extends MultiPart {
-  def parts = conds
+case class OrderBySec(parts: Seq[SelectOrder]) extends MultiPart {
   def expression = "ORDER BY %s"
   def oneLineGlue = ", "
   def multiLineGlue = ",\n         "
 }
 
 
-case class OffsetSec(num: Int) extends SingleArg {
-  def arg = num
+case class OffsetSec(arg: Int) extends SingleArg {
   def expression = "OFFSET ?"
 }
 
 
-case class LimitSec(num: Int) extends SingleArg {
-  def arg = num
+case class LimitSec(arg: Int) extends SingleArg {
   def expression = "LIMIT ?"
 }
 
 // Update
 
-case class UpdateSec(table: TableRef) extends SinglePart {
-  def part = table
+case class UpdateSec(part: TableRef) extends SinglePart {
   def expression = "UPDATE %s"
 }
 
 
-case class UpdateSetSec(changes: Seq[Change]) extends MultiPart {
-  def parts = changes
+case class UpdateSetSec(parts: Seq[Change]) extends MultiPart {
   def expression = "SET %s"
   def oneLineGlue = ", "
   def multiLineGlue = ",\n    "
@@ -196,14 +190,12 @@ case class UpdateSetSec(changes: Seq[Change]) extends MultiPart {
 
 // Insert
 
-case class InsertIntoSec(table: TableRef) extends SinglePart {
-  def part = table
+case class InsertIntoSec(part: TableRef) extends SinglePart {
   def expression = "INSERT INTO %s"
 }
 
 
-case class InsertColumnsSec(columns: Seq[Col]) extends MultiPart {
-  def parts = columns
+case class InsertColumnsSec(parts: Seq[Col]) extends MultiPart {
   def expression = "(%s)"
   def oneLineGlue = ", "
   def multiLineGlue = ",\n "
@@ -262,7 +254,7 @@ object InsertDoNothingSec extends Section {
 }
 
 
-case class InsertDoUpdate(changes: Seq[Change]) {
+case class InsertDoUpdate(changes: Seq[Change]) extends Section {
   def parts = changes
   def expression = "DO UPDATE SET %s"
   def oneLineGlue = ", "

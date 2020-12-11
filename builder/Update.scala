@@ -38,35 +38,17 @@ class Update(parts: Collector) extends Table
 
   def next(section: section): Update = new Update(parts.add(section))
 
-  def next(addedParts: Collector): Update = new Update(addedParts)
-
-  // table
-
   def table(table: TableName): Change = next(UpdateSec(table))
-
-  // change
 
   def set(changes: Change*): Where = next(UpdateSetSec(changes))
 
   def setList(changes: List[(Col, Any)]): Where = next(UpdateSetSec(changes))
 
-  // condition
-
-  def where(sub: FilteringStart => Filtering): Ready = {
-    next(
-      sub(
-        Filtering.continue(
-          parts.add("WHERE")
-        )
-      ).parts
-    )
-  }
+  def where(sub: FilteringStart => Filtering): Ready = next(WhereChainSec(sub(Filtering.init).filters))
 
   def where(conds: Part*): Ready = next(WhereAllSec(conds))
 
   def whereList(conds: List[Part]): Ready = next(WhereAllSec(conds))
-
-  // ready
 
   def sql: SqlWithParams = parts.sql
 

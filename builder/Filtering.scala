@@ -6,7 +6,7 @@ object implicits {
     import kuzminki.containers._
 
     implicit val stringToColumn: String => Col = name => Col(name)
-    implicit val stringToFilter: String => Filter = name => Filter(name)
+    implicit val stringToFilter: String => Condition = name => Condition(name)
 
     implicit val stringToTableName: String => TableName = name => TableName(name)
     implicit val tupleToTableNameAlias: Tuple2[String, String] => TableNameAlias = pair => TableNameAlias(pair._1, pair._2)
@@ -16,9 +16,57 @@ object implicits {
 }
 
 
-object Filtering {
-  def init: FilteringStart = FilteringChain(PartCollector.init)
-  def continue(parts: PartCollector): FilteringStart = FilteringChain(parts)
+case class Filter(name: Sting, op: String, args: Seq[Any]) extends Renderable {
+  def render = "%s = ?".format(name)
+  def wrap = "%s = ?".format(Renderable.wrapped(name))
+}
+
+
+trait FilterWithOperator extends Renderable {
+  def filter: Renderable
+  def template: String
+  def render = template.format(filter.render)
+  def wrapp = template.format(filter.wrap)
+  def pretty = template.format(filter.pretty)
+  def args = filter.args
+}
+
+
+case class StartFilter(filter: Renderable) extends FilterWithOperator {
+  def template = "%s"
+}
+
+
+case class AndFilter(filter: Renderable) extends FilterWithOperator {
+  def template = "AND %s"
+}
+
+
+case class OrFilter(filter: Renderable) extends FilterWithOperator {
+  def template = "OR %s"
+}
+
+
+object NestedFilters {
+  def init = NestedFilters(1, Array.empty[AndOrCond])
+}
+
+
+case class NestedFilters(level: Int, filters: Array[FilterWithOperator]) extends Renderable {
+  
+  def add(filter: FilterWithOperator) = NestedFilters(level, filters :+ filter)
+
+  def child = CondCollector(level + 1, Array.empty[FilterWithOperator])
+
+  def padding = " " * level * 4
+
+  def base = " " * (level - 1) * 4
+
+  def render = "(" + conds.map(_.render).mkString(" ") + ")"
+
+  def wrap = "(" + conds.map(_.wrap).mkString(" ") + ")"
+
+  def pretty = "(\n" + conds.map(_.render).map(padding + _).mkString("\n") + base + ")\n"
 }
 
 
@@ -27,7 +75,7 @@ trait Filtering {
   def and(sub: FilteringStart => Filtering): Filtering
   def or(part: Part): Filtering
   def or(sub: FilteringStart => Filtering): Filtering
-  def parts: PartCollector
+  def filters: NestedFilters
 }
 
 
@@ -36,28 +84,27 @@ trait FilteringStart {
 }
 
 
-case class FilteringChain(conds: FilteringCollector) extends Filtering
-                                                   with FilteringStart{
+object Filtering {
+  def init: FilteringStart = FilteringChain(NestedFilters.init)
+}
 
-  private def next(cond: DirectiveCond) = FilteringChain(conds.add(cond))
 
-  private def wrapped(sub: FilteringStart => Filtering): Part = {
-    sub(Filtering.init).parts.asNested
-  }
+case class FilteringChain(filters: NestedFilters) extends Filtering
+                                                     with FilteringStart {
 
-  def col(cond: Cond): Filtering = next(cond.where)
+  private def next(filter: FilterWithOperator) = FilteringChain(filters.add(filter))
 
-  def and(cond: Cond): Filtering = next(cond.and)
+  private def child = FilteringChain(filters.child)
 
-  def and(sub: FilteringStart => Filtering): Filtering = {
-    next("AND", wrapped(sub))
-  }
+  def col(filter: Filter): Filtering = next(StartFilter(filter))
 
-  def or(part: Part): Filtering = next(cond.or)
+  def and(filter: Filter): Filtering = next(AndFilter(filter))
 
-  def or(sub: FilteringStart => Filtering): Filtering = {
-    next("OR", wrapped(sub))
-  }
+  def and(nested: FilteringStart => Filtering): Filtering = next(AndFilter(nested(child).filters))
+
+  def or(filter: Filter): Filtering = next(OrFilter(filter))
+
+  def or(nested: FilteringStart => Filtering): Filtering = next(OrFilter(nested(child).filters))
 }
 
 

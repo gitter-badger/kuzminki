@@ -85,12 +85,6 @@ class Select(parts: Collector) extends Columns
 
   def next(section: Section): Select = new Select(parts.add(section))
 
-  def next(tmpl: String): Select = next(Part.create(tmpl))
-
-  def next(part: Part): Select = next(parts.add(part))
-
-  def next(addedParts: PartCollector): Select = new Select(parts)
-
   // columns
 
   def columns(cols: Column*): From = {
@@ -107,19 +101,11 @@ class Select(parts: Collector) extends Columns
 
   // where
 
-  def where(sub: FilteringStart => Filtering): OrderBy = {
-    next(
-      sub(
-        Filtering.continue(
-          parts.add("WHERE")
-        )
-      ).parts
-    )
-  }
+  def where(sub: FilteringStart => Filtering): OrderBy = next(WhereChainSec(sub(Filtering.init).filters))
 
-  def where(conds: Part*): OrderBy = next(WhereAllSec(conds))
+  def where(filters: Filter*): OrderBy = next(WhereAllSec(filters))
 
-  def whereList(conds: List[Part]): OrderBy = next(WhereAllSec(conds))
+  def whereList(filters: List[Filter]): OrderBy = next(WhereAllSec(filters))
 
   // cond
 
@@ -151,15 +137,7 @@ class Select(parts: Collector) extends Columns
 
   // having
 
-  def having(sub: FilteringStart => Filtering): OrderBy = {
-    next(
-      sub(
-        Filtering.continue(
-          parts.add("HAVING")
-        )
-      ).parts
-    )
-  }
+  def having(sub: FilteringStart => Filtering): OrderBy = next(HavingChainSec(sub(Filtering.init).filters))
 
   def having(conds: Part*): OrderBy = next(HavingSec(conds))
 

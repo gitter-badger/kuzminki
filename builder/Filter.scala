@@ -1,7 +1,7 @@
 package kuzminki
 
 
-case class Filter(name: String) {
+case class Condition(name: String) {
 
   //def samasem(value: Any): Part = Part.create(s"$name = ?", value)
 

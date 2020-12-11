@@ -37,29 +37,45 @@ object containers {
   case class Cond(name: Sting, op: String, args: Seq[Any]) extends Renderable {
     def render = "%s = ?".format(name)
     def wrap = "%s = ?".format(Renderable.wrapped(name))
-    def where = WhereCond(this)
+    def start = StartCond(this)
     def and = AndCond(this)
     def or = OrCond(this)
   }
 
-  trait DirectiveCond {
+  trait CondWithOperator {
     def cond: Cond
-    def directive: String
-    def render = directive + " " + cond.render
-    def wrapped = directive + " " cond.wrap 
+    def template: String
+    def render = template.format(cond.render)
+    def wrapp = template.format(cond.wrap) 
+    def pre = render + "\n"
   }
 
-  case class WhereCond(cond: Cond) extends Renderable with DirectiveCond {
-    def directive = "WHERE"
+  trait OneCond extends DirectiveCond {
+    def indent = render + "\n"
+  }
+
+  trait NestedCond extends DirectiveCond {
+    val padding: String
+    def 
+  }
+
+  case class StartCond(cond: Cond) extends Renderable with DirectiveCond {
+    def template = "%s"
   }
 
   case class AndCond(cond: Cond) extends Renderable {
-    def directive = "AND"
+    def template = "AND %s"
   }
 
   case class OrCond(cond: Cond) extends Renderable {
-    def directive = "OR" 
-  } 
+    def template = "OR %s" 
+  }
+
+  case class AndNestedCond(cond: Filtering) extends Renderable {
+    def template = "OR (%s)"
+  }
+
+  case class OrNestedCond()
 
   // table
 
