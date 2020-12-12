@@ -30,7 +30,7 @@ object NestedFilters {
 }
 
 
-case class NestedFilters(level: Int, filters: Array[FilterWithOperator]) extends Renderable with Pretty {
+case class NestedFilters(level: Int, filters: Array[FilterWithOperator]) extends RenderablePretty {
   
   def add(filter: FilterWithOperator) = NestedFilters(level, filters :+ filter)
   def child = NestedFilters(level + 1, Array.empty[FilterWithOperator])
@@ -38,8 +38,22 @@ case class NestedFilters(level: Int, filters: Array[FilterWithOperator]) extends
   def padding = " " * level * 4
   def base = " " * (level - 1) * 4
 
+  def template = {
+    level match {
+      case 1 => "%s"
+      case _ => "(%s)"
+    }
+  }
+
+  def prettyTemplate = {
+    level match {
+      case 1 => "%s\n%s"
+      case _ => "(%s\n%s)"
+    }
+  }
+
   def render = {
-    "(%s)".format(
+    template.format(
       filters
         .map(_.render)
         .mkString(" ")
@@ -47,7 +61,7 @@ case class NestedFilters(level: Int, filters: Array[FilterWithOperator]) extends
   }
 
   def wrap = {
-    "(%s)".format(
+    template.format(
       filters
         .map(_.wrap)
         .mkString(" ")
@@ -55,7 +69,7 @@ case class NestedFilters(level: Int, filters: Array[FilterWithOperator]) extends
   }
 
   def pretty = {
-    "(\n%s\n%s)".format(
+    prettyTemplate.format(
       filters
         .map(_.render)
         .map(padding + _)

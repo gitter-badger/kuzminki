@@ -35,6 +35,8 @@ object InsertStages {
 
   trait Ready {
     def print: Unit
+    def wrapped: Unit
+    def pretty: Unit
   }
 }
 
@@ -77,7 +79,7 @@ case class Insert(sections: Collector) extends Into
 
   // on conflict do
 
-  def doNothing: Ready = next(InsertOnConflictSec)
+  def doNothing: Ready = next(InsertDoNothingSec)
 
   def doUpdate(changes: Change*): Ready = next(InsertDoUpdate(changes))
 
@@ -87,6 +89,20 @@ case class Insert(sections: Collector) extends Into
     sections.renderQuery match {
       case QueryResult(tmpl, args) =>
         println(tmpl + " - " + args) 
+    }
+  }
+
+  def wrapped: Unit = {
+    sections.wrappedQuery match {
+      case QueryResult(tmpl, args) =>
+        println(tmpl + " - " + args) 
+    }
+  }
+
+  def pretty: Unit = {
+    sections.prettyQuery match {
+      case QueryResult(tmpl, args) =>
+        println(tmpl + "\n" + args) 
     }
   }
 }

@@ -54,7 +54,7 @@ case class FilterIsNull(col: ColName) extends NoArgFilter {
 }
 
 case class FilterIsNotNull(col: ColName) extends NoArgFilter {
-  def template = "%s = IS NOT NULL"
+  def template = "%s IS NOT NULL"
 }
 
 case class FilterLike(col: ColName, arg: String) extends SingleArgFilter {

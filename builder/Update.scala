@@ -22,6 +22,8 @@ object UpdateStages {
 
   trait Ready {
     def print: Unit
+    def wrapped: Unit
+    def pretty: Unit
   }
 }
 
@@ -52,6 +54,20 @@ case class Update(sections: Collector) extends Table
     sections.renderQuery match {
       case QueryResult(tmpl, args) =>
         println(tmpl + " - " + args) 
+    }
+  }
+
+  def wrapped: Unit = {
+    sections.wrappedQuery match {
+      case QueryResult(tmpl, args) =>
+        println(tmpl + " - " + args) 
+    }
+  }
+
+  def pretty: Unit = {
+    sections.prettyQuery match {
+      case QueryResult(tmpl, args) =>
+        println(tmpl + "\n" + args) 
     }
   }
 }
