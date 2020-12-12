@@ -145,9 +145,9 @@ class Select(parts: Collector) extends Columns
 
   // order by
 
-  def orderBy(cols: SelectOrder*): OffsetLimit = next(OrderBySec(cols))
+  def orderBy(cols: Sorting*): OffsetLimit = next(OrderBySec(cols))
 
-  def orderByList(cols: List[SelectOrder]): OffsetLimit = next(OrderBySec(cols))
+  def orderByList(cols: List[Sorting]): OffsetLimit = next(OrderBySec(cols))
 
   // offset
 

@@ -9,9 +9,9 @@ import kuzminki.implicits._
 
 object Builder {
   
-  def select(cols: Column*) = new Select(Collector.start("SELECT")).columns(cols: _*)
+  def select(cols: Column*) = new Select(Collector.init).columns(cols: _*)
 
-  def select(cols: List[Column]) = new Select(Collector.start("SELECT")).columnsList(cols)
+  def select(cols: List[Column]) = new Select(Collector.init).columnsList(cols)
 
   def insert = new Insert(Collector.init)
 
