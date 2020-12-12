@@ -1,24 +1,24 @@
 package kuzminki
 
 
-sealed trait Sorting extends Renderable with Wrap {
-  def name: String
+sealed trait Sorting extends Renderable {
+  def col: ColRef
   def template: String
-  def render = template.format(name)
-  def wrap = template.format(safe(name))
+  def render = template.format(col.render)
+  def wrap = template.format(col.wrap)
   def args = Seq.empty[Any]
 }
 
-case class DefaultOrder(name: String) extends Sorting {
+case class Sort(col: ColRef) extends Sorting {
   def template = "%s ASC"
-  def asc = Asc(name)
-  def desc = Desc(name)
+  def asc = Asc(col)
+  def desc = Desc(col)
 }
 
-case class Asc(name: String) extends Sorting {
+case class Asc(col: ColRef) extends Sorting {
   def template = "%s ASC"
 }
 
-case class Desc(name: String) extends Sorting {
+case class Desc(col: ColRef) extends Sorting {
   def template = "%s DESC"
 }

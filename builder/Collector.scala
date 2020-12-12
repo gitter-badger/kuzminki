@@ -3,7 +3,7 @@ package kuzminki
 
 trait Section {
   def render: String
-  def wrapp: String
+  def wrap: String
   def pretty: String
   def args: Seq[Any]
 }
@@ -28,17 +28,17 @@ trait TextOnly extends Section {
 }
 
 
-trait SinglePart extends Render {
+trait SinglePart extends Section {
   def part: Renderable
   def expression: String
   def render = expression.format(part.render)
   def wrap = expression.format(part.wrap)
-  def pretty = expression.format(part.wra)
+  def pretty = expression.format(part.wrap)
   def args = part.args
 }
 
 
-trait MultiPart extends Render {
+trait MultiPart extends Section {
   def parts: Seq[Renderable]
   def expression: String
   def oneLineGlue: String
@@ -61,10 +61,10 @@ trait NoArgs {
 
 // Select
 
-case class SelectSec(parts: Seq[ColumnRef]) extends MultiPart {
+case class SelectSec(parts: Seq[ColRef]) extends MultiPart {
   def expression = "SELECT %s"
-  def oneLineGlue: " AND "
-  def multiLineGlue: "\n  AND"
+  def oneLineGlue = " AND "
+  def multiLineGlue = "\n  AND"
 }
 
 
@@ -108,9 +108,9 @@ case class CrossJoinSec(part: TableRef) extends SinglePart {
 }
 
 
-case class OnSec(leftCol: Col, rightCol: Col) extends Section {
-  def render = leftCol.render + " = " + rightCol.render
-  def wrap = leftCol.wrap + " = " + rightCol.wrap
+case class OnSec(leftCol: ColName, rightCol: ColName) extends Section {
+  def render = "%s = %s".format(leftCol.render, rightCol.render)
+  def wrap = "%s = %s".format(leftCol.wrap, rightCol.wrap)
   def pretty = render + "\n"
   def args = Seq.empty[Any]
 }
@@ -121,10 +121,17 @@ case class WhereChainSec(part: NestedFilters) extends SinglePart {
 }
 
 
-case class WhereAllSec(parts: Seq[Cond]) extends MultiPart {
+case class WhereAllSec(parts: Seq[Filter]) extends MultiPart {
   def expression = "WHERE %s"
   def oneLineGlue = " AND "
   def multiLineGlue = "\n  AND "
+}
+
+
+case class GroupBySec(parts: Seq[ColRef]) extends MultiPart {
+  def expression = "GROUP BY %s"
+  def oneLineGlue = ", "
+  def multiLineGlue = ",\n         "
 }
 
 
@@ -133,7 +140,7 @@ case class HavingChainSec(part: NestedFilters) extends SinglePart {
 }
 
 
-case class HavingAllSec(parts: Seq[Cond]) extends MultiPart {
+case class HavingAllSec(parts: Seq[Filter]) extends MultiPart {
   def expression = "HAVING %s"
   def oneLineGlue = " AND "
   def multiLineGlue = "\n  AND "
@@ -176,25 +183,17 @@ case class InsertIntoSec(part: TableRef) extends SinglePart {
 }
 
 
-case class InsertColumnsSec(parts: Seq[Col]) extends MultiPart {
+case class InsertColumnsSec(parts: Seq[ColName]) extends MultiPart {
   def expression = "(%s)"
   def oneLineGlue = ", "
   def multiLineGlue = ",\n "
 }
 
 
-case class InsertDataSec(pairs: Map[(Col, Any)]) extends Section {
-  def parts = pairs
-  def expression = "(%s)"
-  def oneLineGlue = ", "
-  def multiLineGlue = ",\n "
-}
-
-
-case class InsertNestedSec(nested: SelectStages.Ready) extends Section {
+case class InsertNestedSec(nested: Collector) extends Section {
   def render = nested.render
-  def wrap = nested.wrapped
-  def pretty = nested.indented
+  def wrap = nested.wrap
+  def pretty = nested.pretty
   def args = nested.args
 }
 
@@ -212,12 +211,12 @@ object InsertOnConflictSec extends TextOnly {
 }
 
 
-case class InsertOnConflictColumnSec(part: Col) extends SinglePart {
+case class InsertOnConflictColumnSec(part: ColName) extends SinglePart {
   def expression = "ON CONFLICT (%s)"
 }
 
 
-case class InsertOnConflictOnConstraintSec(part: Col) extends SinglePart {
+case class InsertOnConflictOnConstraintSec(part: ColName) extends SinglePart {
   def expression = "ON CONFLICT ON CONSTRAINT (%s)"
 }
 
@@ -227,7 +226,7 @@ object InsertDoNothingSec extends TextOnly {
 }
 
 
-case class InsertDoUpdate(parts: Seq[Change]) extends Section {
+case class InsertDoUpdate(parts: Seq[Change]) extends MultiPart {
   def expression = "DO UPDATE SET %s"
   def oneLineGlue = ", "
   def multiLineGlue = ",\n              "
@@ -241,7 +240,7 @@ case class QueryResult(template: String, args: Seq[Any])
 
 
 object Collector {
-  def init = PartCollector(Array.empty[Section])
+  def init = Collector(Array.empty[Section])
 }
 
 
@@ -255,20 +254,13 @@ case class Collector(sections: Array[Section]) extends Renderable with Pretty {
 
   def pretty = sections.map(_.pretty).mkString("")
 
-  def args = sections.map(_.args).flatten
+  def args = sections.toSeq.map(_.args).flatten
 
   def renderQuery = QueryResult(render, args)
 
   def wrappedQuery = QueryResult(render, args)
 
   def prettyQuery = QueryResult(render, args)
-
-  def sql = {
-    toPair match {
-      case Pair(tmpl, args) => 
-        SqlWithParams(tmpl, args)
-    }
-  } 
 }
 
 

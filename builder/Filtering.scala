@@ -5,7 +5,7 @@ trait FilterWithOperator extends Renderable {
   def filter: Renderable
   def template: String
   def render = template.format(filter.render)
-  def wrapp = template.format(filter.wrap)
+  def wrap = template.format(filter.wrap)
   def args = filter.args
 }
 
@@ -26,21 +26,21 @@ case class OrFilter(filter: Renderable) extends FilterWithOperator {
 
 
 object NestedFilters {
-  def init = NestedFilters(1, Array.empty[AndOrCond])
+  def init = NestedFilters(1, Array.empty[FilterWithOperator])
 }
 
 
 case class NestedFilters(level: Int, filters: Array[FilterWithOperator]) extends Renderable with Pretty {
   
   def add(filter: FilterWithOperator) = NestedFilters(level, filters :+ filter)
-  def child = CondCollector(level + 1, Array.empty[FilterWithOperator])
+  def child = NestedFilters(level + 1, Array.empty[FilterWithOperator])
 
   def padding = " " * level * 4
   def base = " " * (level - 1) * 4
 
   def render = {
     "(%s)".format(
-      conds
+      filters
         .map(_.render)
         .mkString(" ")
     )
@@ -48,22 +48,23 @@ case class NestedFilters(level: Int, filters: Array[FilterWithOperator]) extends
 
   def wrap = {
     "(%s)".format(
-      conds
+      filters
         .map(_.wrap)
         .mkString(" ")
     )
   }
 
   def pretty = {
-    "(\n%s)".filter(
-      conds
+    "(\n%s\n%s)".format(
+      filters
         .map(_.render)
         .map(padding + _)
-        .mkString("\n") + base
+        .mkString("\n"),
+      base
     )
   }
 
-  def args = filters.map(_.args).flatten
+  def args = filters.toSeq.map(_.args).flatten
 }
 
 
@@ -77,7 +78,7 @@ trait Filtering {
 
 
 trait FilteringStart {
-  def col(part: Part): Filtering
+  def col(filter: Filter): Filtering
 }
 
 

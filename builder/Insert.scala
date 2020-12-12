@@ -1,7 +1,6 @@
 package kuzminki
 
 import io.rdbc.sapi._
-import containers._
 
 
 object InsertStages {
@@ -11,31 +10,30 @@ object InsertStages {
   }
 
   trait ColsOrKeyValue {
-    def columns(args: Col*): Values
-    def data(args: (String, Any)*): OnConflict
+    def columns(cols: ColName*): Values
+    def data(args: (ColName, Any)*): OnConflict
     def data(args: Map[String, Any]): OnConflict
   }
 
   trait Values {
-    def values(query: SelectStages.Ready): OnConflict
+    def values(nested: Collector): OnConflict
     def values(args: Any*): OnConflict
     def valuesList(args: List[Any]): OnConflict
   }
 
   trait OnConflict extends Ready {
     def onConflict: OnConflictDo
-    def onConflict(col: String): OnConflictDo
-    def onConflictOnConstraint(const: String): OnConflictDo
+    def onConflict(col: ColName): OnConflictDo
+    def onConflictOnConstraint(const: ColName): OnConflictDo
   }
 
   trait OnConflictDo {
     def doNothing: Ready
-    def doUpdate(args: (Col, Any)*): Ready
-    def doUpdateList(args: List[(String, Any)]): Ready
+    def doUpdate(changes: Change*): Ready
+    def doUpdateList(changes: List[Change]): Ready
   }
 
   trait Ready {
-    def sql: SqlWithParams
     def print: Unit
   }
 }
@@ -44,27 +42,26 @@ object InsertStages {
 import InsertStages._
 
 
-class Insert(parts: Collector) extends Into
+case class Insert(sections: Collector) extends Into
                                       with ColsOrKeyValue
                                       with Values
                                       with OnConflict
                                       with OnConflictDo
                                       with Ready {
 
-  def next(section: section): Insert = new Insert(parts.add(section))
+  def next(section: Section): Insert = Insert(sections.add(section))
 
   def into(table: TableName): ColsOrKeyValue = next(InsertIntoSec(table))
 
-  def columns(cols: Col*): Values = next(InsertColumnsSec(cols))
+  def columns(cols: ColName*): Values = next(InsertColumnsSec(cols))
 
   // values
 
-  def data(args: (Col, Any)*): OnConflict = values(args.toMap)
+  def data(args: (ColName, Any)*): OnConflict = columns(args.map(_._1): _*).values(args.map(_._2): _*)
 
-  def data(args: Map[Col, Any]) = columns(args.keys).values(args.values)
+  def data(args: Map[String, Any]) = columns(args.keys.map(ColName(_)).toSeq: _*).values(args.values.toSeq: _*)
     
-
-  def values(query: SelectStages.Ready): OnConflict = next(InsertNestedSec(query))
+  def values(nested: Collector): OnConflict = next(InsertNestedSec(nested))
 
   def values(args: Any*): OnConflict = next(InsertValuesSec(args))
 
@@ -74,23 +71,21 @@ class Insert(parts: Collector) extends Into
 
   def onConflict: OnConflictDo = next(InsertOnConflictSec)
   
-  def onConflict(col: Col): OnConflictDo = next(InsertOnConflictColumnSec(col))
+  def onConflict(col: ColName): OnConflictDo = next(InsertOnConflictColumnSec(col))
 
-  def onConflictOnConstraint(const: Col): OnConflictDo = next(InsertOnConflictOnConstraintSec(const))
+  def onConflictOnConstraint(const: ColName): OnConflictDo = next(InsertOnConflictOnConstraintSec(const))
 
   // on conflict do
 
-  def doNothing: Ready = next(InsertOnConflictSec) = next(InsertDoNothingSec)
+  def doNothing: Ready = next(InsertOnConflictSec)
 
-  def doUpdate(changes: Change*): Where = next(InsertDoUpdate(changes))
+  def doUpdate(changes: Change*): Ready = next(InsertDoUpdate(changes))
 
-  def doUpdateList(changes: List[Change]): Where = next(InsertDoUpdate(changes))
-
-  def sql: SqlWithParams = parts.sql
+  def doUpdateList(changes: List[Change]): Ready = next(InsertDoUpdate(changes))
 
   def print: Unit = {
-    sql match {
-      case SqlWithParams(tmpl, args) =>
+    sections.renderQuery match {
+      case QueryResult(tmpl, args) =>
         println(tmpl + " - " + args) 
     }
   }

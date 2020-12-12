@@ -3,12 +3,15 @@ package kuzminki
 
 object implicits {
 
-  implicit val stringToColumn: String => Col = name => Col(name)
-  implicit val stringToFilter: String => Condition = name => Condition(name)
+  implicit val stringToColName: String => ColName = name => ColName(name)
+  implicit val stringToFilter: String => FilterCol = name => FilterCol(name)
 
   implicit val stringToTableName: String => TableName = name => TableName(name)
-  implicit val tupleToTableNameAlias: Tuple2[String, String] => TableNameAlias = pair => TableNameAlias(pair._1, pair._2)
+  implicit val tupleToTableAlias: Tuple2[String, String] => TableAlias = tup => TableAlias(tup._1, tup._2)
 
-  implicit val stringToDefaultOrder: String => DefaultOrder = name => DefaultOrder(name)
-  implicit val tupleToChange: Tuple2[String, Any] => Change = pair => Change(Col(pair._1), Change.box(pair._2))
+  implicit val colToDefaultOrder: ColRef => Sort = col => Sort(col)
+  implicit val stringToDefaultOrder: String => Sort = name => Sort(ColName(name))
+  
+  implicit val tupleToChange: Tuple2[String, Any] => Change = tup => Change(ColName(tup._1), Change.box(tup._2))
+  implicit val stringTupToColNameTup: Tuple2[String, Any] => Tuple2[ColName, Any] = tup => (ColName(tup._1), tup._2)
 }

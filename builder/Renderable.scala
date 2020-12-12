@@ -12,7 +12,7 @@ object Renderable {
 }
 
 trait Wrap {
-  def safe(input) = Renderable.wrap(input)
+  def safe(input: String) = Renderable.wrap(input)
 }
 
 trait Pretty {
