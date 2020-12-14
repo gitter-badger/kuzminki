@@ -1,8 +1,8 @@
 package kuzminki
 
 
-trait FilterWithOperator extends Renderable {
-  def filter: Renderable
+trait ChainFilter extends Renderable {
+  val filter: Renderable
   def template: String
   def render = template.format(filter.render)
   def wrap = template.format(filter.wrap)
@@ -10,74 +10,40 @@ trait FilterWithOperator extends Renderable {
 }
 
 
-case class StartFilter(filter: Renderable) extends FilterWithOperator {
+case class StartFilter(filter: Filter) extends ChainFilter {
   def template = "%s"
 }
 
 
-case class AndFilter(filter: Renderable) extends FilterWithOperator {
+case class AndFilter(filter: Filter) extends ChainFilter {
   def template = "AND %s"
 }
 
 
-case class OrFilter(filter: Renderable) extends FilterWithOperator {
+case class OrFilter(filter: Filter) extends ChainFilter {
   def template = "OR %s"
 }
 
 
-object NestedFilters {
-  def init = NestedFilters(1, Array.empty[FilterWithOperator])
+case class AndChain(filter: NestedFilters) extends ChainFilter {
+  def template = "AND (%s)"
 }
 
 
-case class NestedFilters(level: Int, filters: Array[FilterWithOperator]) extends RenderablePretty {
-  
-  def add(filter: FilterWithOperator) = NestedFilters(level, filters :+ filter)
-  def child = NestedFilters(level + 1, Array.empty[FilterWithOperator])
+case class OrChain(filter: NestedFilters) extends ChainFilter {
+  def template = "OR (%s)"
+}
 
-  def padding = " " * level * 4
-  def base = " " * (level - 1) * 4
 
-  def template = {
-    level match {
-      case 1 => "%s"
-      case _ => "(%s)"
-    }
-  }
+object NestedFilters {
+  def init = NestedFilters(Array.empty[ChainFilter])
+}
 
-  def prettyTemplate = {
-    level match {
-      case 1 => "%s\n%s"
-      case _ => "(%s\n%s)"
-    }
-  }
 
-  def render = {
-    template.format(
-      filters
-        .map(_.render)
-        .mkString(" ")
-    )
-  }
-
-  def wrap = {
-    template.format(
-      filters
-        .map(_.wrap)
-        .mkString(" ")
-    )
-  }
-
-  def pretty = {
-    prettyTemplate.format(
-      filters
-        .map(_.render)
-        .map(padding + _)
-        .mkString("\n"),
-      base
-    )
-  }
-
+case class NestedFilters(filters: Array[ChainFilter]) extends Renderable {
+  def add(filter: ChainFilter) = NestedFilters(filters :+ filter)
+  def render = filters.map(_.render).mkString(" ")
+  def wrap = filters.map(_.wrap).mkString(" ")
   def args = filters.toSeq.map(_.args).flatten
 }
 
@@ -104,19 +70,21 @@ object Filtering {
 case class FilteringChain(filters: NestedFilters) extends Filtering
                                                      with FilteringStart {
 
-  private def next(filter: FilterWithOperator) = FilteringChain(filters.add(filter))
-
-  private def child = FilteringChain(filters.child)
+  private def next(filter: ChainFilter) = FilteringChain(filters.add(filter))
 
   def col(filter: Filter): Filtering = next(StartFilter(filter))
 
   def and(filter: Filter): Filtering = next(AndFilter(filter))
 
-  def and(nested: FilteringStart => Filtering): Filtering = next(AndFilter(nested(child).filters))
+  def and(nested: FilteringStart => Filtering): Filtering = {
+    next(AndChain(nested(Filtering.init).filters))
+  }
 
   def or(filter: Filter): Filtering = next(OrFilter(filter))
 
-  def or(nested: FilteringStart => Filtering): Filtering = next(OrFilter(nested(child).filters))
+  def or(nested: FilteringStart => Filtering): Filtering = {
+    next(OrChain(nested(Filtering.init).filters))
+  }
 }
 
 

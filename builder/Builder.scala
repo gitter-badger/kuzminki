@@ -8,13 +8,15 @@ import kuzminki.implicits._
 
 object Builder {
   
-  def select(cols: ColRef*) = new Select(Collector.init).columns(cols: _*)
+  def select(cols: ColRef*) = Select(Collector.init).columns(cols: _*)
 
-  def select(cols: List[ColRef]) = new Select(Collector.init).columnsList(cols)
+  def select(cols: List[ColRef]) = Select(Collector.init).columnsList(cols)
 
-  def insert = new Insert(Collector.init)
+  def delete: DeleteStages.DeleteFrom = Delete(Collector.init)
 
-  def update(table: TableName) = new Update(Collector.init).table(table)
+  def insert: InsertStages.InsertInto = Insert(Collector.init)
+
+  def update(table: TableName) = Update(Collector.init).table(table)
 }
 
 

@@ -32,9 +32,10 @@ import UpdateStages._
 
 
 case class Update(sections: Collector) extends Table
-                                  with SetValues
-                                  with Where
-                                  with Ready {
+                                          with SetValues
+                                          with Where
+                                          with Ready
+                                          with Printing {
 
   def next(section: Section): Update = Update(sections.add(section))
 
@@ -49,27 +50,6 @@ case class Update(sections: Collector) extends Table
   def where(conds: Filter*): Ready = next(WhereAllSec(conds))
 
   def whereList(conds: List[Filter]): Ready = next(WhereAllSec(conds))
-
-  def print: Unit = {
-    sections.renderQuery match {
-      case QueryResult(tmpl, args) =>
-        println(tmpl + " - " + args) 
-    }
-  }
-
-  def wrapped: Unit = {
-    sections.wrappedQuery match {
-      case QueryResult(tmpl, args) =>
-        println(tmpl + " - " + args) 
-    }
-  }
-
-  def pretty: Unit = {
-    sections.prettyQuery match {
-      case QueryResult(tmpl, args) =>
-        println(tmpl + "\n" + args) 
-    }
-  }
 }
 
 

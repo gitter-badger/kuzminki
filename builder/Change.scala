@@ -9,7 +9,6 @@ case class Change(column: ColName, mod: Modification) extends Renderable {
 }
 
 object Change {
-  
   def box(value: Any): Modification = {
     value match {
       case mod: Modification => mod

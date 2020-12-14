@@ -15,12 +15,3 @@ trait Wrap {
   def safe(input: String) = Renderable.wrap(input)
 }
 
-trait RenderablePretty extends Renderable {
-  def pretty: String
-
-}
-
-trait Pretty {
-  def pretty: String
-
-}

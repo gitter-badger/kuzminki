@@ -5,7 +5,7 @@ import io.rdbc.sapi._
 
 object InsertStages {
 
-  trait Into {
+  trait InsertInto {
     def into(table: TableName): ColsOrKeyValue
   }
 
@@ -44,12 +44,13 @@ object InsertStages {
 import InsertStages._
 
 
-case class Insert(sections: Collector) extends Into
-                                      with ColsOrKeyValue
-                                      with Values
-                                      with OnConflict
-                                      with OnConflictDo
-                                      with Ready {
+case class Insert(sections: Collector) extends InsertInto
+                                          with ColsOrKeyValue
+                                          with Values
+                                          with OnConflict
+                                          with OnConflictDo
+                                          with Ready
+                                          with Printing {
 
   def next(section: Section): Insert = Insert(sections.add(section))
 
@@ -84,27 +85,6 @@ case class Insert(sections: Collector) extends Into
   def doUpdate(changes: Change*): Ready = next(InsertDoUpdate(changes))
 
   def doUpdateList(changes: List[Change]): Ready = next(InsertDoUpdate(changes))
-
-  def print: Unit = {
-    sections.renderQuery match {
-      case QueryResult(tmpl, args) =>
-        println(tmpl + " - " + args) 
-    }
-  }
-
-  def wrapped: Unit = {
-    sections.wrappedQuery match {
-      case QueryResult(tmpl, args) =>
-        println(tmpl + " - " + args) 
-    }
-  }
-
-  def pretty: Unit = {
-    sections.prettyQuery match {
-      case QueryResult(tmpl, args) =>
-        println(tmpl + "\n" + args) 
-    }
-  }
 }
 
 

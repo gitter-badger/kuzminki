@@ -72,16 +72,17 @@ import SelectStages._
 
 
 case class Select(sections: Collector) extends Columns
-                                  with From
-                                  with WhereOrJoin
-                                  with JoinOn
-                                  with WhereOrGroup
-                                  with Having
-                                  with Where
-                                  with OrderBy
-                                  with OffsetLimit
-                                  with Limit
-                                  with Ready {
+                                          with From
+                                          with WhereOrJoin
+                                          with JoinOn
+                                          with WhereOrGroup
+                                          with Having
+                                          with Where
+                                          with OrderBy
+                                          with OffsetLimit
+                                          with Limit
+                                          with Ready
+                                          with Printing {
 
   def next(section: Section): Select = Select(sections.add(section))
 
@@ -156,27 +157,6 @@ case class Select(sections: Collector) extends Columns
   // exec
 
   def asNested: Collector = sections
-
-  def print: Unit = {
-    sections.renderQuery match {
-      case QueryResult(tmpl, args) =>
-        println(tmpl + " - " + args) 
-    }
-  }
-
-  def wrapped: Unit = {
-    sections.wrappedQuery match {
-      case QueryResult(tmpl, args) =>
-        println(tmpl + " - " + args) 
-    }
-  }
-
-  def pretty: Unit = {
-    sections.prettyQuery match {
-      case QueryResult(tmpl, args) =>
-        println(tmpl + "\n" + args) 
-    }
-  }
 }
 
 
