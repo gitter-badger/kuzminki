@@ -1,4 +1,4 @@
-package kuzminki
+package kuzminki.builder
 
 
 trait Renderable {

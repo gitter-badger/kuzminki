@@ -1,4 +1,6 @@
-package kuzminki
+package kuzminki.strings
+
+import kuzminki.builder._
 
 
 trait ColRef extends Renderable {

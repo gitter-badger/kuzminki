@@ -1,4 +1,4 @@
-package kuzminki
+package kuzminki.builder
 
 import com.github.vertical_blank.sqlformatter.scala.SqlFormatter
 
@@ -39,53 +39,53 @@ trait MultiPart extends Section {
 
 // Select
 
-case class SelectSec(parts: Seq[ColRef]) extends MultiPart {
+case class SelectSec(parts: Seq[Renderable]) extends MultiPart {
   def expression = "SELECT %s"
   def glue = ", "
 }
 
 
-case class FromSec(part: TableRef) extends SinglePart {
+case class FromSec(part: Renderable) extends SinglePart {
   def expression = "FROM %s"
 }
 
 
-case class InnerJoinSec(part: TableRef) extends SinglePart {
+case class InnerJoinSec(part: Renderable) extends SinglePart {
   def expression = "INNER JOIN %s"
 }
 
 
-case class LeftJoinSec(part: TableRef) extends SinglePart {
+case class LeftJoinSec(part: Renderable) extends SinglePart {
   def expression = "LEFT JOIN %s"
 }
 
 
-case class LeftOuterJoinSec(part: TableRef) extends SinglePart {
+case class LeftOuterJoinSec(part: Renderable) extends SinglePart {
   def expression = "LEFT OUTER JOIN %s"
 }
 
 
-case class RightJoinSec(part: TableRef) extends SinglePart {
+case class RightJoinSec(part: Renderable) extends SinglePart {
   def expression = "RIGHT JOIN %s"
 }
 
 
-case class RightOuterJoinSec(part: TableRef) extends SinglePart {
+case class RightOuterJoinSec(part: Renderable) extends SinglePart {
   def expression = "RIGHT OUTER JOIN %s"
 }
 
 
-case class FullOuterJoinSec(part: TableRef) extends SinglePart {
+case class FullOuterJoinSec(part: Renderable) extends SinglePart {
   def expression = "FULL OUTER JOIN %s"
 }
 
 
-case class CrossJoinSec(part: TableRef) extends SinglePart {
+case class CrossJoinSec(part: Renderable) extends SinglePart {
   def expression = "CROSS JOIN %s"
 }
 
 
-case class OnSec(leftCol: ColName, rightCol: ColName) extends Section {
+case class OnSec(leftCol: Renderable, rightCol: Renderable) extends Section {
   def expression = "ON %s = %s"
   def render = expression.format(leftCol.render, rightCol.render)
   def wrap = expression.format(leftCol.wrap, rightCol.wrap)
@@ -93,35 +93,35 @@ case class OnSec(leftCol: ColName, rightCol: ColName) extends Section {
 }
 
 
-case class WhereChainSec(part: NestedFilters) extends SinglePart {
+case class WhereChainSec(part: Renderable) extends SinglePart {
   def expression = "WHERE %s"
 }
 
 
-case class WhereAllSec(parts: Seq[Filter]) extends MultiPart {
+case class WhereAllSec(parts: Seq[Renderable]) extends MultiPart {
   def expression = "WHERE %s"
   def glue = " AND "
 }
 
 
-case class GroupBySec(parts: Seq[ColRef]) extends MultiPart {
+case class GroupBySec(parts: Seq[Renderable]) extends MultiPart {
   def expression = "GROUP BY %s"
   def glue = ", "
 }
 
 
-case class HavingChainSec(part: NestedFilters) extends SinglePart {
+case class HavingChainSec(part: Renderable) extends SinglePart {
   def expression = "HAVING %s"
 }
 
 
-case class HavingAllSec(parts: Seq[Filter]) extends MultiPart {
+case class HavingAllSec(parts: Seq[Renderable]) extends MultiPart {
   def expression = "HAVING %s"
   def glue = " AND "
 }
 
 
-case class OrderBySec(parts: Seq[Sorting]) extends MultiPart {
+case class OrderBySec(parts: Seq[Renderable]) extends MultiPart {
   def expression = "ORDER BY %s"
   def glue = ", "
 }
@@ -138,36 +138,36 @@ case class LimitSec(arg: Int) extends SingleArg {
 
 // delete
 
-case class DeleteFromSec(part: TableRef) extends SinglePart {
+case class DeleteFromSec(part: Renderable) extends SinglePart {
   def expression = "DELETE FROM %s"
 }
 
 // Update
 
-case class UpdateSec(part: TableRef) extends SinglePart {
+case class UpdateSec(part: Renderable) extends SinglePart {
   def expression = "UPDATE %s"
 }
 
 
-case class UpdateSetSec(parts: Seq[Change]) extends MultiPart {
+case class UpdateSetSec(parts: Seq[Renderable]) extends MultiPart {
   def expression = "SET %s"
   def glue = ", "
 }
 
 // Insert
 
-case class InsertIntoSec(part: TableRef) extends SinglePart {
+case class InsertIntoSec(part: Renderable) extends SinglePart {
   def expression = "INSERT INTO %s"
 }
 
 
-case class InsertColumnsSec(parts: Seq[ColName]) extends MultiPart {
+case class InsertColumnsSec(parts: Seq[Renderable]) extends MultiPart {
   def expression = "(%s)"
   def glue = ", "
 }
 
 
-case class InsertNestedSec(part: Collector) extends SinglePart {
+case class InsertNestedSec(part: Renderable) extends SinglePart {
   def expression = "(%s)"
 }
 
@@ -185,12 +185,12 @@ object InsertOnConflictSec extends TextOnly {
 }
 
 
-case class InsertOnConflictColumnSec(part: ColName) extends SinglePart {
+case class InsertOnConflictColumnSec(part: Renderable) extends SinglePart {
   def expression = "ON CONFLICT (%s)"
 }
 
 
-case class InsertOnConflictOnConstraintSec(part: ColName) extends SinglePart {
+case class InsertOnConflictOnConstraintSec(part: Renderable) extends SinglePart {
   def expression = "ON CONFLICT ON CONSTRAINT (%s)"
 }
 
@@ -200,7 +200,7 @@ object InsertDoNothingSec extends TextOnly {
 }
 
 
-case class InsertDoUpdate(parts: Seq[Change]) extends MultiPart {
+case class InsertDoUpdate(parts: Seq[Renderable]) extends MultiPart {
   def expression = "DO UPDATE SET %s"
   def glue = ", "
 }

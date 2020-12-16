@@ -1,5 +1,6 @@
-package kuzminki
+package kuzminki.strings
 
+import kuzminki.builder._
 import io.rdbc.sapi._
 
 

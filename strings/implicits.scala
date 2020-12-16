@@ -1,4 +1,6 @@
-package kuzminki
+package kuzminki.strings
+
+import kuzminki.builder._
 
 
 object implicits {

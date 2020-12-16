@@ -1,12 +1,13 @@
-package kuzminki
+package kuzminki.strings
 
 import scala.annotation.tailrec
 import scala.collection.mutable.ArrayBuffer
 import io.rdbc.sapi._
-import kuzminki.implicits._
+import kuzminki.builder._
+import kuzminki.strings.implicits._
 
 
-object Builder {
+object StringQuery {
   
   def select(cols: ColRef*) = Select(Collector.init).columns(cols: _*)
 

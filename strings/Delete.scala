@@ -1,5 +1,6 @@
-package kuzminki
+package kuzminki.strings
 
+import kuzminki.builder._
 import io.rdbc.sapi._
 
 
@@ -28,7 +29,7 @@ import DeleteStages._
 case class Delete(sections: Collector) extends DeleteFrom
                                           with Where
                                           with Ready
-                                          with Printing{
+                                          with Printing {
 
   def next(section: Section): Delete = Delete(sections.add(section))
 

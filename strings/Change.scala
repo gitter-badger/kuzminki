@@ -1,5 +1,6 @@
-package kuzminki
+package kuzminki.strings
 
+import kuzminki.builder._
 
 
 case class Change(column: ColName, mod: Modification) extends Renderable {
