@@ -1,4 +1,4 @@
-package kuzminki
+package kuzminki.rdbc
 
 import io.rdbc.sapi._
 

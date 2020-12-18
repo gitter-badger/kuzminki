@@ -1,4 +1,4 @@
-package kuzminki
+package kuzminki.rdbc
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.{Future, Promise}
@@ -21,6 +21,8 @@ import io.rdbc.pgsql.transport.netty.sapi.NettyPgConnectionFactory.Config
 
 import io.rdbc.pool.sapi.ConnectionPool
 import io.rdbc.pool.sapi.ConnectionPoolConfig
+
+import kuzminki.model.ModelCollector
 
 //import transport.actions.{Action, Batch}
 
@@ -51,7 +53,7 @@ object KuzminkiPool {
 }
 
 
-class Kuzminki(conf: SystemConfig)(implicit system: ActorSystem) extends LazyLogging {
+class KuzminkiConn(conf: SystemConfig)(implicit system: ActorSystem) extends LazyLogging {
 
   logger.info("Start")
 
@@ -70,6 +72,14 @@ class Kuzminki(conf: SystemConfig)(implicit system: ActorSystem) extends LazyLog
   }
 
   private def noArgs(statement: String) = SqlWithParams(statement, Vector.empty[Any])
+
+  // model
+
+  def modelSelect(template: String, args: Seq[Any]): Future[List[Row]] = {
+    pool.withConnection(_.statement(SqlWithParams(template, args.toVector)).executeForSet).map(_.toList).recover {
+      case ex: Exception => throw transformError(ex.getMessage, SqlWithParams(template, args.toVector))
+    }
+  }
 
   // find
 

@@ -35,7 +35,7 @@ trait MultiPart extends Section {
 
 // Select
 
-case class SelectSec(parts: Seq[ModelRender]) extends MultiPart {
+case class SelectSec(parts: Seq[ModelCol]) extends MultiPart {
   def expression = "SELECT %s"
   def glue = ", "
 }
@@ -205,13 +205,15 @@ case class QueryResult(template: String, args: Seq[Any])
 
 
 object ModelCollector {
-  def init = ModelCollector(Array.empty[Section])
+  def init = ModelCollector(Array.empty[Section], Seq.empty[ModelCol])
 }
 
 
-case class ModelCollector(sections: Array[Section]) extends ModelRender {
+case class ModelCollector(sections: Array[Section], cols: Seq[ModelCol]) extends ModelRender {
+
+  def select(section: SelectSec) = ModelCollector(sections :+ section, section.parts)
   
-  def add(section: Section) = ModelCollector(sections :+ section)
+  def add(section: Section) = ModelCollector(sections :+ section, cols)
 
   def render = sections.map(_.render).mkString(" ")
 

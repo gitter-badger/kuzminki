@@ -1,5 +1,7 @@
 package kuzminki.model
 
+import scala.concurrent.Future
+
 
 object ModelSelectStages {
 
@@ -29,25 +31,26 @@ object ModelSelectStages {
     def asNested: ModelCollector
     def print: Unit
     def pretty: Unit
+    def run: Future[List[Seq[Any]]]
   }
 }
 
 import ModelSelectStages._
 
 
-case class ModelSelect[T <: Model](model: T, sections: ModelCollector) extends Columns[T]
-                                                                     with Where[T]
-                                                                     with OrderBy[T]
-                                                                     with OffsetLimit
-                                                                     with Limit
-                                                                     with Printing {
+case class ModelSelect[T <: Model](model: T, sections: ModelCollector, exec: Executor) extends Columns[T]
+                                                                                          with Where[T]
+                                                                                          with OrderBy[T]
+                                                                                          with OffsetLimit
+                                                                                          with Limit
+                                                                                          with Printing {
 
   def next(section: Section): ModelSelect[T] = next(sections.add(section))
-  def next(sections: ModelCollector): ModelSelect[T] = ModelSelect(model, sections)
+  def next(sections: ModelCollector): ModelSelect[T] = ModelSelect(model, sections, exec)
 
   def columns(cols: T => Seq[ModelCol]): Where[T] = {
     next(
-      sections.add(
+      sections.select(
         SelectSec(cols(model))
       ).add(
         FromSec(ModelTable(model))
@@ -78,6 +81,8 @@ case class ModelSelect[T <: Model](model: T, sections: ModelCollector) extends C
   def limit(num: Int): Ready = next(LimitSec(num))
 
   def asNested = sections
+
+  def run = exec.run(sections)
 }
 
 
