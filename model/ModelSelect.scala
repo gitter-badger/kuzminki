@@ -1,8 +1,5 @@
 package kuzminki.model
 
-import kuzminki.builder._
-import kuzminki.strings.TableName
-
 
 object ModelSelectStages {
 
@@ -11,7 +8,8 @@ object ModelSelectStages {
   }
 
   trait Where[T] {
-    def where(conds: T => Seq[Filter]): OrderBy[T]
+    def whereOne(conds: T => ModelFilter): OrderBy[T]
+    def where(conds: T => Seq[ModelFilter]): OrderBy[T]
   }
 
   trait OrderBy[T] extends OffsetLimit {
@@ -28,7 +26,7 @@ object ModelSelectStages {
   }
 
   trait Ready {
-    def asNested: Collector
+    def asNested: ModelCollector
     def print: Unit
     def pretty: Unit
   }
@@ -37,24 +35,33 @@ object ModelSelectStages {
 import ModelSelectStages._
 
 
-case class ModelSelect[T <: Model](model: T, sections: Collector) extends Columns[T]
+case class ModelSelect[T <: Model](model: T, sections: ModelCollector) extends Columns[T]
                                                                      with Where[T]
                                                                      with OrderBy[T]
                                                                      with OffsetLimit
                                                                      with Limit
                                                                      with Printing {
 
-  def next(section: Section) = ModelSelect(model, sections.add(section))
+  def next(section: Section): ModelSelect[T] = next(sections.add(section))
+  def next(sections: ModelCollector): ModelSelect[T] = ModelSelect(model, sections)
 
   def columns(cols: T => Seq[ModelCol]): Where[T] = {
     next(
-      SelectSec(cols(model))
-    ).from(TableName(model.tableName))
+      sections.add(
+        SelectSec(cols(model))
+      ).add(
+        FromSec(ModelTable(model))
+      )
+    )
   }
 
-  def from(table: TableName): Where[T] = next(FromSec(table))
+  def whereOne(conds: T => ModelFilter): OrderBy[T] = {
+    next(
+      WhereAllSec(Seq(conds(model)))
+    )
+  }
 
-  def where(conds: T => Seq[Filter]): OrderBy[T] = {
+  def where(conds: T => Seq[ModelFilter]): OrderBy[T] = {
     next(
       WhereAllSec(conds(model))
     )

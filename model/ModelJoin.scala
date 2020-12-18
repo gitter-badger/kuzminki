@@ -1,21 +1,24 @@
 package kuzminki.model
 
-import kuzminki.builder._
-import kuzminki.strings.TableName
+import scala.reflect.ClassTag
 
 
-object ModelSelectStages {
+object ModelJoinStages {
 
-  trait Columns[T] {
-    def columns(cols: T => Seq[ModelCol]): Where[T]
+  trait Columns[A <: Model, B <: Model] {
+    def columns(cols: Join[A, B] => Seq[ModelCol]): JoinOn[A, B]
   }
 
-  trait Where[T] {
-    def where(conds: T => Seq[Filter]): OrderBy[T]
+  trait JoinOn[A <: Model, B <: Model] {
+    def joinOn(leftOn: A => IntCol, rightOn: B => IntCol): Where[A, B]
   }
 
-  trait OrderBy[T] extends OffsetLimit {
-    def orderBy(cols: T => Seq[ModelSorting]): OffsetLimit
+  trait Where[A <: Model, B <: Model] {
+    def where(conds: Join[A, B] => Seq[ModelFilter]): OrderBy[A, B]
+  }
+
+  trait OrderBy[A <: Model, B <: Model] extends OffsetLimit {
+    def orderBy(cols: Join[A, B] => Seq[ModelSorting]): OffsetLimit
   }
 
   trait OffsetLimit extends Limit {
@@ -28,65 +31,66 @@ object ModelSelectStages {
   }
 
   trait Ready {
-    def asNested: Collector
+    def asNested: ModelCollector
     def print: Unit
     def pretty: Unit
   }
 }
 
-import ModelSelectStages._
+import ModelJoinStages._
 
 
 case class Join[A <: Model, B <: Model](a: A, b: B) {
+  a.__prefix = Some("a")
+  b.__prefix = Some("b")
   def left = a
   def right = b
 }
 
 
-case class ModelJoin[A <: Model, B <: Model](join: Join[A, B], sections: Collector) extends Columns[A, B]
+case class ModelJoin[A <: Model, B <: Model](join: Join[A, B], sections: ModelCollector) extends Columns[A, B]
+                                                                                       with JoinOn[A, B]
                                                                                        with Where[A, B]
                                                                                        with OrderBy[A, B]
                                                                                        with OffsetLimit
                                                                                        with Limit
                                                                                        with Printing {
 
-  def next(section: Section) = ModelSelect(model, sections.add(section))
+  def next(section: Section): ModelJoin[A, B] = next(sections.add(section))
+  def next(sections: ModelCollector): ModelJoin[A, B] = ModelJoin(join, sections)
 
-  def columns(cols: Join[A, B] => Seq[ModelCol]): Where[A, B] = {
+  def leftTable = ModelTable(join.a)
+  def rightTable = ModelTable(join.b)
+
+  def columns(cols: Join[A, B] => Seq[ModelCol]): JoinOn[A, B] = {
     next(
-      SelectSec(cols(model))
-    ).from(TableName(join.a.tableName).as("a"))
-  }
-
-  def from(table: TableName): Where[A, B] = next(FromSec(table))
-
-  def where(conds: Join[A, B] => Seq[Filter]): OrderBy[T] = {
-    next(
-      WhereAllSec(conds(model))
+      sections.add(
+        SelectSec(cols(join))
+      ).add(
+        FromSec(leftTable)
+      )
     )
   }
 
-  def join: JoinOn = next(InnerJoinSec(TableName(join.a.tableName).as("b")))
+  def joinOn(leftOn: A => IntCol, rightOn: B => IntCol): Where[A, B] = {
+    next(
+      sections.add(
+        InnerJoinSec(rightTable)
+      ).add(
+        OnSec(leftOn(join.a), rightOn(join.b))
+      )
+    )
+  }
 
-  def innerJoin: JoinOn = next(InnerJoinSec(TableName(join.a.tableName).as("b")))
-
-  def leftJoin: JoinOn = next(LeftJoinSec(TableName(join.a.tableName).as("b")))
-
-  def leftOuterJoin: JoinOn = next(LeftOuterJoinSec(TableName(join.a.tableName).as("b")))
-
-  def rightJoin: JoinOn = next(RightJoinSec(TableName(join.a.tableName).as("b")))
-
-  def rightOuterJoin: JoinOn = next(RightOuterJoinSec(TableName(join.a.tableName).as("b")))
-
-  def fullOuterJoin: JoinOn = next(FullOuterJoinSec(TableName(join.a.tableName).as("b")))
-
-  def crossJoin: JoinOn = next(CrossJoinSec(TableName(join.a.tableName).as("b")))
-
-  def on
+  def where(conds: Join[A, B] => Seq[ModelFilter]): OrderBy[A, B] = {
+    next(
+      WhereAllSec(conds(join))
+    )
+  }
 
   def orderBy(cols: Join[A, B] => Seq[ModelSorting]): OffsetLimit = {
     next(
-      OrderBySec(cols(model))
+      OrderBySec(cols(join))
     )
   }
 

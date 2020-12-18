@@ -1,7 +1,5 @@
 package kuzminki.model
 
-import kuzminki.builder._
-
 
 trait Underlying {
   def col: ModelCol
@@ -10,55 +8,55 @@ trait Underlying {
 
 trait UniversalFilters[T] extends Underlying {
   
-  def matches(value: T): Filter = FilterMatches(col, value)
-  def ===(value: T): Filter = matches(value)
+  def matches(value: T): ModelFilter = FilterMatches(col, value)
+  def ===(value: T): ModelFilter = matches(value)
 
-  def not(value: T): Filter = FilterNot(col, value)
-  def !==(value: T): Filter = not(value)
+  def not(value: T): ModelFilter = FilterNot(col, value)
+  def !==(value: T): ModelFilter = not(value)
   
-  def isNull: Filter = FilterIsNull(col)
-  def isNotNull: Filter = FilterIsNotNull(col)
+  def isNull: ModelFilter = FilterIsNull(col)
+  def isNotNull: ModelFilter = FilterIsNotNull(col)
 
-  def in(value: Seq[T]): Filter = FilterIn(col, value)
+  def in(value: Seq[T]): ModelFilter = FilterIn(col, value)
 }
 
 
 trait ComparativeFilters[T] extends Underlying {
 
-  def gt(value: T): Filter = FilterGt(col, value)
-  def >(value: T): Filter = gt(value)
+  def gt(value: T): ModelFilter = FilterGt(col, value)
+  def >(value: T): ModelFilter = gt(value)
 
-  def gte(value: T): Filter = FilterGte(col, value)
-  def >=(value: T): Filter = gte(value)
+  def gte(value: T): ModelFilter = FilterGte(col, value)
+  def >=(value: T): ModelFilter = gte(value)
 
-  def lt(value: T): Filter = FilterLt(col, value)
-  def <(value: T): Filter = lt(value)
+  def lt(value: T): ModelFilter = FilterLt(col, value)
+  def <(value: T): ModelFilter = lt(value)
 
-  def lte(value: T): Filter = FilterLte(col, value)
-  def <=(value: T): Filter = lte(value)
+  def lte(value: T): ModelFilter = FilterLte(col, value)
+  def <=(value: T): ModelFilter = lte(value)
 }
 
 
 trait StringFilters extends Underlying {
 
-  def like(value: String): Filter = FilterLike(col, value)
-  def startsWith(value: String): Filter = FilterStartsWith(col, value)
-  def endsWith(value: String): Filter = FilterEndsWith(col, value)
-  def similarTo(value: String): Filter = FilterSimilarTo(col, value)
+  def like(value: String): ModelFilter = FilterLike(col, value)
+  def startsWith(value: String): ModelFilter = FilterStartsWith(col, value)
+  def endsWith(value: String): ModelFilter = FilterEndsWith(col, value)
+  def similarTo(value: String): ModelFilter = FilterSimilarTo(col, value)
 
   // re
 
-  def reMatch(value: String): Filter = FilterReIMatch(col, value)
-  def ~(value: String): Filter = reMatch(value)
+  def reMatch(value: String): ModelFilter = FilterReIMatch(col, value)
+  def ~(value: String): ModelFilter = reMatch(value)
 
-  def reIMatch(value: String): Filter = FilterReIMatch(col, value)
-  def ~*(value: String): Filter = reIMatch(value)
+  def reIMatch(value: String): ModelFilter = FilterReIMatch(col, value)
+  def ~*(value: String): ModelFilter = reIMatch(value)
 
-  def reNotMatch(value: String): Filter = FilterReNotMatch(col, value)
-  def !~(value: String): Filter = reNotMatch(value)
+  def reNotMatch(value: String): ModelFilter = FilterReNotMatch(col, value)
+  def !~(value: String): ModelFilter = reNotMatch(value)
 
-  def reNotIMatch(value: String): Filter = FilterReNotImatch(col, value)
-  def !~*(value: String): Filter = reNotIMatch(value)
+  def reNotIMatch(value: String): ModelFilter = FilterReNotImatch(col, value)
+  def !~*(value: String): ModelFilter = reNotIMatch(value)
 }
 
 

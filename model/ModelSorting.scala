@@ -1,13 +1,10 @@
 package kuzminki.model
 
-import kuzminki.builder._
 
-
-sealed trait ModelSorting extends Renderable {
+sealed trait ModelSorting extends ModelRender {
   def col: ModelCol
   def template: String
   def render = template.format(col.render)
-  def wrap = template.format(col.wrap)
   def args = Seq.empty[Any]
 }
 

@@ -1,14 +1,19 @@
 package kuzminki.model
 
-import scala.reflect.{classTag, ClassTag}
-import kuzminki.builder._
+import scala.reflect.ClassTag
 import kuzminki.model.implicits._
 
 
 object ModelQuery {
 
   def select[M <: Model](cols: M => Seq[ModelCol])(implicit tag: ClassTag[M]): ModelSelectStages.Where[M] = {
-    ModelSelect[M](Model.from[M], Collector.init).columns(cols)
+    ModelSelect[M](Model.from[M], ModelCollector.init).columns(cols)
+  }
+
+  def select[A <: Model, B <: Model](cols: Join[A, B] => Seq[ModelCol])
+                                    (implicit tagA: ClassTag[A], tagB: ClassTag[B]): ModelJoinStages.JoinOn[A, B] = {
+    
+    ModelJoin[A, B](Join(Model.from[A], Model.from[B]), ModelCollector.init).columns(cols)
   }
 }
 

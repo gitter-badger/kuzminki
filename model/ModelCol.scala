@@ -3,13 +3,12 @@ package kuzminki.model
 import java.time._
 import java.util.UUID
 import io.rdbc.sapi._
-import kuzminki.builder._
 
 
 case class ColConf(name: String, model: Model)
 
 
-trait ModelCol extends Renderable {
+trait ModelCol extends ModelRender {
   val name: String
   val model: Model
 
@@ -17,8 +16,12 @@ trait ModelCol extends Renderable {
   def asc = ModelAsc(this)
   def desc = ModelDesc(this)
 
-  def render = name
-  def wrap = name
+  def render = {
+    model.__prefix match {
+      case Some(prefix) => s"$prefix.$name"
+      case None => name 
+    }
+  }
   def args = Seq.empty[Any]
 }
 

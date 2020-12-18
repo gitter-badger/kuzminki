@@ -1,8 +1,6 @@
 package kuzminki.model
 
-import scala.reflect.{classTag, ClassTag}
-import kuzminki.builder._
-//import io.rdbc.sapi._
+import scala.reflect.ClassTag
 
 
 object Model {
@@ -11,7 +9,9 @@ object Model {
   }
 }
 
-abstract class Model(val tableName: String) {
+abstract class Model(val __name: String) {
+
+  var __prefix: Option[String] = None
 
   def column[T](name: String)(implicit creator: ColConf => TypedModelCol[T]) = {
     creator(ColConf(name, this))
