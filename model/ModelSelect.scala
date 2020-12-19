@@ -1,89 +1,71 @@
-package kuzminki.model
+package kuzminki.model.select
 
 import scala.concurrent.Future
 
 
-object ModelSelectStages {
+class Columns[T <: Model](model: T, exec: Executor) extends TupleCols(model, exec) {
 
-  trait Columns[T] {
-    def columns(cols: T => Seq[ModelCol]): Where[T]
-  }
-
-  trait Where[T] {
-    def whereOne(conds: T => ModelFilter): OrderBy[T]
-    def where(conds: T => Seq[ModelFilter]): OrderBy[T]
-  }
-
-  trait OrderBy[T] extends OffsetLimit {
-    def orderBy(cols: T => Seq[ModelSorting]): OffsetLimit
-  }
-
-  trait OffsetLimit extends Limit {
-    def offset(num: Int): Limit
-    def limit(num: Int): Ready
-  }
-
-  trait Limit extends Ready {
-    def limit(num: Int): Ready
-  }
-
-  trait Ready {
-    def asNested: ModelCollector
-    def print: Unit
-    def pretty: Unit
-    def run: Future[List[Seq[Any]]]
+  def columns(pick: T => Seq[ModelCol]): Where[T, R] = {
+    new Where(
+      Collector(
+        StandardArgs(pick(model)),
+        exec
+      ).from(model)
+    )
   }
 }
 
-import ModelSelectStages._
 
+class Where[T <: Model, R](model: T, coll: Collector[R]) {
 
-case class ModelSelect[T <: Model](model: T, sections: ModelCollector, exec: Executor) extends Columns[T]
-                                                                                          with Where[T]
-                                                                                          with OrderBy[T]
-                                                                                          with OffsetLimit
-                                                                                          with Limit
-                                                                                          with Printing {
-
-  def next(section: Section): ModelSelect[T] = next(sections.add(section))
-  def next(sections: ModelCollector): ModelSelect[T] = ModelSelect(model, sections, exec)
-
-  def columns(cols: T => Seq[ModelCol]): Where[T] = {
-    next(
-      sections.select(
-        SelectSec(cols(model))
-      ).add(
-        FromSec(ModelTable(model))
-      )
+  def where(pick: T => Seq[ModelFilter]): OrderBy[T, R] = {
+    new Rest(
+      coll.where(pick(model))
     )
   }
-
-  def whereOne(conds: T => ModelFilter): OrderBy[T] = {
-    next(
-      WhereAllSec(Seq(conds(model)))
-    )
-  }
-
-  def where(conds: T => Seq[ModelFilter]): OrderBy[T] = {
-    next(
-      WhereAllSec(conds(model))
-    )
-  }
-
-  def orderBy(cols: T => Seq[ModelSorting]): OffsetLimit = {
-    next(
-      OrderBySec(cols(model))
-    )
-  }
-
-  def offset(num: Int): Limit = next(OffsetSec(num))
-
-  def limit(num: Int): Ready = next(LimitSec(num))
-
-  def asNested = sections
-
-  def run = exec.run(sections)
 }
+
+
+class OrderBy[T <: Model, R](model: T, coll: Collector[R]) extends Offset(model, coll) {
+
+  def orderBy(pick: T => Seq[ModelSorting]): OffsetLimi[T, R] = {
+    new Offset(
+      coll.orderBy(pick(model))
+    )
+  }
+}
+
+
+class Offset[T <: Model, R](model: T, coll: Collector[R]) extends Limit(model, coll) {
+
+  def limit(num: Int): Ready = next(LimitSec(num)) {
+    new Run(
+      coll.limit(num)
+    )
+  }
+}
+
+
+class Limit[T <: Model, R](model: T, coll: Collector[R]) extends Limit(model, coll) {
+
+  def offset(num: Int): Limit = {
+    new Limit(
+      coll.offset(num)
+    )
+  }
+}
+
+
+class Run[T <: Model, R](model: T, coll: Collector[R]) extends Limit(model, coll) {
+
+  def template: Tuple[String, Seq[Any]] = coll.template
+
+  def render: Tuple[String, Seq[Any]] = coll.render
+
+  def run(): Future[List[R]] = coll.run()
+}
+
+
 
 
 

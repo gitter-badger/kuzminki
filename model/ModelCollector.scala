@@ -204,24 +204,38 @@ case class InsertDoUpdate(parts: Seq[ModelRender]) extends MultiPart {
 case class QueryResult(template: String, args: Seq[Any])
 
 
-object ModelCollector {
-  def init = ModelCollector(Array.empty[Section], Seq.empty[ModelCol])
+object Collector {
+  def create[T <: Model, R](model: T, transformer: Transformer[R]) = {
+    Collector(model, transformer, Array.empty[Section])
+  }
 }
 
 
-case class ModelCollector(sections: Array[Section], cols: Seq[ModelCol]) extends ModelRender {
+case class Collector[T <: Model, R](model: T, transformer: Transformer[R], sections: Array[Section]) extends ModelRender {
+
+  def add(sections: Array[Section]) = this.copy(sections = sections)
+
+  def from(model: T) = add(FromSec(ModelTable(model)))
+
+  def where(conds: Seq[ModelCol]) = add(WhereAllSec(conds))
+
+  def orderBy(sorting: Seq[ModelSorting]) = add(OrderBySec(sorting))
+
+  def offset(num: Int) = add(OffsetSec(num))
+
+  def limit(num: Int) = add(LimitSec(num))
 
   def select(section: SelectSec) = ModelCollector(sections :+ section, section.parts)
   
   def add(section: Section) = ModelCollector(sections :+ section, cols)
 
-  def render = sections.map(_.render).mkString(" ")
-
-  def pretty = SqlFormatter.format(render)
-
-  def renderQuery = QueryResult(render, args)
+  def template = sections.map(_.render).mkString(" ")
 
   def args = sections.toSeq.map(_.args).flatten
+
+  def render = (template, args)
+
+  def pretty = SqlFormatter.format(template)
 }
 
 

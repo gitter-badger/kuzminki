@@ -56,8 +56,8 @@ class KuzminkiRdbc(conf: SystemConfig)(implicit system: ActorSystem) {
   val db = new KuzminkiConn(conf)
   val exec = new RdbcExecutor(db)
 
-  def select[M <: Model](cols: M => Seq[ModelCol])(implicit tag: ClassTag[M]): ModelSelectStages.Where[M] = {
-    ModelSelect[M](Model.from[M], ModelCollector.init, exec).columns(cols)
+  def select[M <: Model](cols: M => Seq[ModelCol])(implicit tag: ClassTag[M]): ModelSelectStages.Columns[M] = {
+    new ModelSelect[M](Model.from[M], exec)
   }
 
   def shutdown(): Future[Unit] = db.shutdown()

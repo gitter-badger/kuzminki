@@ -25,25 +25,25 @@ trait ModelCol extends ModelRender {
   def args = Seq.empty[Any]
 }
 
-trait TypedModelCol[T] extends ModelCol {
+trait TypeCol[T] extends ModelCol {
   def get(row: Row): T
 }
 
 
-case class StringCol(name: String, model: Model) extends TypedModelCol[String]
+case class StringCol(name: String, model: Model) extends TypeCol[String]
                                                     with UniversalFilters[String]
                                                     with StringFilters {
 
   def get(row: Row): String = row.str(name)
 }
     
-case class IntCol(name: String, model: Model) extends TypedModelCol[Int]
+case class IntCol(name: String, model: Model) extends TypeCol[Int]
                                                  with UniversalFilters[Int]
                                                  with ComparativeFilters[Int] {
   def get(row: Row): Int = row.int(name)
 }
 
-case class BooleanCol(name: String, model: Model) extends TypedModelCol[Boolean] 
+case class BooleanCol(name: String, model: Model) extends TypeCol[Boolean] 
                                                      with UniversalFilters[Boolean]{
 
   def get(row: Row): Boolean = row.bool(name)
