@@ -1,6 +1,7 @@
 package kuzminki.model
 
 import com.github.vertical_blank.sqlformatter.scala.SqlFormatter
+import kuzminki.model.select.Transformer
 
 
 trait Section extends ModelRender {
@@ -205,19 +206,25 @@ case class QueryResult(template: String, args: Seq[Any])
 
 
 object Collector {
-  def create[T <: Model, R](model: T, transformer: Transformer[R]) = {
-    Collector(model, transformer, Array.empty[Section])
+  def create[T <: Model, R](model: T, transformer: Transformer[R], exec: Executor) = {
+    Collector(
+      model,
+      transformer,
+      exec, 
+      Array(
+        SelectSec(transformer.toSeq),
+        FromSec(ModelTable(model))
+      )
+    )
   }
 }
 
 
-case class Collector[T <: Model, R](model: T, transformer: Transformer[R], sections: Array[Section]) extends ModelRender {
+case class Collector[T <: Model, R](model: T, transformer: Transformer[R], exec: Executor, sections: Array[Section]) extends ModelRender {
 
-  def add(sections: Array[Section]) = this.copy(sections = sections)
+  def add(section: Section) = this.copy(sections = sections)
 
-  def from(model: T) = add(FromSec(ModelTable(model)))
-
-  def where(conds: Seq[ModelCol]) = add(WhereAllSec(conds))
+  def where(conds: Seq[ModelFilter]) = add(WhereAllSec(conds))
 
   def orderBy(sorting: Seq[ModelSorting]) = add(OrderBySec(sorting))
 
@@ -225,17 +232,11 @@ case class Collector[T <: Model, R](model: T, transformer: Transformer[R], secti
 
   def limit(num: Int) = add(LimitSec(num))
 
-  def select(section: SelectSec) = ModelCollector(sections :+ section, section.parts)
-  
-  def add(section: Section) = ModelCollector(sections :+ section, cols)
-
-  def template = sections.map(_.render).mkString(" ")
+  def render = sections.map(_.render).mkString(" ")
 
   def args = sections.toSeq.map(_.args).flatten
 
-  def render = (template, args)
-
-  def pretty = SqlFormatter.format(template)
+  def pretty = SqlFormatter.format(render)
 }
 
 

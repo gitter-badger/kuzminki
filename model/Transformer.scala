@@ -1,24 +1,9 @@
-package kuzminki.rdbc
+package kuzminki.model.select
 
 import io.rdbc.sapi._
 import kuzminki.model._
 import kuzminki.model.implicits._
 
-
-object TupleCols {
-  type ColTuple2 = Tuple2[ModelCol, ModelCol]
-  type ColTuple3 = Tuple3[ModelCol, ModelCol, ModelCol]
-  type ColTuple4 = Tuple4[ModelCol, ModelCol, ModelCol, ModelCol]
-}
-
-
-object Transformer {
-  import TupleCols._
-  def create(cols: Seq[ModelCol]) = new SeqCols(cols)
-  def create[A1, A2](cols: Tuple2[TypeCol[A1], TypeCol[A2]]) = new Tuple2Cols(cols)
-  def create[A1, A2](cols: Tuple2[TypeCol[A1], TypeCol[A2]]) = new Tuple2Cols(cols)
-  //def create(cols: ColTuple4) = new Tuple4Cols(cols)
-}
 
 trait Transformer[T] {
   def toSeq: Seq[ModelCol]
@@ -26,11 +11,11 @@ trait Transformer[T] {
 }
 
 
-class SeqCols(cols: Seq[ModelCol]) extends Transformer[Seq[Any]] {
+case class SeqCols(cols: Seq[ModelCol]) extends Transformer[Seq[Any]] {
 
   def toSeq = cols
 
-  def transform(row: Row) = {
+  def transform(row: Row): Seq[Any] = {
     cols.map {
       case col: StringCol => col.get(row)
       case col: IntCol => col.get(row)
@@ -39,7 +24,7 @@ class SeqCols(cols: Seq[ModelCol]) extends Transformer[Seq[Any]] {
   }
 }
 
-class Tuple2Cols[A1, A2](cols: Tuple2[TypeCol[A1], TypeCol[A2]]) extends Transformer[Tuple2[A1, A2]] {
+case class Tuple2Cols[A1, A2](cols: Tuple2[TypeCol[A1], TypeCol[A2]]) extends Transformer[Tuple2[A1, A2]] {
 
   def toSeq = {
     cols match {
@@ -54,7 +39,7 @@ class Tuple2Cols[A1, A2](cols: Tuple2[TypeCol[A1], TypeCol[A2]]) extends Transfo
   }
 }
 
-class Tuple3Cols[A1, A2, A3](cols: Tuple3[TypeCol[A1],
+case class Tuple3Cols[A1, A2, A3](cols: Tuple3[TypeCol[A1],
                                           TypeCol[A2],
                                           TypeCol[A3]]) extends Transformer[Tuple3[A1, A2, A3]] {
 
@@ -71,7 +56,7 @@ class Tuple3Cols[A1, A2, A3](cols: Tuple3[TypeCol[A1],
   }
 }
 
-class Tuple4Cols[A1, A2, A3, A4](cols: Tuple4[TypeCol[A1],
+case class Tuple4Cols[A1, A2, A3, A4](cols: Tuple4[TypeCol[A1],
                                           TypeCol[A2],
                                           TypeCol[A3],
                                           TypeCol[A4]]) extends Transformer[Tuple4[A1, A2, A3, A4]] {

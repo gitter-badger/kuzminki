@@ -23,28 +23,9 @@ import io.rdbc.pgsql.transport.netty.sapi.NettyPgConnectionFactory.Config
 import io.rdbc.pool.sapi.ConnectionPool
 import io.rdbc.pool.sapi.ConnectionPoolConfig
 
+import kuzminki.model.select.Columns
 import kuzminki.model._
 import kuzminki.model.implicits._
-
-
-class RdbcExecutor(db: KuzminkiConn)(implicit ec: ExecutionContext) extends Executor {
-
-  def getValue(anyCol: ModelCol, row: Row) = {
-    anyCol match {
-      case col: StringCol => col.get(row)
-      case col: IntCol => col.get(row)
-      case col: BooleanCol => col.get(row)
-    }
-  }
-
-  def run(sections: ModelCollector) = {
-    db.modelSelect(sections.render, sections.args).map { rows =>
-      rows.map { row => 
-        sections.cols.map(col => getValue(col, row))
-      }
-    }
-  }
-}
 
 
 class KuzminkiRdbc(conf: SystemConfig)(implicit system: ActorSystem) {
@@ -53,12 +34,18 @@ class KuzminkiRdbc(conf: SystemConfig)(implicit system: ActorSystem) {
   implicit val materializer = ActorMaterializer()(system)
   implicit val timeout = 5.seconds.timeout
 
-  val db = new KuzminkiConn(conf)
+  val db = new RdbcConn(conf)
   val exec = new RdbcExecutor(db)
 
+  def select[M <: Model](implicit tag: ClassTag[M]) = {
+    new Columns(Model.from[M], exec)
+  }
+
+  /*
   def select[M <: Model](cols: M => Seq[ModelCol])(implicit tag: ClassTag[M]): ModelSelectStages.Columns[M] = {
     new ModelSelect[M](Model.from[M], exec)
   }
+  */
 
   def shutdown(): Future[Unit] = db.shutdown()
 }

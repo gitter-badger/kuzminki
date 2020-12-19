@@ -1,68 +1,75 @@
 package kuzminki.model.select
 
+import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
+import kuzminki.model._
 
 
 class Columns[T <: Model](model: T, exec: Executor) extends TupleCols(model, exec) {
 
-  def columns(pick: T => Seq[ModelCol]): Where[T, R] = {
+  def cols(pick: T => Seq[ModelCol]) = {
     new Where(
-      Collector(
-        StandardArgs(pick(model)),
+      Collector.create(
+        model,
+        SeqCols(pick(model)),
         exec
-      ).from(model)
+      )
     )
   }
 }
 
 
-class Where[T <: Model, R](model: T, coll: Collector[R]) {
+class Where[T <: Model, R](coll: Collector[T, R]) {
 
-  def where(pick: T => Seq[ModelFilter]): OrderBy[T, R] = {
-    new Rest(
-      coll.where(pick(model))
+  def where(pick: T => Seq[ModelFilter]) = {
+    new OrderBy(
+      coll.where(pick(coll.model))
     )
   }
 }
 
 
-class OrderBy[T <: Model, R](model: T, coll: Collector[R]) extends Offset(model, coll) {
+class OrderBy[T <: Model, R](coll: Collector[T, R]) extends Offset(coll) {
 
-  def orderBy(pick: T => Seq[ModelSorting]): OffsetLimi[T, R] = {
+  def orderBy(pick: T => Seq[ModelSorting]) = {
     new Offset(
-      coll.orderBy(pick(model))
+      coll.orderBy(pick(coll.model))
     )
   }
 }
 
 
-class Offset[T <: Model, R](model: T, coll: Collector[R]) extends Limit(model, coll) {
+class Offset[T <: Model, R](coll: Collector[T, R]) extends Limit(coll) {
 
-  def limit(num: Int): Ready = next(LimitSec(num)) {
-    new Run(
+  def limit(num: Int) = {
+    new Limit(
       coll.limit(num)
     )
   }
 }
 
 
-class Limit[T <: Model, R](model: T, coll: Collector[R]) extends Limit(model, coll) {
+class Limit[T <: Model, R](coll: Collector[T, R]) extends Run(coll) {
 
-  def offset(num: Int): Limit = {
-    new Limit(
+  def offset(num: Int) = {
+    new Run(
       coll.offset(num)
     )
   }
 }
 
 
-class Run[T <: Model, R](model: T, coll: Collector[R]) extends Limit(model, coll) {
+class Run[T <: Model, R](coll: Collector[T, R]) {
 
-  def template: Tuple[String, Seq[Any]] = coll.template
+  def render = coll.render
 
-  def render: Tuple[String, Seq[Any]] = coll.render
+  def args = coll.args
 
-  def run(): Future[List[R]] = coll.run()
+  def run()(implicit ec: ExecutionContext): Future[List[R]] = {
+    coll.exec.run(coll.render, coll.args).map { rows => 
+      rows.map(row => coll.transformer.transform(row))
+    }
+  }
 }
 
 

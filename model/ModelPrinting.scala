@@ -1,9 +1,9 @@
 package kuzminki.model
 
-
+/*
 trait Printing {
   
-  val sections: ModelCollector
+  val sections: Collector
 
   def print: Unit = {
     println(sections.render + " - " + sections.args) 
@@ -13,3 +13,4 @@ trait Printing {
     println(sections.pretty + "\n" + sections.args)
   }
 }
+*/

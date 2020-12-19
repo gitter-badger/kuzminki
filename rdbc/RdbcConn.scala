@@ -22,14 +22,12 @@ import io.rdbc.pgsql.transport.netty.sapi.NettyPgConnectionFactory.Config
 import io.rdbc.pool.sapi.ConnectionPool
 import io.rdbc.pool.sapi.ConnectionPoolConfig
 
-import kuzminki.model.ModelCollector
-
 //import transport.actions.{Action, Batch}
 
 
 case class KuzminkiException(message: String) extends Exception(message)
 
-object KuzminkiPool {
+object RdbcPool {
 
   def forConfig(conf: SystemConfig, ec: ExecutionContext): ConnectionPool = {
     
@@ -53,7 +51,7 @@ object KuzminkiPool {
 }
 
 
-class KuzminkiConn(conf: SystemConfig)(implicit system: ActorSystem) extends LazyLogging {
+class RdbcConn(conf: SystemConfig)(implicit system: ActorSystem) extends LazyLogging {
 
   logger.info("Start")
 
@@ -63,7 +61,7 @@ class KuzminkiConn(conf: SystemConfig)(implicit system: ActorSystem) extends Laz
 
   private val inf = Timeout(Duration.Inf)
 
-  private val pool = KuzminkiPool.forConfig(conf, system.dispatcher)
+  private val pool = RdbcPool.forConfig(conf, system.dispatcher)
 
   private def transformError(message: String, statement: SqlWithParams): KuzminkiException = {
     val localFormat = s"Query ($message) \n [${statement.sql}]"
