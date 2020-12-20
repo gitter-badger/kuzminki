@@ -5,6 +5,12 @@ import kuzminki.model._
 import kuzminki.model.implicits._
 
 
+
+
+
+
+
+
 trait Transformer[T] {
   def toSeq: Seq[ModelCol]
   def transform(row: Row): T

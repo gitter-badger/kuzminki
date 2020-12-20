@@ -1,7 +1,7 @@
 package kuzminki.model
 
 import com.github.vertical_blank.sqlformatter.scala.SqlFormatter
-import kuzminki.model.select.Transformer
+import kuzminki.rdbc.Results
 
 
 trait Section extends ModelRender {
@@ -206,21 +206,21 @@ case class QueryResult(template: String, args: Seq[Any])
 
 
 object Collector {
-  def create[T <: Model, R](model: T, transformer: Transformer[R], exec: Executor) = {
+  def create[T <: Model](model: T, cols: Seq[TypeCol[_]], exec: Executor) = {
     Collector(
       model,
-      transformer,
-      exec, 
       Array(
-        SelectSec(transformer.toSeq),
+        SelectSec(cols),
         FromSec(ModelTable(model))
-      )
+      ),
+      cols,
+      exec
     )
   }
 }
 
 
-case class Collector[T <: Model, R](model: T, transformer: Transformer[R], exec: Executor, sections: Array[Section]) extends ModelRender {
+case class Collector[T <: Model](model: T, sections: Array[Section], cols: Seq[TypeCol[_]], exec: Executor) extends ModelRender {
 
   def add(section: Section) = this.copy(sections = sections)
 
@@ -237,6 +237,10 @@ case class Collector[T <: Model, R](model: T, transformer: Transformer[R], exec:
   def args = sections.toSeq.map(_.args).flatten
 
   def pretty = SqlFormatter.format(render)
+
+  def tup = (render, args)
+
+  def results = new Results(render, args, cols, exec)(exec.ec)
 }
 
 

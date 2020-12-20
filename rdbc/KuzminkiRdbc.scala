@@ -35,7 +35,7 @@ class KuzminkiRdbc(conf: SystemConfig)(implicit system: ActorSystem) {
   implicit val timeout = 5.seconds.timeout
 
   val db = new RdbcConn(conf)
-  val exec = new RdbcExecutor(db)
+  val exec = RdbcExecutor(db, ec)
 
   def select[M <: Model](implicit tag: ClassTag[M]) = {
     new Columns(Model.from[M], exec)

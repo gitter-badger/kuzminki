@@ -5,13 +5,13 @@ import scala.concurrent.Future
 import kuzminki.model._
 
 
-class Columns[T <: Model](model: T, exec: Executor) extends TupleCols(model, exec) {
+class Columns[T <: Model](model: T, exec: Executor) {
 
-  def cols(pick: T => Seq[ModelCol]) = {
+  def cols(pick: T => Seq[TypeCol[_]]) = {
     new Where(
       Collector.create(
         model,
-        SeqCols(pick(model)),
+        pick(model),
         exec
       )
     )
@@ -19,7 +19,7 @@ class Columns[T <: Model](model: T, exec: Executor) extends TupleCols(model, exe
 }
 
 
-class Where[T <: Model, R](coll: Collector[T, R]) {
+class Where[T <: Model](coll: Collector[T]) {
 
   def where(pick: T => Seq[ModelFilter]) = {
     new OrderBy(
@@ -29,7 +29,7 @@ class Where[T <: Model, R](coll: Collector[T, R]) {
 }
 
 
-class OrderBy[T <: Model, R](coll: Collector[T, R]) extends Offset(coll) {
+class OrderBy[T <: Model](coll: Collector[T]) extends Offset(coll) {
 
   def orderBy(pick: T => Seq[ModelSorting]) = {
     new Offset(
@@ -39,7 +39,7 @@ class OrderBy[T <: Model, R](coll: Collector[T, R]) extends Offset(coll) {
 }
 
 
-class Offset[T <: Model, R](coll: Collector[T, R]) extends Limit(coll) {
+class Offset[T <: Model](coll: Collector[T]) extends Limit(coll) {
 
   def limit(num: Int) = {
     new Limit(
@@ -49,7 +49,7 @@ class Offset[T <: Model, R](coll: Collector[T, R]) extends Limit(coll) {
 }
 
 
-class Limit[T <: Model, R](coll: Collector[T, R]) extends Run(coll) {
+class Limit[T <: Model](coll: Collector[T]) extends Run(coll) {
 
   def offset(num: Int) = {
     new Run(
@@ -59,17 +59,17 @@ class Limit[T <: Model, R](coll: Collector[T, R]) extends Run(coll) {
 }
 
 
-class Run[T <: Model, R](coll: Collector[T, R]) {
+class Run[T <: Model](coll: Collector[T]) {
 
   def render = coll.render
 
   def args = coll.args
 
-  def run()(implicit ec: ExecutionContext): Future[List[R]] = {
-    coll.exec.run(coll.render, coll.args).map { rows => 
-      rows.map(row => coll.transformer.transform(row))
-    }
-  }
+  def asSeq() = coll.results.asSeq()
+
+  def asMap() = coll.results.asMap()
+
+  def asTuple() = coll.results.asTuple()
 }
 
 

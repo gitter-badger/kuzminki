@@ -6,15 +6,15 @@ import io.rdbc.sapi._
 import kuzminki.model.select.Columns
 import kuzminki.model.implicits._
 
-
+/*
 class DummyExecutor extends Executor {
   def run(template: String, args: Seq[Any]) = Future.successful(List.empty[Row])
 }
-
+*/
 
 object ModelQuery {
 
-  val exec = new DummyExecutor()
+  //val exec = new DummyExecutor()
 
   //def select[M <: Model](implicit tag: ClassTag[M]) = new Columns(Model.from[M], exec)
 
