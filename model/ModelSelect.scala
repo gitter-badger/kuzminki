@@ -70,6 +70,8 @@ class Run[T <: Model](coll: Collector[T]) {
   def asMap() = coll.results.asMap()
 
   def asTuple() = coll.results.asTuple()
+
+  def asTupleType[T]() = coll.results.asTupleType[T]()
 }
 
 
