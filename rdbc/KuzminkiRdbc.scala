@@ -23,7 +23,7 @@ import io.rdbc.pgsql.transport.netty.sapi.NettyPgConnectionFactory.Config
 import io.rdbc.pool.sapi.ConnectionPool
 import io.rdbc.pool.sapi.ConnectionPoolConfig
 
-import kuzminki.model.select.Columns
+import kuzminki.model.select._
 import kuzminki.model._
 import kuzminki.model.implicits._
 

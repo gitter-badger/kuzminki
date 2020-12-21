@@ -6,23 +6,13 @@ import kuzminki.model._
 import kuzminki.model.tuples.{Where => TupleWhere}
 
 
-class Columns[T <: Model](model: T, conn: Connection) {
+class OldColumns[T <: Model](model: T, conn: Connection) {
 
   def cols(pick: T => Seq[TypeCol[_]]) = {
     new Where(
       SeqCollector.create(
         model,
         pick(model),
-        conn
-      )
-    )
-  }
-
-  def cols2[A1, A2](pick: T => Tuple2[TypeCol[A1], TypeCol[A2]]) = {
-    new TupleWhere(
-      TupleCollector.create(
-        model,
-        Tuple2Cols(pick(model)),
         conn
       )
     )
@@ -72,14 +62,9 @@ class Limit[T <: Model](coll: SeqCollector[T]) extends Run(coll) {
 
 class Run[T <: Model](coll: SeqCollector[T]) {
 
-  def render = coll.render
-
-  def args = coll.args
-
-  def asSeq() = coll.asSeq()
-
-  def asMap() = coll.asMap()
+  def run = coll
 }
+
 
 
 

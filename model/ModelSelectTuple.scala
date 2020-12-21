@@ -62,11 +62,7 @@ class Limit[T <: Model, R](coll: TupleCollector[T, R]) extends Run(coll) {
 
 class Run[T <: Model, R](coll: TupleCollector[T, R]) {
 
-  def render = coll.render
-
-  def args = coll.args
-
-  def asTuple() = coll.asTuple()
+  def run = coll
 }
 
 
