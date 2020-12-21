@@ -1,225 +1,96 @@
 package kuzminki.model
 
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext
 import com.github.vertical_blank.sqlformatter.scala.SqlFormatter
-import kuzminki.rdbc.Results
-
-
-trait Section extends ModelRender {
-  def expression: String
-}
-
-trait SingleArg extends Section {
-  def arg: Any
-  def expression: String
-  def render = expression
-  def args = Seq(arg)
-}
-
-trait TextOnly extends Section {
-  def render = expression
-  def args = Seq.empty[Any]
-}
-
-trait SinglePart extends Section {
-  def part: ModelRender
-  def render = expression.format(part.render)
-  def args = part.args
-}
-
-trait MultiPart extends Section {
-  def parts: Seq[ModelRender]
-  def expression: String
-  def glue: String
-  def render = expression.format(parts.map(_.render).mkString(glue))
-  def args = parts.map(_.args).flatten
-}
-
-// Select
-
-case class SelectSec(parts: Seq[ModelCol]) extends MultiPart {
-  def expression = "SELECT %s"
-  def glue = ", "
-}
-
-
-case class FromSec(part: ModelTable) extends SinglePart {
-  def expression = "FROM %s"
-}
-
-
-case class InnerJoinSec(part: ModelTable) extends SinglePart {
-  def expression = "INNER JOIN %s"
-}
-
-
-case class LeftJoinSec(part: ModelTable) extends SinglePart {
-  def expression = "LEFT JOIN %s"
-}
-
-
-case class LeftOuterJoinSec(part: ModelTable) extends SinglePart {
-  def expression = "LEFT OUTER JOIN %s"
-}
-
-
-case class RightJoinSec(part: ModelTable) extends SinglePart {
-  def expression = "RIGHT JOIN %s"
-}
-
-
-case class RightOuterJoinSec(part: ModelTable) extends SinglePart {
-  def expression = "RIGHT OUTER JOIN %s"
-}
-
-
-case class FullOuterJoinSec(part: ModelTable) extends SinglePart {
-  def expression = "FULL OUTER JOIN %s"
-}
-
-
-case class CrossJoinSec(part: ModelTable) extends SinglePart {
-  def expression = "CROSS JOIN %s"
-}
-
-
-case class OnSec(leftCol: ModelRender, rightCol: ModelRender) extends Section {
-  def expression = "ON %s = %s"
-  def render = expression.format(leftCol.render, rightCol.render)
-  def args = Seq.empty[Any]
-}
-
-
-case class WhereChainSec(part: ModelRender) extends SinglePart {
-  def expression = "WHERE %s"
-}
-
-
-case class WhereAllSec(parts: Seq[ModelRender]) extends MultiPart {
-  def expression = "WHERE %s"
-  def glue = " AND "
-}
-
-
-case class GroupBySec(parts: Seq[ModelRender]) extends MultiPart {
-  def expression = "GROUP BY %s"
-  def glue = ", "
-}
-
-
-case class HavingChainSec(part: ModelRender) extends SinglePart {
-  def expression = "HAVING %s"
-}
-
-
-case class HavingAllSec(parts: Seq[ModelRender]) extends MultiPart {
-  def expression = "HAVING %s"
-  def glue = " AND "
-}
-
-
-case class OrderBySec(parts: Seq[ModelRender]) extends MultiPart {
-  def expression = "ORDER BY %s"
-  def glue = ", "
-}
-
-
-case class OffsetSec(arg: Int) extends SingleArg {
-  def expression = "OFFSET ?"
-}
-
-
-case class LimitSec(arg: Int) extends SingleArg {
-  def expression = "LIMIT ?"
-}
-
-// delete
-
-case class DeleteFromSec(part: ModelRender) extends SinglePart {
-  def expression = "DELETE FROM %s"
-}
-
-// Update
-
-case class UpdateSec(part: ModelRender) extends SinglePart {
-  def expression = "UPDATE %s"
-}
-
-
-case class UpdateSetSec(parts: Seq[ModelRender]) extends MultiPart {
-  def expression = "SET %s"
-  def glue = ", "
-}
-
-// Insert
-
-case class InsertIntoSec(part: ModelRender) extends SinglePart {
-  def expression = "INSERT INTO %s"
-}
-
-
-case class InsertColumnsSec(parts: Seq[ModelRender]) extends MultiPart {
-  def expression = "(%s)"
-  def glue = ", "
-}
-
-
-case class InsertNestedSec(part: ModelRender) extends SinglePart {
-  def expression = "(%s)"
-}
-
-
-case class InsertValuesSec(values: Seq[Any]) extends Section {
-  def expression = "VALUES (%s)"
-  def render = expression.format(Vector.fill(args.size)("?").mkString(", "))
-  def args = values
-}
-
-
-object InsertOnConflictSec extends TextOnly {
-  def expression = "ON CONFLICT"
-}
-
-
-case class InsertOnConflictColumnSec(part: ModelRender) extends SinglePart {
-  def expression = "ON CONFLICT (%s)"
-}
-
-
-case class InsertOnConflictOnConstraintSec(part: ModelRender) extends SinglePart {
-  def expression = "ON CONFLICT ON CONSTRAINT (%s)"
-}
-
-
-object InsertDoNothingSec extends TextOnly {
-  def expression = "DO NOTHING"
-}
-
-
-case class InsertDoUpdate(parts: Seq[ModelRender]) extends MultiPart {
-  def expression = "DO UPDATE SET %s"
-  def glue = ", "
-}
+import kuzminki.model.select._
 
 // collector
 
-case class QueryResult(template: String, args: Seq[Any])
+case class Query(template: String, args: Seq[Any])
 
 
-object Collector {
-  def create[T <: Model](model: T, cols: Seq[TypeCol[_]], exec: Executor) = {
-    Collector(
+object SeqCollector {
+  
+  def create[M <: Model](model: M, cols: Seq[TypeCol[_]], conn: Connection): SeqCollector[M] = {
+    SeqCollector(
       model,
       Array(
         SelectSec(cols),
         FromSec(ModelTable(model))
       ),
-      cols,
-      exec
+      SeqExecutor(cols, conn.db)(conn.ec)
     )
   }
 }
 
 
+object TupleCollector {
+  
+  def create[T <: Model, R](model: T, transformer: TupleTransformer[R], conn: Connection) = {
+    TupleCollector(
+      model,
+      Array(
+        SelectSec(transformer.toSeq),
+        FromSec(ModelTable(model))
+      ),
+      TupleExecutor(transformer, conn.db)(conn.ec)
+    )
+  }
+}
+
+
+trait Gather {
+  val sections: Array[Section]
+  def add[M](section: Section): M
+  def where(conds: Seq[ModelFilter]) = add(WhereAllSec(conds))
+  def orderBy(sorting: Seq[ModelSorting]) = add(OrderBySec(sorting))
+  def offset(num: Int) = add(OffsetSec(num))
+  def limit(num: Int) = add(LimitSec(num))
+}
+
+
+trait SelectQuery extends ModelRender {
+  val sections: Array[Section]
+  def render = sections.map(_.render).mkString(" ")
+  def args = sections.toSeq.map(_.args).flatten
+  def query = Query(render, args)
+}
+
+
+case class SeqCollector[M <: Model](model: M,
+                                    sections: Array[Section],
+                                    exec: SeqExecutor) extends SelectQuery {
+
+  def add(section: Section) = this.copy(sections = sections)
+  
+  def where(conds: Seq[ModelFilter]) = add(WhereAllSec(conds))
+  def orderBy(sorting: Seq[ModelSorting]) = add(OrderBySec(sorting))
+  def offset(num: Int) = add(OffsetSec(num))
+  def limit(num: Int) = add(LimitSec(num))
+
+  def asSeq(): Future[List[Seq[Any]]] = exec.asSeq(query)
+  def asMap(): Future[List[Map[String, Any]]] = exec.asMap(query)
+}
+
+
+case class TupleCollector[M <: Model, R](model: M,
+                                         sections: Array[Section],
+                                         exec: TupleExecutor[R]) extends SelectQuery {
+
+  def add(section: Section) = this.copy(sections = sections)
+  
+  def where(conds: Seq[ModelFilter]) = add(WhereAllSec(conds))
+  def orderBy(sorting: Seq[ModelSorting]) = add(OrderBySec(sorting))
+  def offset(num: Int) = add(OffsetSec(num))
+  def limit(num: Int) = add(LimitSec(num))
+
+  def asTuple(): Future[List[R]] = exec.asTuple(query)
+}
+
+
+
+/*
 case class Collector[T <: Model](model: T, sections: Array[Section], cols: Seq[TypeCol[_]], exec: Executor) extends ModelRender {
 
   def add(section: Section) = this.copy(sections = sections)
@@ -242,7 +113,7 @@ case class Collector[T <: Model](model: T, sections: Array[Section], cols: Seq[T
 
   def results = new Results(render, args, cols, exec)(exec.ec)
 }
-
+*/
 
 
 

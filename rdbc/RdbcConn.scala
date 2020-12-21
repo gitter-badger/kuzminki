@@ -22,6 +22,8 @@ import io.rdbc.pgsql.transport.netty.sapi.NettyPgConnectionFactory.Config
 import io.rdbc.pool.sapi.ConnectionPool
 import io.rdbc.pool.sapi.ConnectionPoolConfig
 
+import kuzminki.model.Query
+
 //import transport.actions.{Action, Batch}
 
 
@@ -73,9 +75,9 @@ class RdbcConn(conf: SystemConfig)(implicit system: ActorSystem) extends LazyLog
 
   // model
 
-  def modelSelect(template: String, args: Seq[Any]): Future[List[Row]] = {
-    pool.withConnection(_.statement(SqlWithParams(template, args.toVector)).executeForSet).map(_.toList).recover {
-      case ex: Exception => throw transformError(ex.getMessage, SqlWithParams(template, args.toVector))
+  def select(query: Query): Future[List[Row]] = {
+    pool.withConnection(_.statement(SqlWithParams(query.template, query.args.toVector)).executeForSet).map(_.toList).recover {
+      case ex: Exception => throw transformError(ex.getMessage, SqlWithParams(query.template, query.args.toVector))
     }
   }
 

@@ -5,32 +5,13 @@ import kuzminki.model._
 import kuzminki.model.implicits._
 
 
-
-
-
-
-
-
-trait Transformer[T] {
+trait TupleTransformer[T] {
   def toSeq: Seq[ModelCol]
   def transform(row: Row): T
 }
 
 
-case class SeqCols(cols: Seq[ModelCol]) extends Transformer[Seq[Any]] {
-
-  def toSeq = cols
-
-  def transform(row: Row): Seq[Any] = {
-    cols.map {
-      case col: StringCol => col.get(row)
-      case col: IntCol => col.get(row)
-      case col: BooleanCol => col.get(row)
-    }
-  }
-}
-
-case class Tuple2Cols[A1, A2](cols: Tuple2[TypeCol[A1], TypeCol[A2]]) extends Transformer[Tuple2[A1, A2]] {
+case class Tuple2Cols[A1, A2](cols: Tuple2[TypeCol[A1], TypeCol[A2]]) extends TupleTransformer[Tuple2[A1, A2]] {
 
   def toSeq = {
     cols match {
@@ -47,7 +28,7 @@ case class Tuple2Cols[A1, A2](cols: Tuple2[TypeCol[A1], TypeCol[A2]]) extends Tr
 
 case class Tuple3Cols[A1, A2, A3](cols: Tuple3[TypeCol[A1],
                                           TypeCol[A2],
-                                          TypeCol[A3]]) extends Transformer[Tuple3[A1, A2, A3]] {
+                                          TypeCol[A3]]) extends TupleTransformer[Tuple3[A1, A2, A3]] {
 
   def toSeq = {
     cols match {
@@ -65,7 +46,7 @@ case class Tuple3Cols[A1, A2, A3](cols: Tuple3[TypeCol[A1],
 case class Tuple4Cols[A1, A2, A3, A4](cols: Tuple4[TypeCol[A1],
                                           TypeCol[A2],
                                           TypeCol[A3],
-                                          TypeCol[A4]]) extends Transformer[Tuple4[A1, A2, A3, A4]] {
+                                          TypeCol[A4]]) extends TupleTransformer[Tuple4[A1, A2, A3, A4]] {
 
   def toSeq = {
     cols match {

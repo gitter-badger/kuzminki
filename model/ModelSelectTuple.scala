@@ -1,25 +1,15 @@
-package kuzminki.model.select
+package kuzminki.model.tuples
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 import kuzminki.model._
-import kuzminki.model.tuples.{Where => TupleWhere}
+import kuzminki.model.select._
 
 
 class Columns[T <: Model](model: T, conn: Connection) {
 
-  def cols(pick: T => Seq[TypeCol[_]]) = {
-    new Where(
-      SeqCollector.create(
-        model,
-        pick(model),
-        conn
-      )
-    )
-  }
-
   def cols2[A1, A2](pick: T => Tuple2[TypeCol[A1], TypeCol[A2]]) = {
-    new TupleWhere(
+    new Where(
       TupleCollector.create(
         model,
         Tuple2Cols(pick(model)),
@@ -30,7 +20,7 @@ class Columns[T <: Model](model: T, conn: Connection) {
 }
 
 
-class Where[T <: Model](coll: SeqCollector[T]) {
+class Where[T <: Model, R](coll: TupleCollector[T, R]) {
 
   def where(pick: T => Seq[ModelFilter]) = {
     new OrderBy(
@@ -40,7 +30,7 @@ class Where[T <: Model](coll: SeqCollector[T]) {
 }
 
 
-class OrderBy[T <: Model](coll: SeqCollector[T]) extends Offset(coll) {
+class OrderBy[T <: Model, R](coll: TupleCollector[T, R]) extends Offset(coll) {
 
   def orderBy(pick: T => Seq[ModelSorting]) = {
     new Offset(
@@ -50,7 +40,7 @@ class OrderBy[T <: Model](coll: SeqCollector[T]) extends Offset(coll) {
 }
 
 
-class Offset[T <: Model](coll: SeqCollector[T]) extends Limit(coll) {
+class Offset[T <: Model, R](coll: TupleCollector[T, R]) extends Limit(coll) {
 
   def limit(num: Int) = {
     new Limit(
@@ -60,7 +50,7 @@ class Offset[T <: Model](coll: SeqCollector[T]) extends Limit(coll) {
 }
 
 
-class Limit[T <: Model](coll: SeqCollector[T]) extends Run(coll) {
+class Limit[T <: Model, R](coll: TupleCollector[T, R]) extends Run(coll) {
 
   def offset(num: Int) = {
     new Run(
@@ -70,15 +60,13 @@ class Limit[T <: Model](coll: SeqCollector[T]) extends Run(coll) {
 }
 
 
-class Run[T <: Model](coll: SeqCollector[T]) {
+class Run[T <: Model, R](coll: TupleCollector[T, R]) {
 
   def render = coll.render
 
   def args = coll.args
 
-  def asSeq() = coll.asSeq()
-
-  def asMap() = coll.asMap()
+  def asTuple() = coll.asTuple()
 }
 
 
