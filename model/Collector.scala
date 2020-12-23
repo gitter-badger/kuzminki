@@ -11,13 +11,6 @@ import kuzminki.model.select._
 case class Query(template: String, args: Seq[Any])
 
 
-trait ResultMethods {
-  val sections: Array[Section]
-  def render = sections.map(_.render).mkString(" ")
-  def args = sections.toSeq.map(_.args).flatten
-  def query = Query(render, args)
-}
-
 // SeqCollector
 
 object Collector {
@@ -65,6 +58,13 @@ object Collector {
       TupleOutput(transformer, conn)
     )
   }
+}
+
+trait ResultMethods {
+  val sections: Array[Section]
+  def render = sections.map(_.render).mkString(" ")
+  def args = sections.toSeq.map(_.args).flatten
+  def query = Query(render, args)
 }
 
 case class SeqCollector[M <: Model](model: M,

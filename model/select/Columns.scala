@@ -20,7 +20,7 @@ case class Columns[M <: Model](model: M, conn: Connection) extends TupleCols[M] 
 case class JoinColumns[A <: Model, B <: Model](join: Join[A, B], conn: Connection) extends TupleJoinCols[A, B] {
 
   def cols(pick: Join[A, B] => Seq[TypeCol[_]]) = {
-    new standardJoin.Where(
+    new standardJoin.JoinOn(
       Collector.standardJoin(
         join,
         pick(join),

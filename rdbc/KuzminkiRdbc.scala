@@ -41,11 +41,9 @@ class KuzminkiRdbc(conf: SystemConfig)(implicit system: ActorSystem) {
     new Columns(Model.from[M], conn)
   }
 
-  /*
-  def select[M <: Model](cols: M => Seq[ModelCol])(implicit tag: ClassTag[M]): ModelSelectStages.Columns[M] = {
-    new ModelSelect[M](Model.from[M], exec)
+  def select[A <: Model, B <: Model](implicit tagA: ClassTag[A], tagB: ClassTag[B]) = {
+    new JoinColumns(Join(Model.from[A], Model.from[B]), conn)
   }
-  */
 
   def shutdown(): Future[Unit] = db.shutdown()
 }

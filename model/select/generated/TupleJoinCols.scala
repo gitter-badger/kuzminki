@@ -9,7 +9,7 @@ trait TupleJoinCols[A <: Model, B <: Model] {
   val conn: Connection
 
   private def tupledWhere[R](transformer: TupleTransformer[R]) = {
-    new tupledJoin.Where(
+    new tupledJoin.JoinOn(
       Collector.tupleJoin(
         join,
         transformer,
