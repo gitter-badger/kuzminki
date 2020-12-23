@@ -1,7 +1,7 @@
 package kuzminki.model.select
 
-
 import kuzminki.model._
+
 
 object standard {
 
