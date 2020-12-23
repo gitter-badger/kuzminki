@@ -1,10 +1,19 @@
 package kuzminki.model
 
 
-trait ModelFilter extends ModelRender {
+trait OptionalFilter {
+  val isUsed: Boolean
+}
+
+object VoidFilter extends OptionalFilter {
+  val isUsed = false
+}
+
+trait ModelFilter extends OptionalFilter with ModelRender {
   val col: ModelCol
   def template: String
   def render = template.format(col.render)
+  val isUsed = true
 }
 
 trait SingleArgFilter extends ModelFilter {

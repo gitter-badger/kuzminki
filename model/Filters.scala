@@ -18,6 +18,26 @@ trait UniversalFilters[T] extends Underlying {
   def isNotNull: ModelFilter = FilterIsNotNull(col)
 
   def in(value: Seq[T]): ModelFilter = FilterIn(col, value)
+
+  // optional
+
+  def matches(opt: Option[T]): OptionalFilter = {
+    opt match {
+      case Some(value) => matches(value)
+      case None => VoidFilter
+    }
+  }
+
+  def ===(opt: Option[T]): OptionalFilter = matches(opt)
+
+  def not(opt: Option[T]): OptionalFilter = {
+    opt match {
+      case Some(value) => not(value)
+      case None => VoidFilter
+    }
+  }
+
+  def !==(opt: Option[T]): OptionalFilter = not(opt)
 }
 
 
@@ -34,6 +54,44 @@ trait ComparativeFilters[T] extends Underlying {
 
   def lte(value: T): ModelFilter = FilterLte(col, value)
   def <=(value: T): ModelFilter = lte(value)
+
+  // optional
+
+  def gt(opt: Option[T]): OptionalFilter = {
+    opt match {
+      case Some(value) => gt(value)
+      case None => VoidFilter
+    }
+  }
+
+  def >(opt: Option[T]): OptionalFilter = gt(opt)
+
+  def gte(opt: Option[T]): OptionalFilter = {
+    opt match {
+      case Some(value) => gte(value)
+      case None => VoidFilter
+    }
+  }
+
+  def >=(opt: Option[T]): OptionalFilter = gte(opt)
+
+  def lt(opt: Option[T]): OptionalFilter = {
+    opt match {
+      case Some(value) => lt(value)
+      case None => VoidFilter
+    }
+  }
+
+  def <(opt: Option[T]): OptionalFilter = lt(opt)
+
+  def lte(opt: Option[T]): OptionalFilter = {
+    opt match {
+      case Some(value) => lte(value)
+      case None => VoidFilter
+    }
+  }
+
+  def <=(opt: Option[T]): OptionalFilter = lte(opt)
 }
 
 

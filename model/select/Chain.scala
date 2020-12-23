@@ -7,7 +7,7 @@ object standard {
 
   class Where[M <: Model](coll: SeqCollector[M]) extends OrderBy[M](coll) {
 
-    def where(pick: M => Seq[ModelFilter]) = {
+    def where(pick: M => Seq[OptionalFilter]) = {
       new OrderBy(
         coll.add(
           WhereAllSec(pick(coll.model))
@@ -75,7 +75,7 @@ object standardJoin {
 
   class Where[A <: Model, B <: Model](coll: SeqJoinCollector[A, B]) extends OrderBy(coll) {
 
-    def where(pick: Join[A, B] => Seq[ModelFilter]) = {
+    def where(pick: Join[A, B] => Seq[OptionalFilter]) = {
       new OrderBy(
         coll.add(
           WhereAllSec(pick(coll.join))
@@ -130,7 +130,7 @@ object tupled {
 
   class Where[M <: Model, R](coll: TupleCollector[M, R]) extends OrderBy[M, R](coll) {
 
-    def where(pick: M => Seq[ModelFilter]) = {
+    def where(pick: M => Seq[OptionalFilter]) = {
       new OrderBy(
         coll.add(
           WhereAllSec(pick(coll.model))
@@ -202,7 +202,7 @@ object tupledJoin {
 
   class Where[A <: Model, B <: Model, R](coll: TupleJoinCollector[A, B, R]) extends OrderBy[A, B, R](coll) {
 
-    def where(pick: Join[A, B] => Seq[ModelFilter]) = {
+    def where(pick: Join[A, B] => Seq[OptionalFilter]) = {
       new OrderBy(
         coll.add(
           WhereAllSec(pick(coll.join))

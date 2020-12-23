@@ -14,6 +14,16 @@ case class Columns[M <: Model](model: M, conn: Connection) extends TupleCols[M] 
       )
     )
   }
+
+  def col(pick: M => TypeCol[_]) = {
+    new tupled.Where(
+      Collector.tuple(
+        model,
+        SingleCol(pick(model)),
+        conn
+      )
+    )
+  }
 }
 
 
@@ -24,6 +34,16 @@ case class JoinColumns[A <: Model, B <: Model](join: Join[A, B], conn: Connectio
       Collector.standardJoin(
         join,
         pick(join),
+        conn
+      )
+    )
+  }
+
+  def col(pick: Join[A, B] => TypeCol[_]) = {
+    new tupledJoin.Where(
+      Collector.tupleJoin(
+        join,
+        SingleCol(pick(join)),
         conn
       )
     )
