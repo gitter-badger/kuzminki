@@ -3,13 +3,13 @@
 
 
 model = """
-  def cols2[A1, A2](pick: M => Tuple2[TypeCol[A1], TypeCol[A2]]) = {
-    tupledWhere(Tuple2Cols(pick(model)))
+  def cols2[A1, A2](pick: Join[A, B] => Tuple2[TypeCol[A1], TypeCol[A2]]) = {
+    tupledWhere(Tuple2Cols(pick(join)))
   }"""
 
 func = """
-  def cols%s[%s](pick: M => Tuple%s[%s]) = {
-    tupledWhere(Tuple%sCols(pick(model)))
+  def cols%s[%s](pick: Join[A, B] => Tuple%s[%s]) = {
+    tupledWhere(Tuple%sCols(pick(join)))
   }"""
 
 
@@ -19,15 +19,15 @@ template = """package kuzminki.model.select
 import kuzminki.model._
 
 
-trait TupleCols[M <: Model] {
+trait TupleJoinCols[A <: Model, B <: Model] {
 
-  val model: M
+  val join: Join[A, B]
   val conn: Connection
 
   private def tupledWhere[R](transformer: TupleTransformer[R]) = {
-    new tupled.Where(
-      Collector.tuple(
-        model,
+    new tupledJoin.Where(
+      Collector.tupleJoin(
+        join,
         transformer,
         conn
       )
@@ -47,6 +47,6 @@ for num in range(2, 23):
 
 content = template % "\n".join(parts)
 
-f = open('./TupleCols.scala', 'w')
+f = open('./TupleJoinCols.scala', 'w')
 f.write(content)
 f.close()

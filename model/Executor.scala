@@ -10,11 +10,14 @@ import kuzminki.model.select._
 case class Connection(db: RdbcConn, ec: ExecutionContext)
 
 
-case class SeqExecutor(cols: Seq[TypeCol[_]], db: RdbcConn)(implicit ec: ExecutionContext) {
+case class SeqExecutor(query: Query,
+                       cols: Seq[TypeCol[_]],
+                       db: RdbcConn)
+                      (implicit ec: ExecutionContext) {
 
   import kuzminki.model.implicits._
 
-  def asSeq(query: Query): Future[List[Seq[Any]]] = {
+  def asSeq: Future[List[Seq[Any]]] = {
     db.select(query).map { rows =>
       rows.map { row =>
         cols.map(col => col.get(row))
@@ -22,23 +25,84 @@ case class SeqExecutor(cols: Seq[TypeCol[_]], db: RdbcConn)(implicit ec: Executi
     }
   }
 
-  def asMap(query: Query): Future[List[Map[String, Any]]] = {
+  def asSeqTo[T](implicit custom: Seq[Any] => T): Future[List[T]] = {
+    db.select(query).map { rows =>
+      rows.map { row =>
+        custom(
+          cols.map(col => col.get(row))
+        )
+      }
+    }
+  }
+
+  def asMap: Future[List[Map[String, Any]]] = {
     db.select(query).map { rows =>
       rows.map { row =>
         cols.map(col => (col.name, col.get(row))).toMap
       }
     }
   }
+
+  def asMapTo[T](implicit custom: Map[String, Any] => T): Future[List[T]] = {
+    db.select(query).map { rows =>
+      rows.map { row =>
+        custom(
+          cols.map(col => (col.name, col.get(row))).toMap
+        )
+      }
+    }
+  }
+
+  def asRow: Future[List[Row]] = {
+    db.select(query)
+  }
+
+  def asRowTo[T](implicit custom: Row => T): Future[List[T]] = {
+    db.select(query).map { rows =>
+      rows.map { row =>
+        custom(row)
+      }
+    }
+  }
 }
 
 
-case class TupleExecutor[R](transformer: TupleTransformer[R], db: RdbcConn)(implicit ec: ExecutionContext) {
+case class TupleExecutor[R](query: Query,
+                            transformer: TupleTransformer[R],
+                            db: RdbcConn)
+                           (implicit ec: ExecutionContext) {
 
-  def asTuple(query: Query): Future[List[R]] = {
+  def asTuple: Future[List[R]] = {
     db.select(query).map { rows =>
       rows.map { row =>
         transformer.transform(row)
       }
     }
   }
+
+  def as[T](implicit custom: R => T): Future[List[T]] = {
+    db.select(query).map { rows =>
+      rows.map { row =>
+        custom(
+          transformer.transform(row)
+        )
+      }
+    }
+  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

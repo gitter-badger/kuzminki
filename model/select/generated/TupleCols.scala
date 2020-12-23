@@ -10,7 +10,7 @@ trait TupleCols[M <: Model] {
 
   private def tupledWhere[R](transformer: TupleTransformer[R]) = {
     new tupled.Where(
-      TupleCollector.create(
+      Collector.tuple(
         model,
         transformer,
         conn
