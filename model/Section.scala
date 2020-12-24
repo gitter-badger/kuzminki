@@ -97,10 +97,9 @@ case class WhereChainSec(parts: Seq[ModelRender]) extends MultiPart with Used {
 }
 
 
-case class WhereAllSec(optional: Seq[OptionalFilter]) extends MultiPart {
+case class WhereAllSec(parts: Seq[ModelFilter]) extends MultiPart {
   def expression = "WHERE %s"
   def glue = " AND "
-  val parts = optional.filter(_.isUsed).map(_.asInstanceOf[ModelFilter])
   val isUsed = parts.nonEmpty
 }
 

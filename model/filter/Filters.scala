@@ -14,6 +14,8 @@ trait UniversalFilters[T] extends Underlying {
   def not(value: T): ModelFilter = FilterNot(col, value)
   def !==(value: T): ModelFilter = not(value)
   
+  // not optional
+
   def isNull: ModelFilter = FilterIsNull(col)
   def isNotNull: ModelFilter = FilterIsNotNull(col)
 
@@ -21,23 +23,13 @@ trait UniversalFilters[T] extends Underlying {
 
   // optional
 
-  def matches(opt: Option[T]): OptionalFilter = {
-    opt match {
-      case Some(value) => matches(value)
-      case None => VoidFilter
-    }
-  }
+  def matches(opt: Option[T]): Option[ModelFilter] = opt.map(matches)
+  def ===(opt: Option[T]): Option[ModelFilter] = opt.map(matches)
 
-  def ===(opt: Option[T]): OptionalFilter = matches(opt)
+  def not(opt: Option[T]): Option[ModelFilter] = opt.map(not)
+  def !==(opt: Option[T]): Option[ModelFilter] = opt.map(not)
 
-  def not(opt: Option[T]): OptionalFilter = {
-    opt match {
-      case Some(value) => not(value)
-      case None => VoidFilter
-    }
-  }
-
-  def !==(opt: Option[T]): OptionalFilter = not(opt)
+  def in(opt: Option[Seq[T]]): Option[ModelFilter] = opt.map(in)
 }
 
 
@@ -57,41 +49,17 @@ trait ComparativeFilters[T] extends Underlying {
 
   // optional
 
-  def gt(opt: Option[T]): OptionalFilter = {
-    opt match {
-      case Some(value) => gt(value)
-      case None => VoidFilter
-    }
-  }
+  def gt(opt: Option[T]): Option[ModelFilter] = opt.map(gt)
+  def >(opt: Option[T]): Option[ModelFilter] = opt.map(gt)
 
-  def >(opt: Option[T]): OptionalFilter = gt(opt)
+  def gte(opt: Option[T]): Option[ModelFilter] = opt.map(gte)
+  def >=(opt: Option[T]): Option[ModelFilter] = opt.map(gte)
 
-  def gte(opt: Option[T]): OptionalFilter = {
-    opt match {
-      case Some(value) => gte(value)
-      case None => VoidFilter
-    }
-  }
+  def lt(opt: Option[T]): Option[ModelFilter] = opt.map(lt)
+  def <(opt: Option[T]): Option[ModelFilter] = opt.map(lt)
 
-  def >=(opt: Option[T]): OptionalFilter = gte(opt)
-
-  def lt(opt: Option[T]): OptionalFilter = {
-    opt match {
-      case Some(value) => lt(value)
-      case None => VoidFilter
-    }
-  }
-
-  def <(opt: Option[T]): OptionalFilter = lt(opt)
-
-  def lte(opt: Option[T]): OptionalFilter = {
-    opt match {
-      case Some(value) => lte(value)
-      case None => VoidFilter
-    }
-  }
-
-  def <=(opt: Option[T]): OptionalFilter = lte(opt)
+  def lte(opt: Option[T]): Option[ModelFilter] = opt.map(lte)
+  def <=(opt: Option[T]): Option[ModelFilter] = opt.map(lte)
 }
 
 
