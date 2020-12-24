@@ -77,7 +77,7 @@ object standard {
     }
   }
 
-  class Run[M <: Model](coll: SeqCollector[M]) {
+  class Run[M <: Model](coll: SeqCollector[M]) extends Printing {
 
     def run = coll.executor
     def render = coll.render
@@ -173,7 +173,7 @@ object standardJoin {
     }
   }
 
-  class Run[A <: Model, B <: Model](coll: SeqJoinCollector[A, B]) {
+  class Run[A <: Model, B <: Model](coll: SeqJoinCollector[A, B]) extends Printing {
 
     def run = coll.executor
     def render = coll.render
@@ -260,7 +260,7 @@ object tupled {
   }
 
 
-  class Run[T <: Model, R](coll: TupleCollector[T, R]) {
+  class Run[T <: Model, R](coll: TupleCollector[T, R]) extends Printing {
 
     def run = coll.executor
     def render = coll.render
@@ -356,7 +356,7 @@ object tupledJoin {
     }
   }
 
-  class Run[A <: Model, B <: Model, R](coll: TupleJoinCollector[A, B, R]) {
+  class Run[A <: Model, B <: Model, R](coll: TupleJoinCollector[A, B, R]) extends Printing {
 
     def run = coll.executor
     def render = coll.render

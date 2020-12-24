@@ -22,7 +22,7 @@ import io.rdbc.pgsql.transport.netty.sapi.NettyPgConnectionFactory.Config
 import io.rdbc.pool.sapi.ConnectionPool
 import io.rdbc.pool.sapi.ConnectionPoolConfig
 
-import kuzminki.model.Query
+import kuzminki.model.{Query, DbConn}
 
 //import transport.actions.{Action, Batch}
 
@@ -53,7 +53,7 @@ object RdbcPool {
 }
 
 
-class RdbcConn(conf: SystemConfig)(implicit system: ActorSystem) extends LazyLogging {
+class RdbcConn(conf: SystemConfig)(implicit system: ActorSystem) extends DbConn with LazyLogging {
 
   logger.info("Start")
 

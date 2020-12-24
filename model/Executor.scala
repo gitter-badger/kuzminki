@@ -7,12 +7,9 @@ import kuzminki.rdbc._
 import kuzminki.model.select._
 
 
-case class Connection(db: RdbcConn, ec: ExecutionContext)
-
-
 case class SeqExecutor(query: Query,
                        cols: Seq[TypeCol[_]],
-                       db: RdbcConn)
+                       db: DbConn)
                       (implicit ec: ExecutionContext) {
 
   import kuzminki.model.implicits._
@@ -69,7 +66,7 @@ case class SeqExecutor(query: Query,
 
 case class TupleExecutor[R](query: Query,
                             transformer: TupleTransformer[R],
-                            db: RdbcConn)
+                            db: DbConn)
                            (implicit ec: ExecutionContext) {
 
   def asTuple: Future[List[R]] = {
