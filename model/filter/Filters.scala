@@ -30,8 +30,16 @@ trait UniversalFilters[T] extends Underlying {
   def !==(opt: Option[T]): Option[ModelFilter] = opt.map(not)
 
   def in(opt: Option[Seq[T]]): Option[ModelFilter] = opt.map(in)
+
+  // update
+
+  def ==>(value: T) = SetValue(col, value)
 }
 
+trait IncrementUpdate[T] extends Underlying {
+  def +=(value: T) = Increment(col, value)
+  def -=(value: T) = Decrement(col, value)
+}
 
 trait ComparativeFilters[T] extends Underlying {
 

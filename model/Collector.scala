@@ -4,6 +4,7 @@ import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext
 import com.github.vertical_blank.sqlformatter.scala.SqlFormatter
+import io.rdbc.sapi._
 import kuzminki.model.select._
 
 // collector
@@ -66,13 +67,26 @@ object Collector {
       TupleOutput(transformer, conn)
     )
   }
+
+  def forUpdate[M <: Model](model: M,
+                            changes: Seq[Modification],
+                            conn: Connection): OperationCollector[M] = {
+    OperationCollector(
+      model,
+      Array(
+        UpdateSec(ModelTable(model)),
+        UpdateSetSec(changes)
+      ),
+      OperationOutput(conn)
+    )
+  }
 }
 
 trait ResultMethods {
   val sections: Array[Section]
   def render = sections.filter(_.isUsed).map(_.render).mkString(" ")
   def args = sections.filter(_.isUsed).map(_.args).flatten
-  def query = Query(render, args)
+  def statement = SqlWithParams(render, args.toVector)
 }
 
 case class SeqCollector[M <: Model](model: M,
@@ -81,7 +95,7 @@ case class SeqCollector[M <: Model](model: M,
 
   def add(section: Section) = this.copy(sections = sections :+ section)
 
-  def executor = output.executor(query)
+  def executor = output.executor(statement)
 }
 
 
@@ -91,7 +105,7 @@ case class TupleCollector[M <: Model, R](model: M,
 
   def add(section: Section) = this.copy(sections = sections :+ section)
 
-  def executor = output.executor(query)
+  def executor = output.executor(statement)
 }
 
 
@@ -101,7 +115,7 @@ case class SeqJoinCollector[A <: Model, B <: Model](join: Join[A, B],
 
   def add(section: Section) = this.copy(sections = sections :+ section)
 
-  def executor = output.executor(query)
+  def executor = output.executor(statement)
 }
 
 
@@ -111,9 +125,18 @@ case class TupleJoinCollector[A <: Model, B <: Model, R](join: Join[A, B],
 
   def add(section: Section) = this.copy(sections = sections :+ section)
 
-  def executor = output.executor(query)
+  def executor = output.executor(statement)
 }
 
+
+case class OperationCollector[M <: Model](model: M,
+                                    sections: Array[Section],
+                                    output: OperationOutput) extends ResultMethods {
+
+  def add(section: Section) = this.copy(sections = sections :+ section)
+
+  def executor = output.executor(statement)
+}
 
 
 

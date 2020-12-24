@@ -75,9 +75,9 @@ class RdbcConn(conf: SystemConfig)(implicit system: ActorSystem) extends DbConn 
 
   // model
 
-  def select(query: Query): Future[List[Row]] = {
-    pool.withConnection(_.statement(SqlWithParams(query.template, query.args.toVector)).executeForSet).map(_.toList).recover {
-      case ex: Exception => throw transformError(ex.getMessage, SqlWithParams(query.template, query.args.toVector))
+  def select(statement: SqlWithParams): Future[List[Row]] = {
+    pool.withConnection(_.statement(statement).executeForSet).map(_.toList).recover {
+      case ex: Exception => throw transformError(ex.getMessage, statement)
     }
   }
 

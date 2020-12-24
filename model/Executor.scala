@@ -7,7 +7,7 @@ import kuzminki.rdbc._
 import kuzminki.model.select._
 
 
-case class SeqExecutor(query: Query,
+case class SeqExecutor(statement: SqlWithParams,
                        cols: Seq[TypeCol[_]],
                        db: DbConn)
                       (implicit ec: ExecutionContext) {
@@ -15,7 +15,7 @@ case class SeqExecutor(query: Query,
   import kuzminki.model.implicits._
 
   def asSeq: Future[List[Seq[Any]]] = {
-    db.select(query).map { rows =>
+    db.select(statement).map { rows =>
       rows.map { row =>
         cols.map(col => col.get(row))
       }
@@ -23,7 +23,7 @@ case class SeqExecutor(query: Query,
   }
 
   def asSeqTo[T](implicit custom: Seq[Any] => T): Future[List[T]] = {
-    db.select(query).map { rows =>
+    db.select(statement).map { rows =>
       rows.map { row =>
         custom(
           cols.map(col => col.get(row))
@@ -33,7 +33,7 @@ case class SeqExecutor(query: Query,
   }
 
   def asMap: Future[List[Map[String, Any]]] = {
-    db.select(query).map { rows =>
+    db.select(statement).map { rows =>
       rows.map { row =>
         cols.map(col => (col.name, col.get(row))).toMap
       }
@@ -41,7 +41,7 @@ case class SeqExecutor(query: Query,
   }
 
   def asMapTo[T](implicit custom: Map[String, Any] => T): Future[List[T]] = {
-    db.select(query).map { rows =>
+    db.select(statement).map { rows =>
       rows.map { row =>
         custom(
           cols.map(col => (col.name, col.get(row))).toMap
@@ -51,11 +51,11 @@ case class SeqExecutor(query: Query,
   }
 
   def asRow: Future[List[Row]] = {
-    db.select(query)
+    db.select(statement)
   }
 
   def asRowTo[T](implicit custom: Row => T): Future[List[T]] = {
-    db.select(query).map { rows =>
+    db.select(statement).map { rows =>
       rows.map { row =>
         custom(row)
       }
@@ -64,13 +64,13 @@ case class SeqExecutor(query: Query,
 }
 
 
-case class TupleExecutor[R](query: Query,
+case class TupleExecutor[R](statement: SqlWithParams,
                             transformer: TupleTransformer[R],
                             db: DbConn)
                            (implicit ec: ExecutionContext) {
 
   def asTuple: Future[List[R]] = {
-    db.select(query).map { rows =>
+    db.select(statement).map { rows =>
       rows.map { row =>
         transformer.transform(row)
       }
@@ -78,7 +78,7 @@ case class TupleExecutor[R](query: Query,
   }
 
   def as[T](implicit custom: R => T): Future[List[T]] = {
-    db.select(query).map { rows =>
+    db.select(statement).map { rows =>
       rows.map { row =>
         custom(
           transformer.transform(row)
@@ -89,7 +89,14 @@ case class TupleExecutor[R](query: Query,
 }
 
 
+case class OperationExecutor[R](statement: SqlWithParams,
+                                db: DbConn)
+                               (implicit ec: ExecutionContext) {
 
+  def run: Future[Unit] = db.exec(statement)
+
+  def runNum: Future[Long] = db.execNum(statement)
+}
 
 
 

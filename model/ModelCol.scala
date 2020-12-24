@@ -39,7 +39,8 @@ case class StringCol(name: String, model: Model) extends TypeCol[String]
     
 case class IntCol(name: String, model: Model) extends TypeCol[Int]
                                                  with UniversalFilters[Int]
-                                                 with ComparativeFilters[Int] {
+                                                 with ComparativeFilters[Int]
+                                                 with IncrementUpdate[Int] {
   def get(row: Row): Int = row.int(name)
 }
 
