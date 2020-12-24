@@ -5,7 +5,7 @@ import kuzminki.model._
 
 object standard {
 
-  class Where[M <: Model](coll: SeqCollector[M]) extends OrderBy[M](coll) {
+  class Where[M <: Model](coll: SeqCollector[M]) extends OrderBy(coll) {
 
     def where(pick: M => Seq[OptionalFilter]) = {
       new OrderBy(
@@ -14,9 +14,17 @@ object standard {
         )
       )
     }
+
+    def whereChain(pick: ChainStart[M] => FilteringChain[M]) = {
+      new OrderBy(
+        coll.add(
+          WhereChainSec(pick(ChainStart(coll.model)).filters)
+        )
+      )
+    }
   }
 
-  class OrderBy[M <: Model](coll: SeqCollector[M]) extends Offset[M](coll) {
+  class OrderBy[M <: Model](coll: SeqCollector[M]) extends Offset(coll) {
 
     def orderBy(pick: M => Seq[ModelSorting]) = {
       new Offset(
@@ -27,7 +35,7 @@ object standard {
     }
   }
 
-  class Offset[M <: Model](coll: SeqCollector[M]) extends Limit[M](coll) {
+  class Offset[M <: Model](coll: SeqCollector[M]) extends Limit(coll) {
 
     def offset(num: Int) = {
       new Limit(
@@ -38,7 +46,7 @@ object standard {
     }
   }
 
-  class Limit[M <: Model](coll: SeqCollector[M]) extends Run[M](coll) {
+  class Limit[M <: Model](coll: SeqCollector[M]) extends Run(coll) {
 
     def limit(num: Int) = {
       new Run(
@@ -79,6 +87,14 @@ object standardJoin {
       new OrderBy(
         coll.add(
           WhereAllSec(pick(coll.join))
+        )
+      )
+    }
+
+    def whereChain(pick: JoinChainStart[A, B] => JoinFilteringChain[A, B]) = {
+      new OrderBy(
+        coll.add(
+          WhereChainSec(pick(JoinChainStart(coll.join)).filters)
         )
       )
     }
@@ -128,7 +144,7 @@ object standardJoin {
 
 object tupled {
 
-  class Where[M <: Model, R](coll: TupleCollector[M, R]) extends OrderBy[M, R](coll) {
+  class Where[M <: Model, R](coll: TupleCollector[M, R]) extends OrderBy(coll) {
 
     def where(pick: M => Seq[OptionalFilter]) = {
       new OrderBy(
@@ -137,10 +153,18 @@ object tupled {
         )
       )
     }
+
+    def whereChain(pick: ChainStart[M] => FilteringChain[M]) = {
+      new OrderBy(
+        coll.add(
+          WhereChainSec(pick(ChainStart(coll.model)).filters)
+        )
+      )
+    }
   }
 
 
-  class OrderBy[M <: Model, R](coll: TupleCollector[M, R]) extends Offset[M, R](coll) {
+  class OrderBy[M <: Model, R](coll: TupleCollector[M, R]) extends Offset(coll) {
 
     def orderBy(pick: M => Seq[ModelSorting]) = {
       new Offset(
@@ -152,7 +176,7 @@ object tupled {
   }
 
 
-  class Offset[M <: Model, R](coll: TupleCollector[M, R]) extends Limit[M, R](coll) {
+  class Offset[M <: Model, R](coll: TupleCollector[M, R]) extends Limit(coll) {
 
     def offset(num: Int) = {
       new Limit(
@@ -164,7 +188,7 @@ object tupled {
   }
 
 
-  class Limit[M <: Model, R](coll: TupleCollector[M, R]) extends Run[M, R](coll) {
+  class Limit[M <: Model, R](coll: TupleCollector[M, R]) extends Run(coll) {
 
     def limit(num: Int) = {
       new Run(
@@ -200,7 +224,7 @@ object tupledJoin {
     }
   }
 
-  class Where[A <: Model, B <: Model, R](coll: TupleJoinCollector[A, B, R]) extends OrderBy[A, B, R](coll) {
+  class Where[A <: Model, B <: Model, R](coll: TupleJoinCollector[A, B, R]) extends OrderBy(coll) {
 
     def where(pick: Join[A, B] => Seq[OptionalFilter]) = {
       new OrderBy(
@@ -209,9 +233,17 @@ object tupledJoin {
         )
       )
     }
+
+    def whereChain(pick: JoinChainStart[A, B] => JoinFilteringChain[A, B]) = {
+      new OrderBy(
+        coll.add(
+          WhereChainSec(pick(JoinChainStart(coll.join)).filters)
+        )
+      )
+    }
   }
 
-  class OrderBy[A <: Model, B <: Model, R](coll: TupleJoinCollector[A, B, R]) extends Offset[A, B, R](coll) {
+  class OrderBy[A <: Model, B <: Model, R](coll: TupleJoinCollector[A, B, R]) extends Offset(coll) {
 
     def orderBy(pick: Join[A, B] => Seq[ModelSorting]) = {
       new Offset(
@@ -222,7 +254,7 @@ object tupledJoin {
     }
   }
 
-  class Offset[A <: Model, B <: Model, R](coll: TupleJoinCollector[A, B, R]) extends Limit[A, B, R](coll) {
+  class Offset[A <: Model, B <: Model, R](coll: TupleJoinCollector[A, B, R]) extends Limit(coll) {
 
     def offset(num: Int) = {
       new Limit(
@@ -233,7 +265,7 @@ object tupledJoin {
     }
   }
 
-  class Limit[A <: Model, B <: Model, R](coll: TupleJoinCollector[A, B, R]) extends Run[A, B, R](coll) {
+  class Limit[A <: Model, B <: Model, R](coll: TupleJoinCollector[A, B, R]) extends Run(coll) {
 
     def limit(num: Int) = {
       new Run(

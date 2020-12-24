@@ -91,8 +91,9 @@ case class OnSec(leftCol: ModelRender, rightCol: ModelRender) extends Section wi
 }
 
 
-case class WhereChainSec(part: ModelRender) extends SinglePart with Used {
+case class WhereChainSec(parts: Seq[ModelRender]) extends MultiPart with Used {
   def expression = "WHERE %s"
+  def glue = " "
 }
 
 
