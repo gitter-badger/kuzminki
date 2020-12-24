@@ -1,6 +1,7 @@
 package kuzminki.model.update
 
 import kuzminki.model._
+import kuzminki.model.select.SingleCol
 
 
 class Changes[M <: Model](model: M, conn: Connection) {
@@ -20,7 +21,7 @@ class Changes[M <: Model](model: M, conn: Connection) {
 class Where[M <: Model](coll: OperationCollector[M]){
 
   def whereAll(pick: M => Seq[ModelFilter]) = {
-    new RunUpdate(
+    new Returning(
       coll.add(
         WhereAllSec(pick(coll.model))
       )
@@ -28,7 +29,7 @@ class Where[M <: Model](coll: OperationCollector[M]){
   }
 
   def whereOpt(pick: M => Seq[Option[ModelFilter]]) = {
-    new RunUpdate(
+    new Returning(
       coll.add(
         WhereAllSec(pick(coll.model).flatten)
       )
@@ -36,7 +37,7 @@ class Where[M <: Model](coll: OperationCollector[M]){
   }
 
   def whereOne(pick: M => ModelFilter) = {
-    new RunUpdate(
+    new Returning(
       coll.add(
         WhereAllSec(
           Seq(pick(coll.model))
@@ -46,7 +47,7 @@ class Where[M <: Model](coll: OperationCollector[M]){
   }
 
   def whereChain(pick: ChainStart[M] => FilteringChain[M]) = {
-    new RunUpdate(
+    new Returning(
       coll.add(
         WhereChainSec(pick(ChainStart(coll.model)).filters)
       )
@@ -55,7 +56,26 @@ class Where[M <: Model](coll: OperationCollector[M]){
 }
 
 
-class RunUpdate[M <: Model](coll: OperationCollector[M]) extends Printing {
+class Returning[M <: Model](coll: OperationCollector[M]) extends RunOperation(coll) {
+
+  def col(pick: M => TypeCol[_]) = {
+    new RunReturning(
+      Collector.forReturningTuple(
+        coll,
+        SingleCol(pick(coll.model))
+      )
+    )
+  }
+}
+
+class RunReturning[T <: Model, R](coll: TupleCollector[T, R]) extends Printing {
+
+  def run = coll.executor
+  def render = coll.render
+}
+
+
+class RunOperation[M <: Model](coll: OperationCollector[M]) extends Printing {
 
   def run = coll.executor
   def render = coll.render

@@ -80,6 +80,15 @@ object Collector {
       OperationOutput(conn)
     )
   }
+
+  def forReturningTuple[M <: Model, R](collector: OperationCollector[M],
+                                    transformer: TupleTransformer[R]): TupleCollector[M, R] = {
+    TupleCollector(
+      collector.model,
+      collector.sections :+ ReturningSec(transformer.toSeq),
+      TupleOutput(transformer, collector.output.conn)
+    )
+  }
 }
 
 trait ResultMethods {
@@ -130,8 +139,8 @@ case class TupleJoinCollector[A <: Model, B <: Model, R](join: Join[A, B],
 
 
 case class OperationCollector[M <: Model](model: M,
-                                    sections: Array[Section],
-                                    output: OperationOutput) extends ResultMethods {
+                                          sections: Array[Section],
+                                          output: OperationOutput) extends ResultMethods {
 
   def add(section: Section) = this.copy(sections = sections :+ section)
 

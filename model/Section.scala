@@ -143,6 +143,13 @@ case class DeleteFromSec(part: ModelRender) extends SinglePart with Used {
   def expression = "DELETE FROM %s"
 }
 
+// returning
+
+case class ReturningSec(parts: Seq[ModelCol]) extends MultiPart with Used {
+  def expression = "RETURNING %s"
+  def glue = ", "
+}
+
 // Update
 
 case class UpdateSec(part: ModelRender) extends SinglePart with Used {
