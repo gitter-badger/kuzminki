@@ -15,6 +15,16 @@ object standard {
       )
     }
 
+    def whereOne(pick: M => OptionalFilter) = {
+      new OrderBy(
+        coll.add(
+          WhereAllSec(
+            Seq(pick(coll.model))
+          )
+        )
+      )
+    }
+
     def whereChain(pick: ChainStart[M] => FilteringChain[M]) = {
       new OrderBy(
         coll.add(
@@ -30,6 +40,16 @@ object standard {
       new Offset(
         coll.add(
           OrderBySec(pick(coll.model))
+        )
+      )
+    }
+
+    def orderByOne(pick: M => ModelSorting) = {
+      new Offset(
+        coll.add(
+          OrderBySec(
+            Seq(pick(coll.model))
+          )
         )
       )
     }
@@ -91,6 +111,16 @@ object standardJoin {
       )
     }
 
+    def whereOne(pick: Join[A, B] => OptionalFilter) = {
+      new OrderBy(
+        coll.add(
+          WhereAllSec(
+            Seq(pick(coll.join))
+          )
+        )
+      )
+    }
+
     def whereChain(pick: JoinChainStart[A, B] => JoinFilteringChain[A, B]) = {
       new OrderBy(
         coll.add(
@@ -106,6 +136,16 @@ object standardJoin {
       new Offset(
         coll.add(
           OrderBySec(pick(coll.join))
+        )
+      )
+    }
+
+    def orderByOne(pick: Join[A, B] => ModelSorting) = {
+      new Offset(
+        coll.add(
+          OrderBySec(
+            Seq(pick(coll.join))
+          )
         )
       )
     }
@@ -154,6 +194,16 @@ object tupled {
       )
     }
 
+    def whereOne(pick: M => OptionalFilter) = {
+      new OrderBy(
+        coll.add(
+          WhereAllSec(
+            Seq(pick(coll.model))
+          )
+        )
+      )
+    }
+
     def whereChain(pick: ChainStart[M] => FilteringChain[M]) = {
       new OrderBy(
         coll.add(
@@ -170,6 +220,16 @@ object tupled {
       new Offset(
         coll.add(
           OrderBySec(pick(coll.model))
+        )
+      )
+    }
+
+    def orderByOne(pick: M => ModelSorting) = {
+      new Offset(
+        coll.add(
+          OrderBySec(
+            Seq(pick(coll.model))
+          )
         )
       )
     }
@@ -234,6 +294,16 @@ object tupledJoin {
       )
     }
 
+    def whereOne(pick: Join[A, B] => OptionalFilter) = {
+      new OrderBy(
+        coll.add(
+          WhereAllSec(
+            Seq(pick(coll.join))
+          )
+        )
+      )
+    }
+
     def whereChain(pick: JoinChainStart[A, B] => JoinFilteringChain[A, B]) = {
       new OrderBy(
         coll.add(
@@ -249,6 +319,16 @@ object tupledJoin {
       new Offset(
         coll.add(
           OrderBySec(pick(coll.join))
+        )
+      )
+    }
+
+    def orderByOne(pick: Join[A, B] => ModelSorting) = {
+      new Offset(
+        coll.add(
+          OrderBySec(
+            Seq(pick(coll.join))
+          )
         )
       )
     }
