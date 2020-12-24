@@ -71,6 +71,7 @@ object Collector {
   def forUpdate[M <: Model](model: M,
                             changes: Seq[Modification],
                             conn: Connection): OperationCollector[M] = {
+    
     OperationCollector(
       model,
       Array(
@@ -81,8 +82,9 @@ object Collector {
     )
   }
 
-  def forReturningTuple[M <: Model, R](collector: OperationCollector[M],
+  def forTypedReturning[M <: Model, R](collector: OperationCollector[M],
                                     transformer: TupleTransformer[R]): TupleCollector[M, R] = {
+    
     TupleCollector(
       collector.model,
       collector.sections :+ ReturningSec(transformer.toSeq),

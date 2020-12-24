@@ -1,7 +1,6 @@
-package kuzminki.model.update
+package kuzminki.model.operation
 
 import kuzminki.model._
-import kuzminki.model.select.SingleCol
 
 
 class Changes[M <: Model](model: M, conn: Connection) {
@@ -56,30 +55,7 @@ class Where[M <: Model](coll: OperationCollector[M]){
 }
 
 
-class Returning[M <: Model](coll: OperationCollector[M]) extends RunOperation(coll) {
 
-  def col(pick: M => TypeCol[_]) = {
-    new RunReturning(
-      Collector.forReturningTuple(
-        coll,
-        SingleCol(pick(coll.model))
-      )
-    )
-  }
-}
-
-class RunReturning[T <: Model, R](coll: TupleCollector[T, R]) extends Printing {
-
-  def run = coll.executor
-  def render = coll.render
-}
-
-
-class RunOperation[M <: Model](coll: OperationCollector[M]) extends Printing {
-
-  def run = coll.executor
-  def render = coll.render
-}
 
 
 

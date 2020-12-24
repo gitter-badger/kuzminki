@@ -4,7 +4,6 @@ import scala.concurrent.Future
 import scala.concurrent.ExecutionContext
 import io.rdbc.sapi._
 import kuzminki.rdbc._
-import kuzminki.model.select._
 
 
 case class SeqExecutor(statement: SqlWithParams,

@@ -6,7 +6,7 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
 import io.rdbc.sapi._
 import kuzminki.model.select.{Columns, JoinColumns}
-import kuzminki.model.update.{Changes}
+import kuzminki.model.operation.{Changes}
 import kuzminki.model.implicits._
 
 

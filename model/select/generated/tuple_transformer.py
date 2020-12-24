@@ -36,7 +36,7 @@ case class Tuple%sCols[%s](cols: Tuple%s[%s]) extends TupleTransformer[Tuple%s[%
 
 
 
-template = """package kuzminki.model.select
+template = """package kuzminki.model
 
 import io.rdbc.sapi._
 import kuzminki.model._
