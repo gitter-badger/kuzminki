@@ -97,6 +97,22 @@ object Collector {
     )
   }
 
+  def forTypedInsert[M <: Model](model: M,
+                                 cols: Seq[ModelCol],
+                                 values: Seq[Any],
+                                 conn: Connection): OperationCollector[M] = {
+    
+    OperationCollector(
+      model,
+      Array(
+        InsertIntoSec(ModelTable(model)),
+        InsertColumnsSec(cols),
+        InsertValuesSec(values)
+      ),
+      OperationOutput(conn)
+    )
+  }
+
   def forTypedReturning[M <: Model, R](collector: OperationCollector[M],
                                        transformer: TupleTransformer[R]): TupleCollector[M, R] = {
     

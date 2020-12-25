@@ -175,15 +175,15 @@ case class InsertColumnsSec(parts: Seq[ModelCol]) extends MultiPart with Used {
 }
 
 
-case class InsertNestedSec(part: ModelRender) extends SinglePart with Used {
-  def expression = "(%s)"
-}
-
-
 case class InsertValuesSec(values: Seq[Any]) extends Section with Used {
   def expression = "VALUES (%s)"
   def render = expression.format(Vector.fill(args.size)("?").mkString(", "))
   def args = values
+}
+
+
+case class InsertNestedSec(part: ModelRender) extends SinglePart with Used {
+  def expression = "(%s)"
 }
 
 
