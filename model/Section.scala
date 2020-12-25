@@ -169,7 +169,7 @@ case class InsertIntoSec(part: ModelRender) extends SinglePart with Used {
 }
 
 
-case class InsertColumnsSec(parts: Seq[ModelRender]) extends MultiPart with Used {
+case class InsertColumnsSec(parts: Seq[ModelCol]) extends MultiPart with Used {
   def expression = "(%s)"
   def glue = ", "
 }
@@ -192,7 +192,7 @@ object InsertOnConflictSec extends TextOnly with Used {
 }
 
 
-case class InsertOnConflictColumnSec(part: ModelRender) extends SinglePart with Used {
+case class InsertOnConflictColumnSec(part: ModelCol) extends SinglePart with Used {
   def expression = "ON CONFLICT (%s)"
 }
 
@@ -207,7 +207,7 @@ object InsertDoNothingSec extends TextOnly with Used {
 }
 
 
-case class InsertDoUpdate(parts: Seq[ModelRender]) extends MultiPart with Used {
+case class InsertDoUpdateSec(parts: Seq[Assign]) extends MultiPart with Used {
   def expression = "DO UPDATE SET %s"
   def glue = ", "
 }

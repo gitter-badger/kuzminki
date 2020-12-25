@@ -3,9 +3,9 @@ package kuzminki.model.operation
 import kuzminki.model._
 
 
-class Changes[M <: Model](model: M, conn: Connection) {
+class Update[M <: Model](model: M, conn: Connection) {
 
-  def set(pick: M => Seq[Modification]) = {
+  def set(pick: M => Seq[Assign]) = {
     new Where(
       Collector.forUpdate(
         model,
@@ -14,8 +14,17 @@ class Changes[M <: Model](model: M, conn: Connection) {
       )
     )
   }
-}
 
+  def setOne(pick: M => Assign) = {
+    new Where(
+      Collector.forUpdate(
+        model,
+        Seq(pick(model)),
+        conn
+      )
+    )
+  }
+}
 
 class Where[M <: Model](coll: OperationCollector[M]){
 

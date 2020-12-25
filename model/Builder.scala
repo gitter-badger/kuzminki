@@ -6,7 +6,7 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
 import io.rdbc.sapi._
 import kuzminki.model.select.{Columns, JoinColumns}
-import kuzminki.model.operation.{Changes}
+import kuzminki.model.operation.{Update, Insert}
 import kuzminki.model.implicits._
 
 
@@ -25,7 +25,11 @@ object Builder {
   }
 
   def update[M <: Model](implicit tag: ClassTag[M]) = {
-    new Changes(Model.from[M], conn)
+    new Update(Model.from[M], conn)
+  }
+
+  def insert[M <: Model](implicit tag: ClassTag[M]) = {
+    new Insert(Model.from[M], conn)
   }  
 }
 

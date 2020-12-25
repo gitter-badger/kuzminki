@@ -68,8 +68,23 @@ object Collector {
     )
   }
 
+  def forInsertData[M <: Model](model: M,
+                                changes: Seq[SetValue],
+                                conn: Connection): OperationCollector[M] = {
+    
+    OperationCollector(
+      model,
+      Array(
+        InsertIntoSec(ModelTable(model)),
+        InsertColumnsSec(changes.map(_.col)),
+        InsertValuesSec(changes.map(_.value))
+      ),
+      OperationOutput(conn)
+    )
+  }
+
   def forUpdate[M <: Model](model: M,
-                            changes: Seq[Modification],
+                            changes: Seq[Assign],
                             conn: Connection): OperationCollector[M] = {
     
     OperationCollector(
@@ -83,7 +98,7 @@ object Collector {
   }
 
   def forTypedReturning[M <: Model, R](collector: OperationCollector[M],
-                                    transformer: TupleTransformer[R]): TupleCollector[M, R] = {
+                                       transformer: TupleTransformer[R]): TupleCollector[M, R] = {
     
     TupleCollector(
       collector.model,
