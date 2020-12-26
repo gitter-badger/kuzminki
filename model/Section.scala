@@ -177,8 +177,23 @@ case class InsertColumnsSec(parts: Seq[ModelCol]) extends MultiPart with Used {
 
 case class InsertValuesSec(values: Seq[Any]) extends Section with Used {
   def expression = "VALUES (%s)"
-  def render = expression.format(Vector.fill(args.size)("?").mkString(", "))
+  def render = expression.format(Vector.fill(values.size)("?").mkString(", "))
   def args = values
+}
+
+
+case class InsertMultipleValuesSec(valuesList: Seq[Seq[Any]]) extends Section with Used {
+  def expression = "VALUES %s"
+  def render = {
+    expression.format(
+      valuesList.map { values => 
+        "(%s)".format(
+          Vector.fill(values.size)("?").mkString(", ")
+        )
+      }.mkString(", ")
+    )
+  }
+  def args = valuesList.flatten
 }
 
 

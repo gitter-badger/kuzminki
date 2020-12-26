@@ -29,6 +29,17 @@ case class TypedValues[M <: Model, A](model: M, conn: Connection, cols: InsertTy
     )
   }
 
+  def valuesList(dataList: Seq[A]) = {
+    new OnConflict(
+      Collector.forMultipleTypedInsert(
+        model,
+        cols.toSeq,
+        dataList.map(cols.argsToSeq(_)),
+        conn
+      )
+    )
+  }
+
   def valuesAs[T](data: T)(implicit transform: T => A) = {
     new OnConflict(
       Collector.forTypedInsert(
@@ -38,7 +49,18 @@ case class TypedValues[M <: Model, A](model: M, conn: Connection, cols: InsertTy
         conn
       )
     )
-  }  
+  }
+
+  def valuesListAs[T](dataList: Seq[T])(implicit transform: T => A) = {
+    new OnConflict(
+      Collector.forMultipleTypedInsert(
+        model,
+        cols.toSeq,
+        dataList.map(data => cols.argsToSeq(transform(data))),
+        conn
+      )
+    )
+  }
 }
 
 class OnConflict[M <: Model](coll: OperationCollector[M]) extends Returning(coll) {

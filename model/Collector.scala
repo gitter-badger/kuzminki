@@ -72,6 +72,20 @@ object Collector {
     )
   }
 
+  def forUpdate[M <: Model](model: M,
+                            changes: Seq[Assign],
+                            conn: Connection): OperationCollector[M] = {
+    
+    OperationCollector(
+      model,
+      Array(
+        UpdateSec(ModelTable(model)),
+        UpdateSetSec(changes)
+      ),
+      OperationOutput(conn)
+    )
+  }
+
   def forInsertData[M <: Model](model: M,
                                 changes: Seq[SetValue],
                                 conn: Connection): OperationCollector[M] = {
@@ -82,20 +96,6 @@ object Collector {
         InsertIntoSec(ModelTable(model)),
         InsertColumnsSec(changes.map(_.col)),
         InsertValuesSec(changes.map(_.value))
-      ),
-      OperationOutput(conn)
-    )
-  }
-
-  def forUpdate[M <: Model](model: M,
-                            changes: Seq[Assign],
-                            conn: Connection): OperationCollector[M] = {
-    
-    OperationCollector(
-      model,
-      Array(
-        UpdateSec(ModelTable(model)),
-        UpdateSetSec(changes)
       ),
       OperationOutput(conn)
     )
@@ -112,6 +112,22 @@ object Collector {
         InsertIntoSec(ModelTable(model)),
         InsertColumnsSec(cols),
         InsertValuesSec(values)
+      ),
+      OperationOutput(conn)
+    )
+  }
+
+  def forMultipleTypedInsert[M <: Model](model: M,
+                                 cols: Seq[ModelCol],
+                                 valuesList: Seq[Seq[Any]],
+                                 conn: Connection): OperationCollector[M] = {
+    
+    OperationCollector(
+      model,
+      Array(
+        InsertIntoSec(ModelTable(model)),
+        InsertColumnsSec(cols),
+        InsertMultipleValuesSec(valuesList)
       ),
       OperationOutput(conn)
     )
