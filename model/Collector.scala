@@ -19,6 +19,7 @@ object Collector {
   def standard[M <: Model](model: M,
                            cols: Seq[TypeCol[_]],
                            conn: Connection): SeqCollector[M] = {
+    
     SeqCollector(
       model,
       Array(
@@ -32,6 +33,7 @@ object Collector {
   def tuple[M <: Model, R](model: M,
                            transformer: TupleTransformer[R], 
                            conn: Connection): TupleCollector[M, R] = {
+    
     TupleCollector(
       model,
       Array(
@@ -45,6 +47,7 @@ object Collector {
   def standardJoin[A <: Model, B <: Model](join: Join[A, B],
                                            cols: Seq[TypeCol[_]], 
                                            conn: Connection): SeqJoinCollector[A, B] = {
+    
     SeqJoinCollector(
       join,
       Array(
@@ -58,6 +61,7 @@ object Collector {
   def tupleJoin[A <: Model, B <: Model, R](join: Join[A, B], 
                                            transformer: TupleTransformer[R], 
                                            conn: Connection): TupleJoinCollector[A, B, R] = {
+    
     TupleJoinCollector(
       join,
       Array(

@@ -3,20 +3,6 @@ package kuzminki.model.operation
 import kuzminki.model._
 
 
-trait TypedInsert[M <: Model] {
-
-  val model: M
-  val conn: Connection
-
-  def col(pick: M => TypeCol[_]) = {
-    TypedValues(model, conn, Insert1Type(pick(model)))
-  }
-
-  def cols1[T1, T2](pick: M => Tuple2[TypeCol[T1], TypeCol[T2]]) = {
-    TypedValues(model, conn, Insert2Types(pick(model)))
-  }
-}
-
 case class Insert[M <: Model](model: M, conn: Connection) extends TypedInsert[M] {
 
   def data(pick: M => Seq[SetValue]) = {

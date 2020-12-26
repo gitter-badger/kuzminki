@@ -2,35 +2,29 @@
 
 
 model = """
-  def cols2[A1, A2](pick: M => Tuple2[TypeCol[A1], TypeCol[A2]]) = {
-    tupledWhere(Tuple2Cols(pick(model)))
+  def cols2[T1, T2](pick: M => Tuple2[TypeCol[T1], TypeCol[T2]]) = {
+    TypedValues(model, conn, Insert2Types(pick(model)))
   }"""
 
 func = """
   def cols%s[%s](pick: M => Tuple%s[%s]) = {
-    tupledWhere(Tuple%sCols(pick(model)))
+    TypedValues(model, conn, Insert%sTypes(pick(model)))
   }"""
 
 
 
-template = """package kuzminki.model.select
+template = """package kuzminki.model.operation
 
 import kuzminki.model._
 
 
-trait TupleCols[M <: Model] {
+trait TypedInsert[M <: Model] {
 
   val model: M
   val conn: Connection
 
-  private def tupledWhere[R](transformer: TupleTransformer[R]) = {
-    new tupled.Where(
-      Collector.tuple(
-        model,
-        transformer,
-        conn
-      )
-    )
+  def col(pick: M => TypeCol[_]) = {
+    TypedValues(model, conn, Insert1Type(pick(model)))
   }
   %s
 }"""
@@ -46,6 +40,6 @@ for num in range(2, 23):
 
 content = template % "\n".join(parts)
 
-f = open('./TupleCols.scala', 'w')
+f = open('./TypedInsert.scala', 'w')
 f.write(content)
 f.close()
