@@ -101,10 +101,10 @@ object Collector {
     )
   }
 
-  def forTypedInsert[M <: Model](model: M,
-                                 cols: Seq[ModelCol],
-                                 values: Seq[Any],
-                                 conn: Connection): OperationCollector[M] = {
+  def forInsert[M <: Model](model: M,
+                            cols: Seq[ModelCol],
+                            values: Seq[Any],
+                            conn: Connection): OperationCollector[M] = {
     
     OperationCollector(
       model,
@@ -117,10 +117,10 @@ object Collector {
     )
   }
 
-  def forMultipleTypedInsert[M <: Model](model: M,
-                                 cols: Seq[ModelCol],
-                                 valuesList: Seq[Seq[Any]],
-                                 conn: Connection): OperationCollector[M] = {
+  def forMultipleInsert[M <: Model](model: M,
+                                    cols: Seq[ModelCol],
+                                    valuesList: Seq[Seq[Any]],
+                                    conn: Connection): OperationCollector[M] = {
     
     OperationCollector(
       model,

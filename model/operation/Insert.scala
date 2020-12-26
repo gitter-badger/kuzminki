@@ -14,51 +14,98 @@ class Insert[M <: Model](model: M, conn: Connection) extends TypedInsert(model, 
       )
     )
   }
+
+  def uncheckedCols(pick: M => Seq[ModelCol]) = {
+    new UncheckedValues(model, conn, pick(model))
+  }
 }
 
-class TypedValues[M <: Model, A](model: M, conn: Connection, cols: InsertType[A]) {
+abstract class InsertCollector[M <: Model](model: M, conn: Connection) {
 
-  def values(data: A) = {
+  protected def single(cols: Seq[ModelCol], values: Seq[Any]) = {
     new OnConflict(
-      Collector.forTypedInsert(
+      Collector.forInsert(
         model,
-        cols.toSeq,
-        cols.argsToSeq(data),
+        cols,
+        values,
         conn
       )
+    )
+  }
+
+  protected def multiple(cols: Seq[ModelCol], valuesList: Seq[Seq[Any]]) = {
+    new OnConflict(
+      Collector.forMultipleInsert(
+        model,
+        cols,
+        valuesList,
+        conn
+      )
+    )
+  }
+}
+
+class UncheckedValues[M <: Model](model: M, conn: Connection, cols: Seq[ModelCol]) extends InsertCollector(model, conn) {
+
+  private def verify(values: Seq[Any]): Unit = {
+
+    if (values.isEmpty) {
+      throw KuzminkiModelException("no columns selected")
+    }
+
+    if (cols.size != values.size) {
+      throw KuzminkiModelException("values size does not match columns size")
+    }
+  }
+
+  def uncheckedValues(values: Seq[Any]) {
+    verify(values)
+    single(cols, values)
+  }
+
+  def uncheckedValuesAs[T](values: T)(implicit transform: T => Seq[Any]) {
+    uncheckedValues(transform(values))
+  }
+
+  def uncheckedValuesList(valuesList: Seq[Seq[Any]]) {
+    valuesList.foreach(verify)
+    multiple(cols, valuesList)
+  }
+
+  def uncheckedValuesListAs[T](valuesList: Seq[T])(implicit transform: T => Seq[Any]) {
+    uncheckedValuesList(valuesList.map(transform))
+  }
+}
+
+class TypedValues[M <: Model, A](model: M, conn: Connection, cols: InsertType[A]) extends InsertCollector(model, conn) {
+
+  def values(data: A) = {
+    single(
+      cols.toSeq,
+      cols.argsToSeq(data)
     )
   }
 
   def valuesList(dataList: Seq[A]) = {
-    new OnConflict(
-      Collector.forMultipleTypedInsert(
-        model,
-        cols.toSeq,
-        dataList.map(cols.argsToSeq(_)),
-        conn
-      )
+    multiple(
+      cols.toSeq,
+      dataList.map(cols.argsToSeq(_))
     )
   }
 
   def valuesAs[T](data: T)(implicit transform: T => A) = {
-    new OnConflict(
-      Collector.forTypedInsert(
-        model,
-        cols.toSeq,
-        cols.argsToSeq(transform(data)),
-        conn
-      )
+    single(
+      cols.toSeq,
+      cols.argsToSeq(transform(data))
     )
   }
 
   def valuesListAs[T](dataList: Seq[T])(implicit transform: T => A) = {
-    new OnConflict(
-      Collector.forMultipleTypedInsert(
-        model,
-        cols.toSeq,
-        dataList.map(data => cols.argsToSeq(transform(data))),
-        conn
-      )
+    multiple(
+      cols.toSeq,
+      dataList.map { data =>
+        cols.argsToSeq(transform(data))
+      }
     )
   }
 }
