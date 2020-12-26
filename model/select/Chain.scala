@@ -1,5 +1,6 @@
 package kuzminki.model.select
 
+import scala.reflect.{ClassTag, classTag}
 import kuzminki.model._
 
 
@@ -288,6 +289,7 @@ object tupled {
 
     def run = coll.executor
     def render = coll.render
+    def asNested = new NestedSelect(run)
   }
 }
 

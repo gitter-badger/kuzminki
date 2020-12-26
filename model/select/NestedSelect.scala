@@ -1,5 +1,8 @@
-package kuzminki.model.select
+package kuzminki.model
 
-import scala.reflect.ClassTag
 
-case class NestedSelect[R](template: String, args: Seq[Any], tag: ClassTag[R])
+class NestedSelect[R](exec: TupleExecutor[R]) {
+  def untyped = UntypedNestedSelect(exec.statement.sql, exec.statement.params.toSeq)
+}
+
+case class UntypedNestedSelect(render: String, args: Seq[Any]) extends ModelRender

@@ -72,74 +72,13 @@ object Collector {
     )
   }
 
-  def forUpdate[M <: Model](model: M,
-                            changes: Seq[Assign],
-                            conn: Connection): OperationCollector[M] = {
-    
-    OperationCollector(
-      model,
-      Array(
-        UpdateSec(ModelTable(model)),
-        UpdateSetSec(changes)
-      ),
-      OperationOutput(conn)
-    )
-  }
-
-  def forInsertData[M <: Model](model: M,
-                                changes: Seq[SetValue],
-                                conn: Connection): OperationCollector[M] = {
-    
-    OperationCollector(
-      model,
-      Array(
-        InsertIntoSec(ModelTable(model)),
-        InsertColumnsSec(changes.map(_.col)),
-        InsertValuesSec(changes.map(_.value))
-      ),
-      OperationOutput(conn)
-    )
-  }
-
-  def forInsert[M <: Model](model: M,
-                            cols: Seq[ModelCol],
-                            values: Seq[Any],
-                            conn: Connection): OperationCollector[M] = {
-    
-    OperationCollector(
-      model,
-      Array(
-        InsertIntoSec(ModelTable(model)),
-        InsertColumnsSec(cols),
-        InsertValuesSec(values)
-      ),
-      OperationOutput(conn)
-    )
-  }
-
-  def forMultipleInsert[M <: Model](model: M,
-                                    cols: Seq[ModelCol],
-                                    valuesList: Seq[Seq[Any]],
-                                    conn: Connection): OperationCollector[M] = {
-    
-    OperationCollector(
-      model,
-      Array(
-        InsertIntoSec(ModelTable(model)),
-        InsertColumnsSec(cols),
-        InsertMultipleValuesSec(valuesList)
-      ),
-      OperationOutput(conn)
-    )
-  }
-
   def forTypedReturning[M <: Model, R](collector: OperationCollector[M],
                                        transformer: TupleTransformer[R]): TupleCollector[M, R] = {
     
     TupleCollector(
       collector.model,
       collector.sections :+ ReturningSec(transformer.toSeq),
-      TupleOutput(transformer, collector.output.conn)
+      TupleOutput(transformer, collector.conn)
     )
   }
 }
@@ -192,12 +131,12 @@ case class TupleJoinCollector[A <: Model, B <: Model, R](join: Join[A, B],
 
 
 case class OperationCollector[M <: Model](model: M,
-                                          sections: Array[Section],
-                                          output: OperationOutput) extends ResultMethods {
+                                          conn: Connection,
+                                          sections: Array[Section]) extends ResultMethods {
 
   def add(section: Section) = this.copy(sections = sections :+ section)
 
-  def executor = output.executor(statement)
+  def executor = OperationOutput(conn).executor(statement)
 }
 
 

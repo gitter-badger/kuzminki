@@ -7,20 +7,28 @@ class Update[M <: Model](model: M, conn: Connection) {
 
   def set(pick: M => Seq[Assign]) = {
     new Where(
-      Collector.forUpdate(
+      OperationCollector(
         model,
-        pick(model),
-        conn
+        conn,
+        Array(
+          UpdateSec(ModelTable(model)),
+          UpdateSetSec(pick(model))
+        )
       )
     )
   }
 
   def setOne(pick: M => Assign) = {
     new Where(
-      Collector.forUpdate(
+      OperationCollector(
         model,
-        Seq(pick(model)),
-        conn
+        conn,
+        Array(
+          UpdateSec(ModelTable(model)),
+          UpdateSetSec(
+            Seq(pick(model))
+          )
+        )
       )
     )
   }

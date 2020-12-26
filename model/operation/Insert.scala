@@ -3,14 +3,25 @@ package kuzminki.model.operation
 import kuzminki.model._
 
 
+case class CollectSingle[M <: Model](model: M,
+                                    conn: Connection,
+                                    cols: Seq[ModelCol],
+                                    values: Seq[Any])
+
+
 class Insert[M <: Model](model: M, conn: Connection) extends TypedInsert(model, conn) {
 
   def data(pick: M => Seq[SetValue]) = {
-    new OnConflict(
-      Collector.forInsertData(
+    val changes = pick(model)
+    new SingleRowInsert(
+      OperationCollector(
         model,
-        pick(model),
-        conn
+        conn,
+        Array(
+          InsertIntoSec(ModelTable(model)),
+          InsertColumnsSec(changes.map(_.col)),
+          InsertValuesSec(changes.map(_.value))
+        )
       )
     )
   }
@@ -20,32 +31,85 @@ class Insert[M <: Model](model: M, conn: Connection) extends TypedInsert(model, 
   }
 }
 
-abstract class InsertCollector[M <: Model](model: M, conn: Connection) {
+abstract class ValuesNext[M <: Model](model: M, conn: Connection) {
 
   protected def single(cols: Seq[ModelCol], values: Seq[Any]) = {
-    new OnConflict(
-      Collector.forInsert(
+    new SingleRowInsert(
+      OperationCollector(
         model,
-        cols,
-        values,
-        conn
+        conn,
+        Array(
+          InsertIntoSec(ModelTable(model)),
+          InsertColumnsSec(cols),
+          InsertValuesSec(values)
+        )
       )
     )
   }
 
-  protected def multiple(cols: Seq[ModelCol], valuesList: Seq[Seq[Any]]) = {
-    new OnConflict(
-      Collector.forMultipleInsert(
+  protected def multiple(cols: Seq[ModelCol], valuesList: List[Seq[Any]]) = {
+    new Returning(
+      OperationCollector(
         model,
-        cols,
-        valuesList,
-        conn
+        conn,
+        Array(
+          InsertIntoSec(ModelTable(model)),
+          InsertColumnsSec(cols),
+          InsertMultipleValuesSec(valuesList)
+        )
       )
     )
   }
 }
 
-class UncheckedValues[M <: Model](model: M, conn: Connection, cols: Seq[ModelCol]) extends InsertCollector(model, conn) {
+class TypedValues[M <: Model, A](model: M, conn: Connection, cols: InsertType[A]) extends ValuesNext(model, conn) {
+
+  def values(data: A) = {
+    single(
+      cols.toSeq,
+      cols.argsToSeq(data)
+    )
+  }
+
+  def valuesAs[T](data: T)(implicit transform: T => A) = {
+    single(
+      cols.toSeq,
+      cols.argsToSeq(transform(data))
+    )
+  }
+
+  def valuesList(dataList: List[A]) = {
+    multiple(
+      cols.toSeq,
+      dataList.map(cols.argsToSeq(_))
+    )
+  }
+
+  def valuesListAs[T](dataList: List[T])(implicit transform: T => A) = {
+    multiple(
+      cols.toSeq,
+      dataList.map { data =>
+        cols.argsToSeq(transform(data))
+      }
+    )
+  }
+
+  def valuesFromSelect(nested: NestedSelect[A]) = {
+    new Returning(
+      OperationCollector(
+        model,
+        conn,
+        Array(
+          InsertIntoSec(ModelTable(model)),
+          InsertColumnsSec(cols.toSeq),
+          InsertNestedSec(nested.untyped)
+        )
+      )
+    )
+  }
+}
+
+class UncheckedValues[M <: Model](model: M, conn: Connection, cols: Seq[ModelCol]) extends ValuesNext(model, conn) {
 
   private def verify(values: Seq[Any]): Unit = {
 
@@ -67,50 +131,17 @@ class UncheckedValues[M <: Model](model: M, conn: Connection, cols: Seq[ModelCol
     uncheckedValues(transform(values))
   }
 
-  def uncheckedValuesList(valuesList: Seq[Seq[Any]]) {
+  def uncheckedValuesList(valuesList: List[Seq[Any]]) {
     valuesList.foreach(verify)
     multiple(cols, valuesList)
   }
 
-  def uncheckedValuesListAs[T](valuesList: Seq[T])(implicit transform: T => Seq[Any]) {
+  def uncheckedValuesListAs[T](valuesList: List[T])(implicit transform: T => Seq[Any]) {
     uncheckedValuesList(valuesList.map(transform))
   }
 }
 
-class TypedValues[M <: Model, A](model: M, conn: Connection, cols: InsertType[A]) extends InsertCollector(model, conn) {
-
-  def values(data: A) = {
-    single(
-      cols.toSeq,
-      cols.argsToSeq(data)
-    )
-  }
-
-  def valuesList(dataList: Seq[A]) = {
-    multiple(
-      cols.toSeq,
-      dataList.map(cols.argsToSeq(_))
-    )
-  }
-
-  def valuesAs[T](data: T)(implicit transform: T => A) = {
-    single(
-      cols.toSeq,
-      cols.argsToSeq(transform(data))
-    )
-  }
-
-  def valuesListAs[T](dataList: Seq[T])(implicit transform: T => A) = {
-    multiple(
-      cols.toSeq,
-      dataList.map { data =>
-        cols.argsToSeq(transform(data))
-      }
-    )
-  }
-}
-
-class OnConflict[M <: Model](coll: OperationCollector[M]) extends Returning(coll) {
+class SingleRowInsert[M <: Model](coll: OperationCollector[M]) extends Returning(coll) {
 
   def onConflict = {
     new OnConflictDo(
@@ -122,6 +153,29 @@ class OnConflict[M <: Model](coll: OperationCollector[M]) extends Returning(coll
     new OnConflictDo(
       coll.add(
         InsertOnConflictColumnSec(pick(coll.model))
+      )
+    )
+  }
+
+  def whereNotExistsOne(pick: M => ModelFilter) = {
+    whereNotExistsImplement(
+      Seq(pick(coll.model))
+    )
+  }
+
+  def whereNotExistsAll(pick: M => Seq[ModelFilter]) = {
+    whereNotExistsImplement(pick(coll.model))
+  }
+
+  private def whereNotExistsImplement(conds: Seq[ModelFilter]) {
+    val sections = coll.sections.map {
+      case InsertValuesSec(values) => InsertWhereNotExistsSec(values, ModelTable(coll.model))
+      case sec: Section => sec 
+    }
+
+    new Returning(
+      coll.copy(sections = sections).add(
+        WhereAllSec(conds)
       )
     )
   }
@@ -153,6 +207,8 @@ case class OnConflictDo[M <: Model](coll: OperationCollector[M]) {
     )
   }
 }
+
+
 
 
 
