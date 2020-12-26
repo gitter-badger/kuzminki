@@ -16,9 +16,9 @@ case class Insert[M <: Model](model: M, conn: Connection) extends TypedInsert[M]
   }
 }
 
-case class TypedValues[M <: Model, T](model: M, conn: Connection, cols: InsertType[T]) {
+case class TypedValues[M <: Model, A](model: M, conn: Connection, cols: InsertType[A]) {
 
-  def values(data: T) = {
+  def values(data: A) = {
     new OnConflict(
       Collector.forTypedInsert(
         model,
@@ -28,6 +28,17 @@ case class TypedValues[M <: Model, T](model: M, conn: Connection, cols: InsertTy
       )
     )
   }
+
+  def valuesAs[T](data: T)(implicit transform: T => A) = {
+    new OnConflict(
+      Collector.forTypedInsert(
+        model,
+        cols.toSeq,
+        cols.argsToSeq(transform(data)),
+        conn
+      )
+    )
+  }  
 }
 
 class OnConflict[M <: Model](coll: OperationCollector[M]) extends Returning(coll) {

@@ -44,16 +44,16 @@ template = """package kuzminki.model.operation
 import kuzminki.model._
 
 
-trait InsertType[T] {
+trait InsertType[A] {
   def toSeq: Seq[ModelCol]
-  def argsToSeq(arg: T): Seq[Any]
+  def argsToSeq(arg: A): Seq[Any]
 }
 
-case class Insert1Type[T](col: TypeCol[T]) extends InsertType[T] {
+case class Insert1Type[A](col: TypeCol[A]) extends InsertType[A] {
 
   def toSeq = Seq(col)
 
-  def argsToSeq(arg: T) = Seq(arg) 
+  def argsToSeq(arg: A) = Seq(arg) 
 }
 %s
 """

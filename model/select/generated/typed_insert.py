@@ -2,7 +2,7 @@
 
 
 model = """
-  def cols2[T1, T2](pick: M => Tuple2[TypeCol[T1], TypeCol[T2]]) = {
+  def cols2[A1, A2](pick: M => Tuple2[TypeCol[A], TypeCol[A2]]) = {
     TypedValues(model, conn, Insert2Types(pick(model)))
   }"""
 
