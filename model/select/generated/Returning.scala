@@ -3,7 +3,7 @@ package kuzminki.model.operation
 import kuzminki.model._
 
 
-class Returning[M <: Model](coll: OperationCollector[M]) extends RunOperation(coll) {
+class Returning[M <: Model](coll: OperationCollector[M]) extends RunOperation(coll) { 
 
   private def typedReturning[R](transformer: TupleTransformer[R]) = {
     new RunReturning(

@@ -8,7 +8,7 @@ model = """
 
 func = """
   def cols%s[%s](pick: M => Tuple%s[%s]) = {
-    TypedValues(model, conn, Insert%sTypes(pick(model)))
+    new TypedValues(model, conn, new Insert%sTypes(pick(model)))
   }"""
 
 
@@ -18,13 +18,10 @@ template = """package kuzminki.model.operation
 import kuzminki.model._
 
 
-trait TypedInsert[M <: Model] {
-
-  val model: M
-  val conn: Connection
+abstract class TypedInsert[M <: Model](model: M, conn: Connection) {
 
   def col(pick: M => TypeCol[_]) = {
-    TypedValues(model, conn, Insert1Type(pick(model)))
+    new TypedValues(model, conn, new Insert1Type(pick(model)))
   }
   %s
 }"""

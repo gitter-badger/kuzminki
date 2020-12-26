@@ -2,7 +2,7 @@
 
 
 model = """
-  case class Insert2Types[T1, T2](cols: Tuple2[TypeCol[T1], TypeCol[T2]]) extends InsertType[Tuple2[T1, T2]] {
+class Insert2Types[T1, T2](cols: Tuple2[TypeCol[T1], TypeCol[T2]]) extends InsertType[Tuple2[T1, T2]] {
 
   def toSeq = {
     cols match {
@@ -20,7 +20,7 @@ model = """
 }"""
 
 func = """
-  case class Insert%sTypes[%s](cols: Tuple%s[%s]) extends InsertType[Tuple%s[%s]] {
+class Insert%sTypes[%s](cols: Tuple%s[%s]) extends InsertType[Tuple%s[%s]] {
 
   def toSeq = {
     cols match {

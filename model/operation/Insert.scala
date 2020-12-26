@@ -3,7 +3,7 @@ package kuzminki.model.operation
 import kuzminki.model._
 
 
-case class Insert[M <: Model](model: M, conn: Connection) extends TypedInsert[M] {
+class Insert[M <: Model](model: M, conn: Connection) extends TypedInsert(model, conn) {
 
   def data(pick: M => Seq[SetValue]) = {
     new OnConflict(
@@ -16,7 +16,7 @@ case class Insert[M <: Model](model: M, conn: Connection) extends TypedInsert[M]
   }
 }
 
-case class TypedValues[M <: Model, A](model: M, conn: Connection, cols: InsertType[A]) {
+class TypedValues[M <: Model, A](model: M, conn: Connection, cols: InsertType[A]) {
 
   def values(data: A) = {
     new OnConflict(
@@ -80,7 +80,7 @@ class OnConflict[M <: Model](coll: OperationCollector[M]) extends Returning(coll
   }
 }
 
-class OnConflictDo[M <: Model](coll: OperationCollector[M]) {
+case class OnConflictDo[M <: Model](coll: OperationCollector[M]) {
 
   def doNothing = {
     new Returning(
