@@ -1,8 +1,8 @@
 package kuzminki.model
 
 
-class NestedSelect[R](exec: TupleExecutor[R]) {
-  def untyped = UntypedNestedSelect(exec.statement.sql, exec.statement.params.toSeq)
+class NestedSelect[R](sections: Array[Section], output: TupleOutput[R]) {
+  def untyped = UntypedNestedSelect(sections)
 }
 
-case class UntypedNestedSelect(render: String, args: Seq[Any]) extends ModelRender
+case class UntypedNestedSelect(sections: Array[Section]) extends ResultMethods with ModelRender

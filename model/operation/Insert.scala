@@ -169,14 +169,13 @@ class SingleRowInsert[M <: Model](coll: OperationCollector[M]) extends Returning
 
   private def whereNotExistsImplement(conds: Seq[ModelFilter]) = {
     val sections = coll.sections.map {
-      case InsertValuesSec(values) => InsertWhereNotExistsSec(values, ModelTable(coll.model))
+      case InsertValuesSec(values) =>
+        InsertWhereNotExistsSec(values, ModelTable(coll.model), WhereAllSec(conds))
       case sec: Section => sec 
     }
 
     new Returning(
-      coll.copy(sections = sections).add(
-        WhereAllSec(conds)
-      )
+      coll.copy(sections = sections)
     )
   }
 }

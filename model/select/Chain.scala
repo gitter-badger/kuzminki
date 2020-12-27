@@ -289,7 +289,7 @@ object tupled {
 
     def run = coll.executor
     def render = coll.render
-    def asNested = new NestedSelect(run)
+    def asNested = coll.nested
   }
 }
 
@@ -395,7 +395,6 @@ object tupledJoin {
     def run = coll.executor
     def render = coll.render
   }
-
 }
 
 

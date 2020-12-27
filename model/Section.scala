@@ -197,10 +197,16 @@ case class InsertMultipleValuesSec(valuesList: Seq[Seq[Any]]) extends Section wi
 }
 
 
-case class InsertWhereNotExistsSec(values: Seq[Any], table: ModelTable) extends Section with Used {
-  def expression = "SELECT %s WHERE NOT EXISTS (SELECT 1 FROM %s"
-  def render = expression.format(Vector.fill(values.size)("?").mkString(", "), table.render)
-  def args = values
+case class InsertWhereNotExistsSec(values: Seq[Any], table: ModelTable, where: WhereAllSec) extends Section with Used {
+  def expression = "SELECT %s WHERE NOT EXISTS (SELECT 1 FROM %s %s)"
+  def render = {
+    expression.format(
+      Vector.fill(values.size)("?").mkString(", "),
+      table.render,
+      where.render
+    )
+  }
+  def args = values ++ where.args
 }
 
 

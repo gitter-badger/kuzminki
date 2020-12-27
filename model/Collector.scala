@@ -86,13 +86,23 @@ object Collector {
 trait ResultMethods {
   val sections: Array[Section]
   def render = sections.filter(_.isUsed).map(_.render).mkString(" ")
-  def args = sections.filter(_.isUsed).map(_.args).flatten
+  def args = sections.toSeq.filter(_.isUsed).map(_.args).flatten
   def statement = SqlWithParams(render, args.toVector)
 }
+
 
 case class SeqCollector[M <: Model](model: M,
                                     sections: Array[Section],
                                     output: SeqOutput) extends ResultMethods {
+
+  def add(section: Section) = this.copy(sections = sections :+ section)
+
+  def executor = output.executor(statement)
+}
+
+case class SeqJoinCollector[A <: Model, B <: Model](join: Join[A, B],
+                                                    sections: Array[Section],
+                                                    output: SeqOutput) extends ResultMethods {
 
   def add(section: Section) = this.copy(sections = sections :+ section)
 
@@ -107,16 +117,8 @@ case class TupleCollector[M <: Model, R](model: M,
   def add(section: Section) = this.copy(sections = sections :+ section)
 
   def executor = output.executor(statement)
-}
 
-
-case class SeqJoinCollector[A <: Model, B <: Model](join: Join[A, B],
-                                                    sections: Array[Section],
-                                                    output: SeqOutput) extends ResultMethods {
-
-  def add(section: Section) = this.copy(sections = sections :+ section)
-
-  def executor = output.executor(statement)
+  def nested = new NestedSelect(sections, output)
 }
 
 
