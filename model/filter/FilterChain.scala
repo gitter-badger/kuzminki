@@ -5,49 +5,49 @@ package kuzminki.model
 import scala.collection.mutable.ArrayBuffer
 
 
-trait ChainFilter extends ModelRender {
-  val filter: ModelRender
+trait ChainFilter extends Render {
+  val filter: Render
   def template: String
   def render = template.format(filter.render)
   def args = filter.args
 }
 
-trait NestedFilters extends ModelRender {
-  val filters: Array[ModelRender]
+trait NestedFilters extends Render {
+  val filters: Array[Render]
   def template: String
   def render = template.format(filters.map(_.render).mkString(" "))
   def args = filters.toSeq.map(_.args).flatten
 }
 
 
-case class StartFilter(filter: ModelFilter) extends ChainFilter {
+case class StartFilter(filter: Filter) extends ChainFilter {
   def template = "%s"
 }
 
 
-case class AndFilter(filter: ModelFilter) extends ChainFilter {
+case class AndFilter(filter: Filter) extends ChainFilter {
   def template = "AND %s"
 }
 
 
-case class OrFilter(filter: ModelFilter) extends ChainFilter {
+case class OrFilter(filter: Filter) extends ChainFilter {
   def template = "OR %s"
 }
 
 
-case class AndChain(filters: Array[ModelRender]) extends NestedFilters {
+case class AndChain(filters: Array[Render]) extends NestedFilters {
   def template = "AND (%s)"
 }
 
 
-case class OrChain(filters: Array[ModelRender]) extends NestedFilters {
+case class OrChain(filters: Array[Render]) extends NestedFilters {
   def template = "OR (%s)"
 }
 
 
 case class ChainStart[M <: Model](model: M) {
 
-  def col(pick: M => ModelFilter) = {
+  def col(pick: M => Filter) = {
     FilteringChain(
       model,
       Array(
@@ -58,17 +58,17 @@ case class ChainStart[M <: Model](model: M) {
 }
 
 
-case class FilteringChain[M <: Model](model: M, filters: Array[ModelRender]) {
+case class FilteringChain[M <: Model](model: M, filters: Array[Render]) {
 
-  private def next(filter: ModelRender) = this.copy(filters = filters :+ filter)
+  private def next(filter: Render) = this.copy(filters = filters :+ filter)
 
-  def and(pick: M => ModelFilter) = {
+  def and(pick: M => Filter) = {
     next(
       AndFilter(pick(model))
     )
   }
 
-  def or(pick: M => ModelFilter) = {
+  def or(pick: M => Filter) = {
     next(
       OrFilter(pick(model))
     )
@@ -90,7 +90,7 @@ case class FilteringChain[M <: Model](model: M, filters: Array[ModelRender]) {
 
 case class JoinChainStart[A <: Model, B <: Model](join: Join[A, B]) {
 
-  def col(pick: Join[A, B] => ModelFilter) = {
+  def col(pick: Join[A, B] => Filter) = {
     JoinFilteringChain(
       join,
       Array(
@@ -101,17 +101,17 @@ case class JoinChainStart[A <: Model, B <: Model](join: Join[A, B]) {
 }
 
 
-case class JoinFilteringChain[A <: Model, B <: Model](join: Join[A, B], filters: Array[ModelRender]) {
+case class JoinFilteringChain[A <: Model, B <: Model](join: Join[A, B], filters: Array[Render]) {
 
-  private def next(filter: ModelRender) = this.copy(filters = filters :+ filter)
+  private def next(filter: Render) = this.copy(filters = filters :+ filter)
 
-  def and(pick: Join[A, B] => ModelFilter) = {
+  def and(pick: Join[A, B] => Filter) = {
     next(
       AndFilter(pick(join))
     )
   }
 
-  def or(pick: Join[A, B] => ModelFilter) = {
+  def or(pick: Join[A, B] => Filter) = {
     next(
       OrFilter(pick(join))
     )

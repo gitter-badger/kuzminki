@@ -16,69 +16,69 @@ case class Query(template: String, args: Seq[Any])
 
 object Collector {
   
-  def standard[M <: Model](model: M,
-                           cols: Seq[TypeCol[_]],
-                           conn: Connection): SeqCollector[M] = {
+  def indexed[M <: Model](model: M,
+                          cols: Seq[TypeCol[_]],
+                          conn: Connection): IndexedCollector[M] = {
     
-    SeqCollector(
+    IndexedCollector(
       model,
       Array(
         SelectSec(cols),
         FromSec(ModelTable(model))
       ),
-      SeqOutput(cols, conn)
+      IndexedOutput(cols, conn)
     )
   }
 
-  def tuple[M <: Model, R](model: M,
-                           transformer: TupleTransformer[R], 
-                           conn: Connection): TupleCollector[M, R] = {
+  def typed[M <: Model, R](model: M,
+                           transformer: TypedTransformer[R], 
+                           conn: Connection): TypedCollector[M, R] = {
     
-    TupleCollector(
+    TypedCollector(
       model,
       Array(
         SelectSec(transformer.toSeq),
         FromSec(ModelTable(model))
       ),
-      TupleOutput(transformer, conn)
+      TypedOutput(transformer, conn)
     )
   }
 
-  def standardJoin[A <: Model, B <: Model](join: Join[A, B],
-                                           cols: Seq[TypeCol[_]], 
-                                           conn: Connection): SeqJoinCollector[A, B] = {
+  def indexedJoin[A <: Model, B <: Model](join: Join[A, B],
+                                          cols: Seq[TypeCol[_]], 
+                                          conn: Connection): IndexedJoinCollector[A, B] = {
     
-    SeqJoinCollector(
+    IndexedJoinCollector(
       join,
       Array(
         SelectSec(cols),
         FromSec(ModelTable(join.a))
       ),
-      SeqOutput(cols, conn)
+      IndexedOutput(cols, conn)
     )
   }
 
-  def tupleJoin[A <: Model, B <: Model, R](join: Join[A, B], 
-                                           transformer: TupleTransformer[R], 
-                                           conn: Connection): TupleJoinCollector[A, B, R] = {
+  def typedJoin[A <: Model, B <: Model, R](join: Join[A, B], 
+                                           transformer: TypedTransformer[R], 
+                                           conn: Connection): TypedJoinCollector[A, B, R] = {
     
-    TupleJoinCollector(
+    TypedJoinCollector(
       join,
       Array(
         SelectSec(transformer.toSeq),
         FromSec(ModelTable(join.a))
       ),
-      TupleOutput(transformer, conn)
+      TypedOutput(transformer, conn)
     )
   }
 
   def forTypedReturning[M <: Model, R](collector: OperationCollector[M],
-                                       transformer: TupleTransformer[R]): TupleCollector[M, R] = {
+                                       transformer: TypedTransformer[R]): TypedCollector[M, R] = {
     
-    TupleCollector(
+    TypedCollector(
       collector.model,
       collector.sections :+ ReturningSec(transformer.toSeq),
-      TupleOutput(transformer, collector.conn)
+      TypedOutput(transformer, collector.conn)
     )
   }
 }
@@ -91,30 +91,36 @@ trait ResultMethods {
 }
 
 
-case class SeqCollector[M <: Model](model: M,
-                                    sections: Array[Section],
-                                    output: SeqOutput) extends ResultMethods {
+case class IndexedCollector[M <: Model](model: M,
+                                        sections: Array[Section],
+                                        output: IndexedOutput) extends ResultMethods {
 
   def add(section: Section) = this.copy(sections = sections :+ section)
+
+  def extend(added: Array[Section]) = this.copy(sections = sections ++ added)
 
   def executor = output.executor(statement)
 }
 
-case class SeqJoinCollector[A <: Model, B <: Model](join: Join[A, B],
-                                                    sections: Array[Section],
-                                                    output: SeqOutput) extends ResultMethods {
+case class IndexedJoinCollector[A <: Model, B <: Model](join: Join[A, B],
+                                                        sections: Array[Section],
+                                                        output: IndexedOutput) extends ResultMethods {
 
   def add(section: Section) = this.copy(sections = sections :+ section)
+
+  def extend(added: Array[Section]) = this.copy(sections = sections ++ added)
 
   def executor = output.executor(statement)
 }
 
 
-case class TupleCollector[M <: Model, R](model: M,
+case class TypedCollector[M <: Model, R](model: M,
                                          sections: Array[Section],
-                                         output: TupleOutput[R]) extends ResultMethods {
+                                         output: TypedOutput[R]) extends ResultMethods {
 
   def add(section: Section) = this.copy(sections = sections :+ section)
+
+  def extend(added: Array[Section]) = this.copy(sections = sections ++ added)
 
   def executor = output.executor(statement)
 
@@ -122,12 +128,14 @@ case class TupleCollector[M <: Model, R](model: M,
 }
 
 
-case class TupleJoinCollector[A <: Model, B <: Model, R](join: Join[A, B],
+case class TypedJoinCollector[A <: Model, B <: Model, R](join: Join[A, B],
                                                          sections: Array[Section],
-                                                         output: TupleOutput[R]) extends ResultMethods {
+                                                         output: TypedOutput[R]) extends ResultMethods {
 
   def add(section: Section) = this.copy(sections = sections :+ section)
 
+  def extend(added: Array[Section]) = this.copy(sections = sections ++ added)
+  
   def executor = output.executor(statement)
 }
 
@@ -137,6 +145,8 @@ case class OperationCollector[M <: Model](model: M,
                                           sections: Array[Section]) extends ResultMethods {
 
   def add(section: Section) = this.copy(sections = sections :+ section)
+
+  def extend(added: Array[Section]) = this.copy(sections = sections ++ added)
 
   def executor = OperationOutput(conn).executor(statement)
 }

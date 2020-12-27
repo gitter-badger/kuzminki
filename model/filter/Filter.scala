@@ -1,18 +1,18 @@
 package kuzminki.model
 
 
-trait ModelFilter extends ModelRender {
+trait Filter extends Render {
   val col: ModelCol
   def template: String
   def render = template.format(col.render)
 }
 
-trait SingleArgFilter extends ModelFilter {
+trait SingleArgFilter extends Filter {
   val arg: Any
   def args = Seq(arg)
 }
 
-trait NoArgFilter extends ModelFilter {
+trait NoArgFilter extends Filter {
   def args = Seq.empty[Any]
 }
 
@@ -44,7 +44,7 @@ case class FilterIn(col: ModelCol, arg: Seq[Any]) extends SingleArgFilter {
   def template = "%s = ANY(?)"
 }
 
-case class FilterBetween(col: ModelCol, args: Seq[Any]) extends ModelFilter {
+case class FilterBetween(col: ModelCol, args: Seq[Any]) extends Filter {
   def template = "%s = BETWEEN ? AND ?"
 }
 

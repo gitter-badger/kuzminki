@@ -71,26 +71,10 @@ class TypedValues[M <: Model, A](model: M, conn: Connection, cols: InsertType[A]
     )
   }
 
-  def valuesAs[T](data: T)(implicit transform: T => A) = {
-    single(
-      cols.toSeq,
-      cols.argsToSeq(transform(data))
-    )
-  }
-
   def valuesList(dataList: List[A]) = {
     multiple(
       cols.toSeq,
       dataList.map(cols.argsToSeq(_))
-    )
-  }
-
-  def valuesListAs[T](dataList: List[T])(implicit transform: T => A) = {
-    multiple(
-      cols.toSeq,
-      dataList.map { data =>
-        cols.argsToSeq(transform(data))
-      }
     )
   }
 
@@ -143,31 +127,33 @@ class UncheckedValues[M <: Model](model: M, conn: Connection, cols: Seq[ModelCol
 
 class SingleRowInsert[M <: Model](coll: OperationCollector[M]) extends Returning(coll) {
 
-  def onConflict = {
-    new OnConflictDo(
-      coll.add(InsertOnConflictSec)
+  def onConflictDoNothing = {
+    new Returning(
+      coll.extend(Array(
+        InsertOnConflictSec,
+        InsertDoNothingSec
+      ))
     )
   }
 
   def onConflictOnColumn(pick: M => ModelCol) = {
     new OnConflictDo(
-      coll.add(
-        InsertOnConflictColumnSec(pick(coll.model))
-      )
+      pick(coll.model),
+      coll
     )
   }
 
-  def whereNotExistsOne(pick: M => ModelFilter) = {
+  def whereNotExistsOne(pick: M => Filter) = {
     whereNotExistsImplement(
       Seq(pick(coll.model))
     )
   }
 
-  def whereNotExistsAll(pick: M => Seq[ModelFilter]) = {
+  def whereNotExistsAll(pick: M => Seq[Filter]) = {
     whereNotExistsImplement(pick(coll.model))
   }
 
-  private def whereNotExistsImplement(conds: Seq[ModelFilter]) = {
+  private def whereNotExistsImplement(conds: Seq[Filter]) = {
     val sections = coll.sections.map {
       case InsertValuesSec(values) =>
         InsertWhereNotExistsSec(values, ModelTable(coll.model), WhereAllSec(conds))
@@ -180,29 +166,42 @@ class SingleRowInsert[M <: Model](coll: OperationCollector[M]) extends Returning
   }
 }
 
-case class OnConflictDo[M <: Model](coll: OperationCollector[M]) {
+case class OnConflictDo[M <: Model](conflictCol: ModelCol, coll: OperationCollector[M]) {
 
   def doNothing = {
     new Returning(
-      coll.add(InsertDoNothingSec)
+      coll.extend(Array(
+        InsertOnConflictColumnSec(conflictCol),
+        InsertDoNothingSec
+      ))
     )
   }
 
-  def doUpdate(pick: M => Seq[Assign]) = {
+  private def validate(change: SetValue): Unit = {
+    if (change.col.name == conflictCol.name) {
+      throw KuzminkiModelException("cannot update the conflicting column")
+    }
+  }
+
+  def doUpdate(pick: M => Seq[SetValue]) = {
+    val changes = pick(coll.model)
+    changes.foreach(validate)
     new Returning(
-      coll.add(
-        InsertDoUpdateSec(pick(coll.model))
-      )
+      coll.extend(Array(
+        InsertOnConflictColumnSec(conflictCol),
+        InsertDoUpdateSec(changes)
+      ))
     )
   }
 
-  def doUpdateOne(pick: M => Assign) = {
+  def doUpdateOne(pick: M => SetValue) = {
+    val change = pick(coll.model)
+    validate(change)
     new Returning(
-      coll.add(
-        InsertDoUpdateSec(
-          Seq(pick(coll.model))
-        )
-      )
+      coll.extend(Array(
+        InsertOnConflictColumnSec(conflictCol),
+        InsertDoUpdateSec(Seq(change))
+      ))
     )
   }
 }

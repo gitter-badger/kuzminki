@@ -8,28 +8,28 @@ trait Underlying {
 
 trait UniversalFilters[T] extends Underlying {
   
-  def matches(value: T): ModelFilter = FilterMatches(col, value)
-  def ===(value: T): ModelFilter = matches(value)
+  def matches(value: T): Filter = FilterMatches(col, value)
+  def ===(value: T): Filter = matches(value)
 
-  def not(value: T): ModelFilter = FilterNot(col, value)
-  def !==(value: T): ModelFilter = not(value)
+  def not(value: T): Filter = FilterNot(col, value)
+  def !==(value: T): Filter = not(value)
   
   // not optional
 
-  def isNull: ModelFilter = FilterIsNull(col)
-  def isNotNull: ModelFilter = FilterIsNotNull(col)
+  def isNull: Filter = FilterIsNull(col)
+  def isNotNull: Filter = FilterIsNotNull(col)
 
-  def in(value: Seq[T]): ModelFilter = FilterIn(col, value)
+  def in(value: Seq[T]): Filter = FilterIn(col, value)
 
   // optional
 
-  def matches(opt: Option[T]): Option[ModelFilter] = opt.map(matches)
-  def ===(opt: Option[T]): Option[ModelFilter] = opt.map(matches)
+  def matches(opt: Option[T]): Option[Filter] = opt.map(matches)
+  def ===(opt: Option[T]): Option[Filter] = opt.map(matches)
 
-  def not(opt: Option[T]): Option[ModelFilter] = opt.map(not)
-  def !==(opt: Option[T]): Option[ModelFilter] = opt.map(not)
+  def not(opt: Option[T]): Option[Filter] = opt.map(not)
+  def !==(opt: Option[T]): Option[Filter] = opt.map(not)
 
-  def in(opt: Option[Seq[T]]): Option[ModelFilter] = opt.map(in)
+  def in(opt: Option[Seq[T]]): Option[Filter] = opt.map(in)
 
   // update
 
@@ -43,54 +43,54 @@ trait IncrementUpdate[T] extends Underlying {
 
 trait ComparativeFilters[T] extends Underlying {
 
-  def gt(value: T): ModelFilter = FilterGt(col, value)
-  def >(value: T): ModelFilter = gt(value)
+  def gt(value: T): Filter = FilterGt(col, value)
+  def >(value: T): Filter = gt(value)
 
-  def gte(value: T): ModelFilter = FilterGte(col, value)
-  def >=(value: T): ModelFilter = gte(value)
+  def gte(value: T): Filter = FilterGte(col, value)
+  def >=(value: T): Filter = gte(value)
 
-  def lt(value: T): ModelFilter = FilterLt(col, value)
-  def <(value: T): ModelFilter = lt(value)
+  def lt(value: T): Filter = FilterLt(col, value)
+  def <(value: T): Filter = lt(value)
 
-  def lte(value: T): ModelFilter = FilterLte(col, value)
-  def <=(value: T): ModelFilter = lte(value)
+  def lte(value: T): Filter = FilterLte(col, value)
+  def <=(value: T): Filter = lte(value)
 
   // optional
 
-  def gt(opt: Option[T]): Option[ModelFilter] = opt.map(gt)
-  def >(opt: Option[T]): Option[ModelFilter] = opt.map(gt)
+  def gt(opt: Option[T]): Option[Filter] = opt.map(gt)
+  def >(opt: Option[T]): Option[Filter] = opt.map(gt)
 
-  def gte(opt: Option[T]): Option[ModelFilter] = opt.map(gte)
-  def >=(opt: Option[T]): Option[ModelFilter] = opt.map(gte)
+  def gte(opt: Option[T]): Option[Filter] = opt.map(gte)
+  def >=(opt: Option[T]): Option[Filter] = opt.map(gte)
 
-  def lt(opt: Option[T]): Option[ModelFilter] = opt.map(lt)
-  def <(opt: Option[T]): Option[ModelFilter] = opt.map(lt)
+  def lt(opt: Option[T]): Option[Filter] = opt.map(lt)
+  def <(opt: Option[T]): Option[Filter] = opt.map(lt)
 
-  def lte(opt: Option[T]): Option[ModelFilter] = opt.map(lte)
-  def <=(opt: Option[T]): Option[ModelFilter] = opt.map(lte)
+  def lte(opt: Option[T]): Option[Filter] = opt.map(lte)
+  def <=(opt: Option[T]): Option[Filter] = opt.map(lte)
 }
 
 
 trait StringFilters extends Underlying {
 
-  def like(value: String): ModelFilter = FilterLike(col, value)
-  def startsWith(value: String): ModelFilter = FilterStartsWith(col, value)
-  def endsWith(value: String): ModelFilter = FilterEndsWith(col, value)
-  def similarTo(value: String): ModelFilter = FilterSimilarTo(col, value)
+  def like(value: String): Filter = FilterLike(col, value)
+  def startsWith(value: String): Filter = FilterStartsWith(col, value)
+  def endsWith(value: String): Filter = FilterEndsWith(col, value)
+  def similarTo(value: String): Filter = FilterSimilarTo(col, value)
 
   // re
 
-  def reMatch(value: String): ModelFilter = FilterReIMatch(col, value)
-  def ~(value: String): ModelFilter = reMatch(value)
+  def reMatch(value: String): Filter = FilterReIMatch(col, value)
+  def ~(value: String): Filter = reMatch(value)
 
-  def reIMatch(value: String): ModelFilter = FilterReIMatch(col, value)
-  def ~*(value: String): ModelFilter = reIMatch(value)
+  def reIMatch(value: String): Filter = FilterReIMatch(col, value)
+  def ~*(value: String): Filter = reIMatch(value)
 
-  def reNotMatch(value: String): ModelFilter = FilterReNotMatch(col, value)
-  def !~(value: String): ModelFilter = reNotMatch(value)
+  def reNotMatch(value: String): Filter = FilterReNotMatch(col, value)
+  def !~(value: String): Filter = reNotMatch(value)
 
-  def reNotIMatch(value: String): ModelFilter = FilterReNotImatch(col, value)
-  def !~*(value: String): ModelFilter = reNotIMatch(value)
+  def reNotIMatch(value: String): Filter = FilterReNotImatch(col, value)
+  def !~*(value: String): Filter = reNotIMatch(value)
 }
 
 

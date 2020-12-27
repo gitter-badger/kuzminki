@@ -3,19 +3,19 @@ package kuzminki.model.operation
 import kuzminki.model._
 
 
-trait InsertType[A] {
+trait InsertType[R] {
   def toSeq: Seq[ModelCol]
-  def argsToSeq(arg: A): Seq[Any]
+  def argsToSeq(arg: R): Seq[Any]
 }
 
-case class Insert1Type[A](col: TypeCol[A]) extends InsertType[A] {
+case class InsertType1[R](col: TypeCol[R]) extends InsertType[R] {
 
   def toSeq = Seq(col)
 
-  def argsToSeq(arg: A) = Seq(arg) 
+  def argsToSeq(arg: R) = Seq(arg) 
 }
 
-class Insert2Types[A1, A2](cols: Tuple2[TypeCol[A1], TypeCol[A2]]) extends InsertType[Tuple2[A1, A2]] {
+class InsertType2[R1, R2](cols: Tuple2[TypeCol[R1], TypeCol[R2]]) extends InsertType[Tuple2[R1, R2]] {
 
   def toSeq = {
     cols match {
@@ -24,7 +24,7 @@ class Insert2Types[A1, A2](cols: Tuple2[TypeCol[A1], TypeCol[A2]]) extends Inser
     }
   }
 
-  def argsToSeq(args: Tuple2[A1, A2]) = {
+  def argsToSeq(args: Tuple2[R1, R2]) = {
     args match {
       case (arg1, arg2) =>
         Seq(arg1, arg2)
@@ -32,7 +32,7 @@ class Insert2Types[A1, A2](cols: Tuple2[TypeCol[A1], TypeCol[A2]]) extends Inser
   }
 }
 
-class Insert3Types[A1, A2, A3](cols: Tuple3[TypeCol[A1], TypeCol[A2], TypeCol[A3]]) extends InsertType[Tuple3[A1, A2, A3]] {
+class InsertType3[R1, R2, R3](cols: Tuple3[TypeCol[R1], TypeCol[R2], TypeCol[R3]]) extends InsertType[Tuple3[R1, R2, R3]] {
 
   def toSeq = {
     cols match {
@@ -41,7 +41,7 @@ class Insert3Types[A1, A2, A3](cols: Tuple3[TypeCol[A1], TypeCol[A2], TypeCol[A3
     }
   }
 
-  def argsToSeq(args: Tuple3[A1, A2, A3]) = {
+  def argsToSeq(args: Tuple3[R1, R2, R3]) = {
     args match {
       case (arg1, arg2, arg3) =>
         Seq(arg1, arg2, arg3)
@@ -49,7 +49,7 @@ class Insert3Types[A1, A2, A3](cols: Tuple3[TypeCol[A1], TypeCol[A2], TypeCol[A3
   }
 }
 
-class Insert4Types[A1, A2, A3, A4](cols: Tuple4[TypeCol[A1], TypeCol[A2], TypeCol[A3], TypeCol[A4]]) extends InsertType[Tuple4[A1, A2, A3, A4]] {
+class InsertType4[R1, R2, R3, R4](cols: Tuple4[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4]]) extends InsertType[Tuple4[R1, R2, R3, R4]] {
 
   def toSeq = {
     cols match {
@@ -58,7 +58,7 @@ class Insert4Types[A1, A2, A3, A4](cols: Tuple4[TypeCol[A1], TypeCol[A2], TypeCo
     }
   }
 
-  def argsToSeq(args: Tuple4[A1, A2, A3, A4]) = {
+  def argsToSeq(args: Tuple4[R1, R2, R3, R4]) = {
     args match {
       case (arg1, arg2, arg3, arg4) =>
         Seq(arg1, arg2, arg3, arg4)
@@ -66,7 +66,7 @@ class Insert4Types[A1, A2, A3, A4](cols: Tuple4[TypeCol[A1], TypeCol[A2], TypeCo
   }
 }
 
-class Insert5Types[A1, A2, A3, A4, A5](cols: Tuple5[TypeCol[A1], TypeCol[A2], TypeCol[A3], TypeCol[A4], TypeCol[A5]]) extends InsertType[Tuple5[A1, A2, A3, A4, A5]] {
+class InsertType5[R1, R2, R3, R4, R5](cols: Tuple5[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5]]) extends InsertType[Tuple5[R1, R2, R3, R4, R5]] {
 
   def toSeq = {
     cols match {
@@ -75,7 +75,7 @@ class Insert5Types[A1, A2, A3, A4, A5](cols: Tuple5[TypeCol[A1], TypeCol[A2], Ty
     }
   }
 
-  def argsToSeq(args: Tuple5[A1, A2, A3, A4, A5]) = {
+  def argsToSeq(args: Tuple5[R1, R2, R3, R4, R5]) = {
     args match {
       case (arg1, arg2, arg3, arg4, arg5) =>
         Seq(arg1, arg2, arg3, arg4, arg5)
@@ -83,7 +83,7 @@ class Insert5Types[A1, A2, A3, A4, A5](cols: Tuple5[TypeCol[A1], TypeCol[A2], Ty
   }
 }
 
-class Insert6Types[A1, A2, A3, A4, A5, A6](cols: Tuple6[TypeCol[A1], TypeCol[A2], TypeCol[A3], TypeCol[A4], TypeCol[A5], TypeCol[A6]]) extends InsertType[Tuple6[A1, A2, A3, A4, A5, A6]] {
+class InsertType6[R1, R2, R3, R4, R5, R6](cols: Tuple6[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6]]) extends InsertType[Tuple6[R1, R2, R3, R4, R5, R6]] {
 
   def toSeq = {
     cols match {
@@ -92,7 +92,7 @@ class Insert6Types[A1, A2, A3, A4, A5, A6](cols: Tuple6[TypeCol[A1], TypeCol[A2]
     }
   }
 
-  def argsToSeq(args: Tuple6[A1, A2, A3, A4, A5, A6]) = {
+  def argsToSeq(args: Tuple6[R1, R2, R3, R4, R5, R6]) = {
     args match {
       case (arg1, arg2, arg3, arg4, arg5, arg6) =>
         Seq(arg1, arg2, arg3, arg4, arg5, arg6)
@@ -100,7 +100,7 @@ class Insert6Types[A1, A2, A3, A4, A5, A6](cols: Tuple6[TypeCol[A1], TypeCol[A2]
   }
 }
 
-class Insert7Types[A1, A2, A3, A4, A5, A6, A7](cols: Tuple7[TypeCol[A1], TypeCol[A2], TypeCol[A3], TypeCol[A4], TypeCol[A5], TypeCol[A6], TypeCol[A7]]) extends InsertType[Tuple7[A1, A2, A3, A4, A5, A6, A7]] {
+class InsertType7[R1, R2, R3, R4, R5, R6, R7](cols: Tuple7[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7]]) extends InsertType[Tuple7[R1, R2, R3, R4, R5, R6, R7]] {
 
   def toSeq = {
     cols match {
@@ -109,7 +109,7 @@ class Insert7Types[A1, A2, A3, A4, A5, A6, A7](cols: Tuple7[TypeCol[A1], TypeCol
     }
   }
 
-  def argsToSeq(args: Tuple7[A1, A2, A3, A4, A5, A6, A7]) = {
+  def argsToSeq(args: Tuple7[R1, R2, R3, R4, R5, R6, R7]) = {
     args match {
       case (arg1, arg2, arg3, arg4, arg5, arg6, arg7) =>
         Seq(arg1, arg2, arg3, arg4, arg5, arg6, arg7)
@@ -117,7 +117,7 @@ class Insert7Types[A1, A2, A3, A4, A5, A6, A7](cols: Tuple7[TypeCol[A1], TypeCol
   }
 }
 
-class Insert8Types[A1, A2, A3, A4, A5, A6, A7, A8](cols: Tuple8[TypeCol[A1], TypeCol[A2], TypeCol[A3], TypeCol[A4], TypeCol[A5], TypeCol[A6], TypeCol[A7], TypeCol[A8]]) extends InsertType[Tuple8[A1, A2, A3, A4, A5, A6, A7, A8]] {
+class InsertType8[R1, R2, R3, R4, R5, R6, R7, R8](cols: Tuple8[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8]]) extends InsertType[Tuple8[R1, R2, R3, R4, R5, R6, R7, R8]] {
 
   def toSeq = {
     cols match {
@@ -126,7 +126,7 @@ class Insert8Types[A1, A2, A3, A4, A5, A6, A7, A8](cols: Tuple8[TypeCol[A1], Typ
     }
   }
 
-  def argsToSeq(args: Tuple8[A1, A2, A3, A4, A5, A6, A7, A8]) = {
+  def argsToSeq(args: Tuple8[R1, R2, R3, R4, R5, R6, R7, R8]) = {
     args match {
       case (arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8) =>
         Seq(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)
@@ -134,7 +134,7 @@ class Insert8Types[A1, A2, A3, A4, A5, A6, A7, A8](cols: Tuple8[TypeCol[A1], Typ
   }
 }
 
-class Insert9Types[A1, A2, A3, A4, A5, A6, A7, A8, A9](cols: Tuple9[TypeCol[A1], TypeCol[A2], TypeCol[A3], TypeCol[A4], TypeCol[A5], TypeCol[A6], TypeCol[A7], TypeCol[A8], TypeCol[A9]]) extends InsertType[Tuple9[A1, A2, A3, A4, A5, A6, A7, A8, A9]] {
+class InsertType9[R1, R2, R3, R4, R5, R6, R7, R8, R9](cols: Tuple9[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9]]) extends InsertType[Tuple9[R1, R2, R3, R4, R5, R6, R7, R8, R9]] {
 
   def toSeq = {
     cols match {
@@ -143,7 +143,7 @@ class Insert9Types[A1, A2, A3, A4, A5, A6, A7, A8, A9](cols: Tuple9[TypeCol[A1],
     }
   }
 
-  def argsToSeq(args: Tuple9[A1, A2, A3, A4, A5, A6, A7, A8, A9]) = {
+  def argsToSeq(args: Tuple9[R1, R2, R3, R4, R5, R6, R7, R8, R9]) = {
     args match {
       case (arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9) =>
         Seq(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
@@ -151,7 +151,7 @@ class Insert9Types[A1, A2, A3, A4, A5, A6, A7, A8, A9](cols: Tuple9[TypeCol[A1],
   }
 }
 
-class Insert10Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10](cols: Tuple10[TypeCol[A1], TypeCol[A2], TypeCol[A3], TypeCol[A4], TypeCol[A5], TypeCol[A6], TypeCol[A7], TypeCol[A8], TypeCol[A9], TypeCol[A10]]) extends InsertType[Tuple10[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10]] {
+class InsertType10[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10](cols: Tuple10[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10]]) extends InsertType[Tuple10[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10]] {
 
   def toSeq = {
     cols match {
@@ -160,7 +160,7 @@ class Insert10Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10](cols: Tuple10[TypeC
     }
   }
 
-  def argsToSeq(args: Tuple10[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10]) = {
+  def argsToSeq(args: Tuple10[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10]) = {
     args match {
       case (arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10) =>
         Seq(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10)
@@ -168,7 +168,7 @@ class Insert10Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10](cols: Tuple10[TypeC
   }
 }
 
-class Insert11Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11](cols: Tuple11[TypeCol[A1], TypeCol[A2], TypeCol[A3], TypeCol[A4], TypeCol[A5], TypeCol[A6], TypeCol[A7], TypeCol[A8], TypeCol[A9], TypeCol[A10], TypeCol[A11]]) extends InsertType[Tuple11[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11]] {
+class InsertType11[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11](cols: Tuple11[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11]]) extends InsertType[Tuple11[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11]] {
 
   def toSeq = {
     cols match {
@@ -177,7 +177,7 @@ class Insert11Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11](cols: Tuple11[
     }
   }
 
-  def argsToSeq(args: Tuple11[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11]) = {
+  def argsToSeq(args: Tuple11[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11]) = {
     args match {
       case (arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11) =>
         Seq(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11)
@@ -185,7 +185,7 @@ class Insert11Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11](cols: Tuple11[
   }
 }
 
-class Insert12Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12](cols: Tuple12[TypeCol[A1], TypeCol[A2], TypeCol[A3], TypeCol[A4], TypeCol[A5], TypeCol[A6], TypeCol[A7], TypeCol[A8], TypeCol[A9], TypeCol[A10], TypeCol[A11], TypeCol[A12]]) extends InsertType[Tuple12[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12]] {
+class InsertType12[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12](cols: Tuple12[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12]]) extends InsertType[Tuple12[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12]] {
 
   def toSeq = {
     cols match {
@@ -194,7 +194,7 @@ class Insert12Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12](cols: Tup
     }
   }
 
-  def argsToSeq(args: Tuple12[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12]) = {
+  def argsToSeq(args: Tuple12[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12]) = {
     args match {
       case (arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12) =>
         Seq(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12)
@@ -202,7 +202,7 @@ class Insert12Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12](cols: Tup
   }
 }
 
-class Insert13Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13](cols: Tuple13[TypeCol[A1], TypeCol[A2], TypeCol[A3], TypeCol[A4], TypeCol[A5], TypeCol[A6], TypeCol[A7], TypeCol[A8], TypeCol[A9], TypeCol[A10], TypeCol[A11], TypeCol[A12], TypeCol[A13]]) extends InsertType[Tuple13[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13]] {
+class InsertType13[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13](cols: Tuple13[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13]]) extends InsertType[Tuple13[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13]] {
 
   def toSeq = {
     cols match {
@@ -211,7 +211,7 @@ class Insert13Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13](cols
     }
   }
 
-  def argsToSeq(args: Tuple13[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13]) = {
+  def argsToSeq(args: Tuple13[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13]) = {
     args match {
       case (arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13) =>
         Seq(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13)
@@ -219,7 +219,7 @@ class Insert13Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13](cols
   }
 }
 
-class Insert14Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14](cols: Tuple14[TypeCol[A1], TypeCol[A2], TypeCol[A3], TypeCol[A4], TypeCol[A5], TypeCol[A6], TypeCol[A7], TypeCol[A8], TypeCol[A9], TypeCol[A10], TypeCol[A11], TypeCol[A12], TypeCol[A13], TypeCol[A14]]) extends InsertType[Tuple14[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14]] {
+class InsertType14[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14](cols: Tuple14[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14]]) extends InsertType[Tuple14[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14]] {
 
   def toSeq = {
     cols match {
@@ -228,7 +228,7 @@ class Insert14Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14]
     }
   }
 
-  def argsToSeq(args: Tuple14[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14]) = {
+  def argsToSeq(args: Tuple14[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14]) = {
     args match {
       case (arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14) =>
         Seq(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14)
@@ -236,7 +236,7 @@ class Insert14Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14]
   }
 }
 
-class Insert15Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15](cols: Tuple15[TypeCol[A1], TypeCol[A2], TypeCol[A3], TypeCol[A4], TypeCol[A5], TypeCol[A6], TypeCol[A7], TypeCol[A8], TypeCol[A9], TypeCol[A10], TypeCol[A11], TypeCol[A12], TypeCol[A13], TypeCol[A14], TypeCol[A15]]) extends InsertType[Tuple15[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15]] {
+class InsertType15[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15](cols: Tuple15[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15]]) extends InsertType[Tuple15[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15]] {
 
   def toSeq = {
     cols match {
@@ -245,7 +245,7 @@ class Insert15Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14,
     }
   }
 
-  def argsToSeq(args: Tuple15[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15]) = {
+  def argsToSeq(args: Tuple15[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15]) = {
     args match {
       case (arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15) =>
         Seq(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15)
@@ -253,7 +253,7 @@ class Insert15Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14,
   }
 }
 
-class Insert16Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16](cols: Tuple16[TypeCol[A1], TypeCol[A2], TypeCol[A3], TypeCol[A4], TypeCol[A5], TypeCol[A6], TypeCol[A7], TypeCol[A8], TypeCol[A9], TypeCol[A10], TypeCol[A11], TypeCol[A12], TypeCol[A13], TypeCol[A14], TypeCol[A15], TypeCol[A16]]) extends InsertType[Tuple16[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16]] {
+class InsertType16[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16](cols: Tuple16[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16]]) extends InsertType[Tuple16[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16]] {
 
   def toSeq = {
     cols match {
@@ -262,7 +262,7 @@ class Insert16Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14,
     }
   }
 
-  def argsToSeq(args: Tuple16[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16]) = {
+  def argsToSeq(args: Tuple16[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16]) = {
     args match {
       case (arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16) =>
         Seq(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16)
@@ -270,7 +270,7 @@ class Insert16Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14,
   }
 }
 
-class Insert17Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16, A17](cols: Tuple17[TypeCol[A1], TypeCol[A2], TypeCol[A3], TypeCol[A4], TypeCol[A5], TypeCol[A6], TypeCol[A7], TypeCol[A8], TypeCol[A9], TypeCol[A10], TypeCol[A11], TypeCol[A12], TypeCol[A13], TypeCol[A14], TypeCol[A15], TypeCol[A16], TypeCol[A17]]) extends InsertType[Tuple17[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16, A17]] {
+class InsertType17[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17](cols: Tuple17[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17]]) extends InsertType[Tuple17[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17]] {
 
   def toSeq = {
     cols match {
@@ -279,7 +279,7 @@ class Insert17Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14,
     }
   }
 
-  def argsToSeq(args: Tuple17[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16, A17]) = {
+  def argsToSeq(args: Tuple17[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17]) = {
     args match {
       case (arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17) =>
         Seq(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17)
@@ -287,7 +287,7 @@ class Insert17Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14,
   }
 }
 
-class Insert18Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16, A17, A18](cols: Tuple18[TypeCol[A1], TypeCol[A2], TypeCol[A3], TypeCol[A4], TypeCol[A5], TypeCol[A6], TypeCol[A7], TypeCol[A8], TypeCol[A9], TypeCol[A10], TypeCol[A11], TypeCol[A12], TypeCol[A13], TypeCol[A14], TypeCol[A15], TypeCol[A16], TypeCol[A17], TypeCol[A18]]) extends InsertType[Tuple18[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16, A17, A18]] {
+class InsertType18[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18](cols: Tuple18[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17], TypeCol[R18]]) extends InsertType[Tuple18[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18]] {
 
   def toSeq = {
     cols match {
@@ -296,7 +296,7 @@ class Insert18Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14,
     }
   }
 
-  def argsToSeq(args: Tuple18[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16, A17, A18]) = {
+  def argsToSeq(args: Tuple18[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18]) = {
     args match {
       case (arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18) =>
         Seq(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18)
@@ -304,7 +304,7 @@ class Insert18Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14,
   }
 }
 
-class Insert19Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16, A17, A18, A19](cols: Tuple19[TypeCol[A1], TypeCol[A2], TypeCol[A3], TypeCol[A4], TypeCol[A5], TypeCol[A6], TypeCol[A7], TypeCol[A8], TypeCol[A9], TypeCol[A10], TypeCol[A11], TypeCol[A12], TypeCol[A13], TypeCol[A14], TypeCol[A15], TypeCol[A16], TypeCol[A17], TypeCol[A18], TypeCol[A19]]) extends InsertType[Tuple19[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16, A17, A18, A19]] {
+class InsertType19[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19](cols: Tuple19[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17], TypeCol[R18], TypeCol[R19]]) extends InsertType[Tuple19[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19]] {
 
   def toSeq = {
     cols match {
@@ -313,7 +313,7 @@ class Insert19Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14,
     }
   }
 
-  def argsToSeq(args: Tuple19[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16, A17, A18, A19]) = {
+  def argsToSeq(args: Tuple19[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19]) = {
     args match {
       case (arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19) =>
         Seq(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19)
@@ -321,7 +321,7 @@ class Insert19Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14,
   }
 }
 
-class Insert20Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16, A17, A18, A19, A20](cols: Tuple20[TypeCol[A1], TypeCol[A2], TypeCol[A3], TypeCol[A4], TypeCol[A5], TypeCol[A6], TypeCol[A7], TypeCol[A8], TypeCol[A9], TypeCol[A10], TypeCol[A11], TypeCol[A12], TypeCol[A13], TypeCol[A14], TypeCol[A15], TypeCol[A16], TypeCol[A17], TypeCol[A18], TypeCol[A19], TypeCol[A20]]) extends InsertType[Tuple20[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16, A17, A18, A19, A20]] {
+class InsertType20[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20](cols: Tuple20[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17], TypeCol[R18], TypeCol[R19], TypeCol[R20]]) extends InsertType[Tuple20[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20]] {
 
   def toSeq = {
     cols match {
@@ -330,7 +330,7 @@ class Insert20Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14,
     }
   }
 
-  def argsToSeq(args: Tuple20[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16, A17, A18, A19, A20]) = {
+  def argsToSeq(args: Tuple20[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20]) = {
     args match {
       case (arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20) =>
         Seq(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20)
@@ -338,7 +338,7 @@ class Insert20Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14,
   }
 }
 
-class Insert21Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16, A17, A18, A19, A20, A21](cols: Tuple21[TypeCol[A1], TypeCol[A2], TypeCol[A3], TypeCol[A4], TypeCol[A5], TypeCol[A6], TypeCol[A7], TypeCol[A8], TypeCol[A9], TypeCol[A10], TypeCol[A11], TypeCol[A12], TypeCol[A13], TypeCol[A14], TypeCol[A15], TypeCol[A16], TypeCol[A17], TypeCol[A18], TypeCol[A19], TypeCol[A20], TypeCol[A21]]) extends InsertType[Tuple21[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16, A17, A18, A19, A20, A21]] {
+class InsertType21[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21](cols: Tuple21[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17], TypeCol[R18], TypeCol[R19], TypeCol[R20], TypeCol[R21]]) extends InsertType[Tuple21[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21]] {
 
   def toSeq = {
     cols match {
@@ -347,7 +347,7 @@ class Insert21Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14,
     }
   }
 
-  def argsToSeq(args: Tuple21[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16, A17, A18, A19, A20, A21]) = {
+  def argsToSeq(args: Tuple21[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21]) = {
     args match {
       case (arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20, arg21) =>
         Seq(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20, arg21)
@@ -355,7 +355,7 @@ class Insert21Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14,
   }
 }
 
-class Insert22Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16, A17, A18, A19, A20, A21, A22](cols: Tuple22[TypeCol[A1], TypeCol[A2], TypeCol[A3], TypeCol[A4], TypeCol[A5], TypeCol[A6], TypeCol[A7], TypeCol[A8], TypeCol[A9], TypeCol[A10], TypeCol[A11], TypeCol[A12], TypeCol[A13], TypeCol[A14], TypeCol[A15], TypeCol[A16], TypeCol[A17], TypeCol[A18], TypeCol[A19], TypeCol[A20], TypeCol[A21], TypeCol[A22]]) extends InsertType[Tuple22[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16, A17, A18, A19, A20, A21, A22]] {
+class InsertType22[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21, R22](cols: Tuple22[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17], TypeCol[R18], TypeCol[R19], TypeCol[R20], TypeCol[R21], TypeCol[R22]]) extends InsertType[Tuple22[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21, R22]] {
 
   def toSeq = {
     cols match {
@@ -364,7 +364,7 @@ class Insert22Types[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14,
     }
   }
 
-  def argsToSeq(args: Tuple22[A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16, A17, A18, A19, A20, A21, A22]) = {
+  def argsToSeq(args: Tuple22[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21, R22]) = {
     args match {
       case (arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20, arg21, arg22) =>
         Seq(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20, arg21, arg22)

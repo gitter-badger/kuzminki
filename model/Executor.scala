@@ -6,10 +6,10 @@ import io.rdbc.sapi._
 import kuzminki.rdbc._
 
 
-case class SeqExecutor(statement: SqlWithParams,
-                       cols: Seq[TypeCol[_]],
-                       db: DbConn)
-                      (implicit ec: ExecutionContext) {
+case class IndexedExecutor(statement: SqlWithParams,
+                           cols: Seq[TypeCol[_]],
+                           db: DbConn)
+                          (implicit ec: ExecutionContext) {
 
   import kuzminki.model.implicits._
 
@@ -63,17 +63,21 @@ case class SeqExecutor(statement: SqlWithParams,
 }
 
 
-case class TupleExecutor[R](statement: SqlWithParams,
-                            transformer: TupleTransformer[R],
+case class TypedExecutor[R](statement: SqlWithParams,
+                            transformer: TypedTransformer[R],
                             db: DbConn)
                            (implicit ec: ExecutionContext) {
 
-  def asTuple: Future[List[R]] = {
+  def list: Future[List[R]] = {
     db.select(statement).map { rows =>
       rows.map { row =>
         transformer.transform(row)
       }
     }
+  }
+
+  def headOpt: Future[Option[R]] = {
+    list.map(_.headOption)
   }
 
   def as[T](implicit custom: R => T): Future[List[T]] = {

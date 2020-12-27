@@ -7,14 +7,13 @@ import io.rdbc.sapi._
 
 case class ColConf(name: String, model: Model)
 
-
-trait ModelCol extends ModelRender {
+trait ModelCol extends Render {
   val name: String
   val model: Model
 
   def col = this
-  def asc = ModelAsc(this)
-  def desc = ModelDesc(this)
+  def asc = Asc(this)
+  def desc = Desc(this)
 
   def render = {
     model.__prefix match {

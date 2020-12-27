@@ -2,7 +2,7 @@ package kuzminki.model
 
 
 
-trait Assign extends ModelRender {
+trait Assign extends Render {
   val col: ModelCol
   val value: Any
   def args = Seq(value)

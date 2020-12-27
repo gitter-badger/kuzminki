@@ -1,7 +1,7 @@
 package kuzminki.model
 
 
-trait Section extends ModelRender {
+trait Section extends Render {
   def expression: String
   val isUsed: Boolean
 }
@@ -19,13 +19,13 @@ trait TextOnly extends Section {
 }
 
 trait SinglePart extends Section {
-  val part: ModelRender
+  val part: Render
   def render = expression.format(part.render)
   def args = part.args
 }
 
 trait MultiPart extends Section {
-  val parts: Seq[ModelRender]
+  val parts: Seq[Render]
   def expression: String
   def glue: String
   def render = expression.format(parts.map(_.render).mkString(glue))
@@ -84,45 +84,45 @@ case class CrossJoinSec(part: ModelTable) extends SinglePart with Used {
 }
 
 
-case class OnSec(leftCol: ModelRender, rightCol: ModelRender) extends Section with Used {
+case class OnSec(leftCol: ModelCol, rightCol: ModelCol) extends Section with Used {
   def expression = "ON %s = %s"
   def render = expression.format(leftCol.render, rightCol.render)
   def args = Seq.empty[Any]
 }
 
 
-case class WhereChainSec(parts: Seq[ModelRender]) extends MultiPart with Used {
+case class WhereChainSec(parts: Seq[Render]) extends MultiPart with Used {
   def expression = "WHERE %s"
   def glue = " "
 }
 
 
-case class WhereAllSec(parts: Seq[ModelFilter]) extends MultiPart {
+case class WhereAllSec(parts: Seq[Filter]) extends MultiPart {
   def expression = "WHERE %s"
   def glue = " AND "
   val isUsed = parts.nonEmpty
 }
 
 
-case class GroupBySec(parts: Seq[ModelRender]) extends MultiPart {
+case class GroupBySec(parts: Seq[ModelCol]) extends MultiPart {
   def expression = "GROUP BY %s"
   def glue = ", "
   val isUsed = parts.nonEmpty
 }
 
 
-case class HavingChainSec(part: ModelRender) extends SinglePart with Used {
+case class HavingChainSec(part: Render) extends SinglePart with Used {
   def expression = "HAVING %s"
 }
 
 
-case class HavingAllSec(parts: Seq[ModelRender]) extends MultiPart with Used {
+case class HavingAllSec(parts: Seq[Render]) extends MultiPart with Used {
   def expression = "HAVING %s"
   def glue = " AND "
 }
 
 
-case class OrderBySec(parts: Seq[ModelRender]) extends MultiPart with Used {
+case class OrderBySec(parts: Seq[Render]) extends MultiPart with Used {
   def expression = "ORDER BY %s"
   def glue = ", "
 }
@@ -139,7 +139,7 @@ case class LimitSec(arg: Int) extends SingleArg with Used {
 
 // delete
 
-case class DeleteFromSec(part: ModelRender) extends SinglePart with Used {
+case class DeleteFromSec(part: Render) extends SinglePart with Used {
   def expression = "DELETE FROM %s"
 }
 
@@ -152,19 +152,19 @@ case class ReturningSec(parts: Seq[ModelCol]) extends MultiPart with Used {
 
 // Update
 
-case class UpdateSec(part: ModelRender) extends SinglePart with Used {
+case class UpdateSec(part: ModelTable) extends SinglePart with Used {
   def expression = "UPDATE %s"
 }
 
 
-case class UpdateSetSec(parts: Seq[ModelRender]) extends MultiPart with Used {
+case class UpdateSetSec(parts: Seq[Assign]) extends MultiPart with Used {
   def expression = "SET %s"
   def glue = ", "
 }
 
 // Insert
 
-case class InsertIntoSec(part: ModelRender) extends SinglePart with Used {
+case class InsertIntoSec(part: Render) extends SinglePart with Used {
   def expression = "INSERT INTO %s"
 }
 
@@ -225,7 +225,7 @@ case class InsertOnConflictColumnSec(part: ModelCol) extends SinglePart with Use
 }
 
 
-case class InsertOnConflictOnConstraintSec(part: ModelRender) extends SinglePart with Used {
+case class InsertOnConflictOnConstraintSec(part: Render) extends SinglePart with Used {
   def expression = "ON CONFLICT ON CONSTRAINT (%s)"
 }
 

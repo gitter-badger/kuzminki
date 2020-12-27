@@ -14,5 +14,5 @@ object implicits {
   implicit val modelColToBooleanCol: TypeCol[Boolean] => BooleanCol = col => col.asInstanceOf[BooleanCol]
 
   // query
-  implicit val modelColToSorting: ModelCol => ModelSorting = col => ModelSort(col)
+  implicit val modelColToSorting: ModelCol => Sorting = col => Sort(col)
 }

@@ -6,15 +6,15 @@ import io.rdbc.sapi._
 import kuzminki.rdbc._
 
 
-case class SeqOutput(cols: Seq[TypeCol[_]], conn: Connection) {
+case class IndexedOutput(cols: Seq[TypeCol[_]], conn: Connection) {
 
-  def executor(statement: SqlWithParams) = SeqExecutor(statement, cols, conn.db)(conn.ec)
+  def executor(statement: SqlWithParams) = IndexedExecutor(statement, cols, conn.db)(conn.ec)
 }
 
 
-case class TupleOutput[R](transformer: TupleTransformer[R], conn: Connection) {
+case class TypedOutput[R](transformer: TypedTransformer[R], conn: Connection) {
 
-  def executor(statement: SqlWithParams) = TupleExecutor(statement, transformer, conn.db)(conn.ec)
+  def executor(statement: SqlWithParams) = TypedExecutor(statement, transformer, conn.db)(conn.ec)
 }
 
 
