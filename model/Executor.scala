@@ -92,9 +92,9 @@ case class OperationExecutor[R](statement: SqlWithParams,
                                 db: DbConn)
                                (implicit ec: ExecutionContext) {
 
-  def run: Future[Unit] = db.exec(statement)
+  def forUnit: Future[Unit] = db.exec(statement)
 
-  def runNum: Future[Long] = db.execNum(statement)
+  def forNum: Future[Long] = db.execNum(statement)
 }
 
 

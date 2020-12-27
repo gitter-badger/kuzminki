@@ -24,6 +24,7 @@ import io.rdbc.pool.sapi.ConnectionPool
 import io.rdbc.pool.sapi.ConnectionPoolConfig
 
 import kuzminki.model.select._
+import kuzminki.model.operation.{Insert, Update}
 import kuzminki.model._
 import kuzminki.model.implicits._
 
@@ -43,6 +44,14 @@ class KuzminkiRdbc(conf: SystemConfig)(implicit system: ActorSystem) {
 
   def select[A <: Model, B <: Model](implicit tagA: ClassTag[A], tagB: ClassTag[B]) = {
     new JoinColumns(Join(Model.from[A], Model.from[B]), conn)
+  }
+
+  def insert[M <: Model](implicit tag: ClassTag[M]) = {
+    new Insert(Model.from[M], conn)
+  }
+
+  def update[M <: Model](implicit tag: ClassTag[M]) = {
+    new Update(Model.from[M], conn)
   }
 
   def shutdown(): Future[Unit] = db.shutdown()
