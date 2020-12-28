@@ -21,6 +21,8 @@ trait UniversalFilters[T] extends Underlying {
 
   def in(value: Seq[T]): Filter = FilterIn(col, value)
 
+  //def in(subquery: nested: NestedSelect[V]): Filter = FilterInSubquery
+
   // optional
 
   def matches(opt: Option[T]): Option[Filter] = opt.map(matches)

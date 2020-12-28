@@ -1,8 +1,6 @@
 package kuzminki.model.operation
 
 import kuzminki.model._
-import kuzminki.model.select.typed.RunTyped
-import kuzminki.model.select.typedjoin.RunTypedJoin
 
 
 case class CollectSingle[M <: Model](model: M,
@@ -64,23 +62,23 @@ abstract class ValuesNext[M <: Model](model: M, conn: Connection) {
   }
 }
 
-class TypedValues[M <: Model, V](model: M, conn: Connection, cols: InsertType[V]) extends ValuesNext(model, conn) {
+class TypedValues[M <: Model, R](model: M, conn: Connection, cols: InsertType[R]) extends ValuesNext(model, conn) {
 
-  def values(data: V) = {
+  def values(data: R) = {
     single(
       cols.toSeq,
       cols.argsToSeq(data)
     )
   }
 
-  def valuesList(dataList: List[V]) = {
+  def valuesList(dataList: List[R]) = {
     multiple(
       cols.toSeq,
       dataList.map(cols.argsToSeq(_))
     )
   }
 
-  def valuesFromSelect(nested: NestedSelect[V]): Returning[M] = {
+  def valuesFromSelect(nested: NestedSelect[R]) = {
     new Returning(
       OperationCollector(
         model,
@@ -92,14 +90,6 @@ class TypedValues[M <: Model, V](model: M, conn: Connection, cols: InsertType[V]
         )
       )
     )
-  }
-
-  def valuesFromSelect(nested: RunTyped[_, V]): Returning[M] = {
-    valuesFromSelect(nested.asNested)
-  }
-
-  def valuesFromSelect(nested: RunTypedJoin[_, _, V]): Returning[M] = {
-    valuesFromSelect(nested.asNested)
   }
 }
 

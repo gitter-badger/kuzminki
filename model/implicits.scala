@@ -1,5 +1,8 @@
 package kuzminki.model
 
+import kuzminki.model.select.typed.RunTyped
+import kuzminki.model.select.typedjoin.RunTypedJoin
+
 
 object implicits {
 
@@ -15,4 +18,8 @@ object implicits {
 
   // query
   implicit val modelColToSorting: ModelCol => Sorting = col => Sort(col)
+
+  // subquery
+  implicit def runTypedToNested[R](rt: RunTyped[_, R]): NestedSelect[R] = rt.asNested
+  implicit def runTypedJoinToNested[R](rtj: RunTypedJoin[_, _, R]): NestedSelect[R] = rtj.asNested
 }
