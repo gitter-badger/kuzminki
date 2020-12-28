@@ -78,7 +78,7 @@ class TypedValues[M <: Model, R](model: M, conn: Connection, cols: InsertType[R]
     )
   }
 
-  def valuesFromSelect(nested: NestedSelect[R]) = {
+  def valuesFromSelect(sub: SubQuery[R]) = {
     new Returning(
       OperationCollector(
         model,
@@ -86,7 +86,7 @@ class TypedValues[M <: Model, R](model: M, conn: Connection, cols: InsertType[R]
         Array(
           InsertIntoSec(ModelTable(model)),
           InsertColumnsSec(cols.toSeq),
-          InsertNestedSec(nested.untyped)
+          InsertSubQuerySec(sub.untyped)
         )
       )
     )

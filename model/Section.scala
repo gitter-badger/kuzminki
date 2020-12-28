@@ -210,7 +210,7 @@ case class InsertWhereNotExistsSec(values: Seq[Any], table: ModelTable, where: W
 }
 
 
-case class InsertNestedSec(part: UntypedNestedSelect) extends SinglePart with Used {
+case class InsertSubQuerySec(part: UntypedSubQuery) extends SinglePart with Used {
   def expression = "(%s)"
 }
 

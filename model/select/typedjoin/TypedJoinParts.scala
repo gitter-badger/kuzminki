@@ -99,7 +99,7 @@ class RunTypedJoin[A <: Model, B <: Model, R](coll: TypedJoinCollector[A, B, R])
 
   def run = coll.executor
   def render = coll.render
-  def asNested = coll.nested
+  def asSub = coll.sub
 }
 
 

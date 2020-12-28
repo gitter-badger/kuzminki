@@ -124,7 +124,7 @@ case class TypedCollector[M <: Model, R](model: M,
 
   def executor = output.executor(statement)
 
-  def nested = new NestedSelect(sections, output)
+  def sub = new SubQuery(sections, output)
 }
 
 
@@ -138,7 +138,7 @@ case class TypedJoinCollector[A <: Model, B <: Model, R](join: Join[A, B],
   
   def executor = output.executor(statement)
 
-  def nested = new NestedSelect(sections, output)
+  def sub = new SubQuery(sections, output)
 }
 
 

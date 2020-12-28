@@ -20,6 +20,6 @@ object implicits {
   implicit val modelColToSorting: ModelCol => Sorting = col => Sort(col)
 
   // subquery
-  implicit def runTypedToNested[R](rt: RunTyped[_, R]): NestedSelect[R] = rt.asNested
-  implicit def runTypedJoinToNested[R](rtj: RunTypedJoin[_, _, R]): NestedSelect[R] = rtj.asNested
+  implicit def runTypedToNested[R](rt: RunTyped[_, R]): SubQuery[R] = rt.asSub
+  implicit def runTypedJoinToNested[R](rtj: RunTypedJoin[_, _, R]): SubQuery[R] = rtj.asSub
 }

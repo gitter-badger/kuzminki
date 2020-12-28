@@ -20,8 +20,10 @@ trait UniversalFilters[T] extends Underlying {
   def isNotNull: Filter = FilterIsNotNull(col)
 
   def in(value: Seq[T]): Filter = FilterIn(col, value)
+  def notIn(value: Seq[T]): Filter = FilterNotIn(col, value)
 
-  //def in(subquery: nested: NestedSelect[V]): Filter = FilterInSubquery
+  def in(sub: SubQuery[T]): Filter = FilterInSubquery(col, sub.untyped)
+  def notIn(sub: SubQuery[T]): Filter = FilterNotInSubquery(col, sub.untyped)
 
   // optional
 

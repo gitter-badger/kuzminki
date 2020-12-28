@@ -91,6 +91,6 @@ class RunTyped[T <: Model, R](coll: TypedCollector[T, R]) extends Printing {
 
   def run = coll.executor
   def render = coll.render
-  def asNested = coll.nested
+  def asSub = coll.sub
 }
 
