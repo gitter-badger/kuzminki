@@ -137,6 +137,8 @@ case class TypedJoinCollector[A <: Model, B <: Model, R](join: Join[A, B],
   def extend(added: Array[Section]) = this.copy(sections = sections ++ added)
   
   def executor = output.executor(statement)
+
+  def nested = new NestedSelect(sections, output)
 }
 
 

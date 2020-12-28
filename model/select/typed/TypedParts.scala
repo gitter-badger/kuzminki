@@ -75,10 +75,10 @@ class Offset[M <: Model, R](coll: TypedCollector[M, R]) extends Limit(coll) {
 }
 
 
-class Limit[M <: Model, R](coll: TypedCollector[M, R]) extends Run(coll) {
+class Limit[M <: Model, R](coll: TypedCollector[M, R]) extends RunTyped(coll) {
 
   def limit(num: Int) = {
-    new Run(
+    new RunTyped(
       coll.add(
         LimitSec(num)
       )
@@ -87,9 +87,10 @@ class Limit[M <: Model, R](coll: TypedCollector[M, R]) extends Run(coll) {
 }
 
 
-class Run[T <: Model, R](coll: TypedCollector[T, R]) extends Printing {
+class RunTyped[T <: Model, R](coll: TypedCollector[T, R]) extends Printing {
 
   def run = coll.executor
   def render = coll.render
   def asNested = coll.nested
 }
+

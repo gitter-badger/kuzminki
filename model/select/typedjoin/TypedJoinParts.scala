@@ -84,10 +84,10 @@ class Offset[A <: Model, B <: Model, R](coll: TypedJoinCollector[A, B, R]) exten
   }
 }
 
-class Limit[A <: Model, B <: Model, R](coll: TypedJoinCollector[A, B, R]) extends Run(coll) {
+class Limit[A <: Model, B <: Model, R](coll: TypedJoinCollector[A, B, R]) extends RunTypedJoin(coll) {
 
   def limit(num: Int) = {
-    new Run(
+    new RunTypedJoin(
       coll.add(
         LimitSec(num)
       )
@@ -95,10 +95,11 @@ class Limit[A <: Model, B <: Model, R](coll: TypedJoinCollector[A, B, R]) extend
   }
 }
 
-class Run[A <: Model, B <: Model, R](coll: TypedJoinCollector[A, B, R]) extends Printing {
+class RunTypedJoin[A <: Model, B <: Model, R](coll: TypedJoinCollector[A, B, R]) extends Printing {
 
   def run = coll.executor
   def render = coll.render
+  def asNested = coll.nested
 }
 
 

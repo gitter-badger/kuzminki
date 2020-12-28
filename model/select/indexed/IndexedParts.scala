@@ -72,10 +72,10 @@ class Offset[M <: Model](coll: IndexedCollector[M]) extends Limit(coll) {
   }
 }
 
-class Limit[M <: Model](coll: IndexedCollector[M]) extends Run(coll) {
+class Limit[M <: Model](coll: IndexedCollector[M]) extends RunIndexed(coll) {
 
   def limit(num: Int) = {
-    new Run(
+    new RunIndexed(
       coll.add(
         LimitSec(num)
       )
@@ -83,7 +83,7 @@ class Limit[M <: Model](coll: IndexedCollector[M]) extends Run(coll) {
   }
 }
 
-class Run[M <: Model](coll: IndexedCollector[M]) extends Printing {
+class RunIndexed[M <: Model](coll: IndexedCollector[M]) extends Printing {
 
   def run = coll.executor
   def render = coll.render
