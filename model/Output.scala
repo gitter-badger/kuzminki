@@ -22,3 +22,4 @@ case class OperationOutput(conn: Connection) {
 
   def executor(statement: SqlWithParams) = OperationExecutor(statement, conn.db)(conn.ec)
 }
+

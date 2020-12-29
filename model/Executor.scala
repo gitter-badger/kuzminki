@@ -102,6 +102,14 @@ case class OperationExecutor[R](statement: SqlWithParams,
 }
 
 
+case class CountExecutor[R](statement: SqlWithParams,
+                            db: DbConn)
+                           (implicit ec: ExecutionContext) {
+
+  def forNum: Future[Int] = db.count(statement)
+}
+
+
 
 
 

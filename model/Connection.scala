@@ -11,6 +11,7 @@ trait DbConn {
   def select(statement: SqlWithParams): Future[List[Row]]
   def exec(statement: SqlWithParams): Future[Unit]
   def execNum(statement: SqlWithParams): Future[Long]
+  def count(statement: SqlWithParams): Future[Int]
 }
 
 class DummyConn extends DbConn {
@@ -24,6 +25,10 @@ class DummyConn extends DbConn {
   }
   
   def execNum(statement: SqlWithParams): Future[Long] = {
+    throw new Exception("dummy")
+  }
+
+  def count(statement: SqlWithParams): Future[Int] = {
     throw new Exception("dummy")
   }
 }

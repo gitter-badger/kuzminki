@@ -154,5 +154,15 @@ case class OperationCollector[M <: Model](model: M,
 }
 
 
+case class CountCollector(conn: Connection, sections: Array[Section]) extends ResultMethods {
+
+  def add(section: Section) = this.copy(sections = sections :+ section)
+
+  def extend(added: Array[Section]) = this.copy(sections = sections ++ added)
+
+  def executor = CountExecutor(statement, conn.db)(conn.ec)
+}
+
+
 
 

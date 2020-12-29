@@ -137,6 +137,12 @@ case class LimitSec(arg: Int) extends SingleArg with Used {
   def expression = "LIMIT ?"
 }
 
+// count
+
+case class CountFromSec(part: ModelTable) extends SinglePart with Used {
+  def expression = "SELECT COUNT(*) FROM %s"
+}
+
 // delete
 
 case class DeleteFromSec(part: Render) extends SinglePart with Used {

@@ -25,6 +25,7 @@ import io.rdbc.pool.sapi.ConnectionPoolConfig
 
 import kuzminki.model.select._
 import kuzminki.model.operation.{Insert, Update, Delete}
+import kuzminki.model.count.Count
 import kuzminki.model._
 import kuzminki.model.implicits._
 
@@ -56,6 +57,14 @@ class KuzminkiRdbc(conf: SystemConfig)(implicit system: ActorSystem) {
 
   def delete[M <: Model](implicit tag: ClassTag[M]) = {
     Delete.from(Model.from[M], conn)
+  }
+
+  def count[M <: Model](implicit tag: ClassTag[M]) = {
+    Count.from(Model.from[M], conn)
+  }
+
+  def count[A <: Model, B <: Model](implicit tagA: ClassTag[A], tagB: ClassTag[B]) = {
+    Count.fromJoin(Join(Model.from[A], Model.from[B]), conn)
   }
 
   def shutdown(): Future[Unit] = db.shutdown()
