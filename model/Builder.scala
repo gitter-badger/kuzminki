@@ -6,7 +6,7 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
 import io.rdbc.sapi._
 import kuzminki.model.select.{Columns, JoinColumns}
-import kuzminki.model.operation.{Update, Insert}
+import kuzminki.model.operation.{Update, Insert, Delete}
 import kuzminki.model.implicits._
 
 
@@ -30,18 +30,15 @@ object Builder {
 
   def insert[M <: Model](implicit tag: ClassTag[M]) = {
     new Insert(Model.from[M], conn)
-  }  
-}
+  }
 
-/*
-class Users extends Model("users") {
-  def name = column[String]("name")
-  def email = column[String]("email")
-  def age = column[Int]("age")
+  def delete[M <: Model](implicit tag: ClassTag[M]) = {
+    Delete.from(Model.from[M], conn)
+  }
 }
 
 
-object Models {
-  val user = Model.from[Users]
-}
-*/
+
+
+
+

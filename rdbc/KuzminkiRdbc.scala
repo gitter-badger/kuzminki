@@ -24,7 +24,7 @@ import io.rdbc.pool.sapi.ConnectionPool
 import io.rdbc.pool.sapi.ConnectionPoolConfig
 
 import kuzminki.model.select._
-import kuzminki.model.operation.{Insert, Update}
+import kuzminki.model.operation.{Insert, Update, Delete}
 import kuzminki.model._
 import kuzminki.model.implicits._
 
@@ -52,6 +52,10 @@ class KuzminkiRdbc(conf: SystemConfig)(implicit system: ActorSystem) {
 
   def update[M <: Model](implicit tag: ClassTag[M]) = {
     new Update(Model.from[M], conn)
+  }
+
+  def delete[M <: Model](implicit tag: ClassTag[M]) = {
+    Delete.from(Model.from[M], conn)
   }
 
   def shutdown(): Future[Unit] = db.shutdown()
