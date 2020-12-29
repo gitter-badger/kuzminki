@@ -41,12 +41,14 @@ case class FilterLte(col: ModelCol, arg: Any) extends SingleArgFilter {
   def template = "%s <= ?"
 }
 
-case class FilterIn(col: ModelCol, arg: Seq[Any]) extends SingleArgFilter {
-  def template = "%s = ANY(?)"
+case class FilterIn(col: ModelCol, args: Seq[Any]) extends Filter {
+  def template = "%s = ANY(ARRAY[%s])"
+  def render = template.format(col.render, Vector.fill(args.size)("?").mkString(", "))
 }
 
-case class FilterNotIn(col: ModelCol, arg: Seq[Any]) extends SingleArgFilter {
-  def template = "%s != ANY(?)"
+case class FilterNotIn(col: ModelCol, args: Seq[Any]) extends Filter {
+  def template = "%s != ANY(ARRAY[%s])"
+  def render = template.format(col.render, Vector.fill(args.size)("?").mkString(", "))
 }
 
 case class FilterInSubquery(col: ModelCol, sub: UntypedSubQuery) extends Filter {

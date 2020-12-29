@@ -5,7 +5,6 @@ trait Underlying {
   def col: ModelCol
 }
 
-
 trait UniversalFilters[T] extends Underlying {
   
   def matches(value: T): Filter = FilterMatches(col, value)
@@ -19,7 +18,7 @@ trait UniversalFilters[T] extends Underlying {
   def isNull: Filter = FilterIsNull(col)
   def isNotNull: Filter = FilterIsNotNull(col)
 
-  def in(value: Seq[T]): Filter = FilterIn(col, value)
+  def in(values: Seq[T]): Filter = FilterIn(col, values)
   def notIn(value: Seq[T]): Filter = FilterNotIn(col, value)
 
   def in(sub: SubQuery[T]): Filter = FilterInSubquery(col, sub.untyped)
@@ -33,7 +32,11 @@ trait UniversalFilters[T] extends Underlying {
   def not(opt: Option[T]): Option[Filter] = opt.map(not)
   def !==(opt: Option[T]): Option[Filter] = opt.map(not)
 
+  def isNullSome: Option[Filter] = Some(isNull)
+  def isNotNullSome: Option[Filter] = Some(isNotNull)
+
   def in(opt: Option[Seq[T]]): Option[Filter] = opt.map(in)
+  def notIn(opt: Option[Seq[T]]): Option[Filter] = opt.map(notIn)
 
   // update
 
@@ -96,6 +99,7 @@ trait StringFilters extends Underlying {
   def reNotIMatch(value: String): Filter = FilterReNotImatch(col, value)
   def !~*(value: String): Filter = reNotIMatch(value)
 }
+
 
 
 

@@ -17,8 +17,8 @@ trait ModelCol extends Render {
 
   def render = {
     model.__prefix match {
-      case Some(prefix) => s"$prefix.$name"
-      case None => name 
+      case Some(prefix) => wrap("%s.%s".format(prefix, name))
+      case None => wrap(name) 
     }
   }
   def args = Seq.empty[Any]

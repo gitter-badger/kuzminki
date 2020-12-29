@@ -10,15 +10,15 @@ trait Assign extends Render {
 }
 
 case class SetValue(col: ModelCol, value: Any) extends Assign {
-  def render = s"${col.name} = ?"
+  def render = "%s = ?".format(col.render)
 }
 
 case class Increment(col: ModelCol, value: Any) extends Assign {
-  def render = s"${col.name} = ${col.name} + ?"
+  def render = "%s = %s + ?".format(col.render, col.render)
 }
 
 case class Decrement(col: ModelCol, value: Any) extends Assign {
-  def render = s"${col.name} = ${col.name} - ?"
+  def render = "%s = %s - ?".format(col.render, col.render)
 }
 
 
