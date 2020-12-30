@@ -2,7 +2,7 @@ package kuzminki.model
 
 
 trait Underlying {
-  def col: ModelCol
+  def col: RealCol
 }
 
 trait UniversalFilters[T] extends Underlying {

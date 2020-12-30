@@ -178,7 +178,7 @@ case class OnConflictDo[M <: Model](conflictCol: ModelCol, coll: OperationCollec
   }
 
   private def validate(change: SetValue): Unit = {
-    if (change.col.name == conflictCol.name) {
+    if (change.col == conflictCol) {
       throw KuzminkiModelException("cannot update the conflicting column")
     }
   }

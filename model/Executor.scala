@@ -14,13 +14,17 @@ case class IndexedExecutor(statement: SqlWithParams,
   import kuzminki.model.implicits._
 
   def asSeq: Future[List[Seq[Any]]] = {
+    val indexedCols = cols.zipWithIndex
     db.select(statement).map { rows =>
       rows.map { row =>
-        cols.map(col => col.get(row))
+        indexedCols.map {
+          case (col, index) =>
+            col.get(row, index)
+        }
       }
     }
   }
-
+  /*
   def asSeqTo[T](implicit custom: Seq[Any] => T): Future[List[T]] = {
     db.select(statement).map { rows =>
       rows.map { row =>
@@ -30,7 +34,7 @@ case class IndexedExecutor(statement: SqlWithParams,
       }
     }
   }
-
+  
   def asMap: Future[List[Map[String, Any]]] = {
     db.select(statement).map { rows =>
       rows.map { row =>
@@ -48,7 +52,7 @@ case class IndexedExecutor(statement: SqlWithParams,
       }
     }
   }
-
+  */
   def asRow: Future[List[Row]] = {
     db.select(statement)
   }

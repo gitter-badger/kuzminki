@@ -14,7 +14,7 @@ case class TypedCols1[R](col: TypeCol[R]) extends TypedTransformer[R] {
 
   def toSeq: Seq[ModelCol] = Seq(col)
 
-  def transform(row: Row): R = col.get(row)
+  def transform(row: Row): R = col.get(row, 0)
 }
 
 case class TypedCols2[R1, R2](cols: Tuple2[TypeCol[R1], TypeCol[R2]]) extends TypedTransformer[Tuple2[R1, R2]] {
@@ -27,7 +27,7 @@ case class TypedCols2[R1, R2](cols: Tuple2[TypeCol[R1], TypeCol[R2]]) extends Ty
 
   def transform(row: Row): Tuple2[R1, R2] = {
     cols match {
-      case (col1, col2) => (col1.get(row), col2.get(row))
+      case (col1, col2) => (col1.get(row, 0), col2.get(row, 1))
     }
   }
 }
@@ -42,7 +42,7 @@ case class TypedCols3[R1, R2, R3](cols: Tuple3[TypeCol[R1], TypeCol[R2], TypeCol
 
   def transform(row: Row): Tuple3[R1, R2, R3] = {
     cols match {
-      case (col1, col2, col3) => (col1.get(row), col2.get(row), col3.get(row))
+      case (col1, col2, col3) => (col1.get(row, 0), col2.get(row, 1), col3.get(row, 2))
     }
   }
 }
@@ -57,7 +57,7 @@ case class TypedCols4[R1, R2, R3, R4](cols: Tuple4[TypeCol[R1], TypeCol[R2], Typ
 
   def transform(row: Row): Tuple4[R1, R2, R3, R4] = {
     cols match {
-      case (col1, col2, col3, col4) => (col1.get(row), col2.get(row), col3.get(row), col4.get(row))
+      case (col1, col2, col3, col4) => (col1.get(row, 0), col2.get(row, 1), col3.get(row, 2), col4.get(row, 3))
     }
   }
 }
@@ -72,7 +72,7 @@ case class TypedCols5[R1, R2, R3, R4, R5](cols: Tuple5[TypeCol[R1], TypeCol[R2],
 
   def transform(row: Row): Tuple5[R1, R2, R3, R4, R5] = {
     cols match {
-      case (col1, col2, col3, col4, col5) => (col1.get(row), col2.get(row), col3.get(row), col4.get(row), col5.get(row))
+      case (col1, col2, col3, col4, col5) => (col1.get(row, 0), col2.get(row, 1), col3.get(row, 2), col4.get(row, 3), col5.get(row, 4))
     }
   }
 }
@@ -87,7 +87,7 @@ case class TypedCols6[R1, R2, R3, R4, R5, R6](cols: Tuple6[TypeCol[R1], TypeCol[
 
   def transform(row: Row): Tuple6[R1, R2, R3, R4, R5, R6] = {
     cols match {
-      case (col1, col2, col3, col4, col5, col6) => (col1.get(row), col2.get(row), col3.get(row), col4.get(row), col5.get(row), col6.get(row))
+      case (col1, col2, col3, col4, col5, col6) => (col1.get(row, 0), col2.get(row, 1), col3.get(row, 2), col4.get(row, 3), col5.get(row, 4), col6.get(row, 5))
     }
   }
 }
@@ -102,7 +102,7 @@ case class TypedCols7[R1, R2, R3, R4, R5, R6, R7](cols: Tuple7[TypeCol[R1], Type
 
   def transform(row: Row): Tuple7[R1, R2, R3, R4, R5, R6, R7] = {
     cols match {
-      case (col1, col2, col3, col4, col5, col6, col7) => (col1.get(row), col2.get(row), col3.get(row), col4.get(row), col5.get(row), col6.get(row), col7.get(row))
+      case (col1, col2, col3, col4, col5, col6, col7) => (col1.get(row, 0), col2.get(row, 1), col3.get(row, 2), col4.get(row, 3), col5.get(row, 4), col6.get(row, 5), col7.get(row, 6))
     }
   }
 }
@@ -117,7 +117,7 @@ case class TypedCols8[R1, R2, R3, R4, R5, R6, R7, R8](cols: Tuple8[TypeCol[R1], 
 
   def transform(row: Row): Tuple8[R1, R2, R3, R4, R5, R6, R7, R8] = {
     cols match {
-      case (col1, col2, col3, col4, col5, col6, col7, col8) => (col1.get(row), col2.get(row), col3.get(row), col4.get(row), col5.get(row), col6.get(row), col7.get(row), col8.get(row))
+      case (col1, col2, col3, col4, col5, col6, col7, col8) => (col1.get(row, 0), col2.get(row, 1), col3.get(row, 2), col4.get(row, 3), col5.get(row, 4), col6.get(row, 5), col7.get(row, 6), col8.get(row, 7))
     }
   }
 }
@@ -132,7 +132,7 @@ case class TypedCols9[R1, R2, R3, R4, R5, R6, R7, R8, R9](cols: Tuple9[TypeCol[R
 
   def transform(row: Row): Tuple9[R1, R2, R3, R4, R5, R6, R7, R8, R9] = {
     cols match {
-      case (col1, col2, col3, col4, col5, col6, col7, col8, col9) => (col1.get(row), col2.get(row), col3.get(row), col4.get(row), col5.get(row), col6.get(row), col7.get(row), col8.get(row), col9.get(row))
+      case (col1, col2, col3, col4, col5, col6, col7, col8, col9) => (col1.get(row, 0), col2.get(row, 1), col3.get(row, 2), col4.get(row, 3), col5.get(row, 4), col6.get(row, 5), col7.get(row, 6), col8.get(row, 7), col9.get(row, 8))
     }
   }
 }
@@ -147,7 +147,7 @@ case class TypedCols10[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10](cols: Tuple10[Ty
 
   def transform(row: Row): Tuple10[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10] = {
     cols match {
-      case (col1, col2, col3, col4, col5, col6, col7, col8, col9, col10) => (col1.get(row), col2.get(row), col3.get(row), col4.get(row), col5.get(row), col6.get(row), col7.get(row), col8.get(row), col9.get(row), col10.get(row))
+      case (col1, col2, col3, col4, col5, col6, col7, col8, col9, col10) => (col1.get(row, 0), col2.get(row, 1), col3.get(row, 2), col4.get(row, 3), col5.get(row, 4), col6.get(row, 5), col7.get(row, 6), col8.get(row, 7), col9.get(row, 8), col10.get(row, 9))
     }
   }
 }
@@ -162,7 +162,7 @@ case class TypedCols11[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11](cols: Tuple
 
   def transform(row: Row): Tuple11[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11] = {
     cols match {
-      case (col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11) => (col1.get(row), col2.get(row), col3.get(row), col4.get(row), col5.get(row), col6.get(row), col7.get(row), col8.get(row), col9.get(row), col10.get(row), col11.get(row))
+      case (col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11) => (col1.get(row, 0), col2.get(row, 1), col3.get(row, 2), col4.get(row, 3), col5.get(row, 4), col6.get(row, 5), col7.get(row, 6), col8.get(row, 7), col9.get(row, 8), col10.get(row, 9), col11.get(row, 10))
     }
   }
 }
@@ -177,7 +177,7 @@ case class TypedCols12[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12](cols: 
 
   def transform(row: Row): Tuple12[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12] = {
     cols match {
-      case (col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12) => (col1.get(row), col2.get(row), col3.get(row), col4.get(row), col5.get(row), col6.get(row), col7.get(row), col8.get(row), col9.get(row), col10.get(row), col11.get(row), col12.get(row))
+      case (col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12) => (col1.get(row, 0), col2.get(row, 1), col3.get(row, 2), col4.get(row, 3), col5.get(row, 4), col6.get(row, 5), col7.get(row, 6), col8.get(row, 7), col9.get(row, 8), col10.get(row, 9), col11.get(row, 10), col12.get(row, 11))
     }
   }
 }
@@ -192,7 +192,7 @@ case class TypedCols13[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13](c
 
   def transform(row: Row): Tuple13[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13] = {
     cols match {
-      case (col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12, col13) => (col1.get(row), col2.get(row), col3.get(row), col4.get(row), col5.get(row), col6.get(row), col7.get(row), col8.get(row), col9.get(row), col10.get(row), col11.get(row), col12.get(row), col13.get(row))
+      case (col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12, col13) => (col1.get(row, 0), col2.get(row, 1), col3.get(row, 2), col4.get(row, 3), col5.get(row, 4), col6.get(row, 5), col7.get(row, 6), col8.get(row, 7), col9.get(row, 8), col10.get(row, 9), col11.get(row, 10), col12.get(row, 11), col13.get(row, 12))
     }
   }
 }
@@ -207,7 +207,7 @@ case class TypedCols14[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R
 
   def transform(row: Row): Tuple14[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14] = {
     cols match {
-      case (col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12, col13, col14) => (col1.get(row), col2.get(row), col3.get(row), col4.get(row), col5.get(row), col6.get(row), col7.get(row), col8.get(row), col9.get(row), col10.get(row), col11.get(row), col12.get(row), col13.get(row), col14.get(row))
+      case (col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12, col13, col14) => (col1.get(row, 0), col2.get(row, 1), col3.get(row, 2), col4.get(row, 3), col5.get(row, 4), col6.get(row, 5), col7.get(row, 6), col8.get(row, 7), col9.get(row, 8), col10.get(row, 9), col11.get(row, 10), col12.get(row, 11), col13.get(row, 12), col14.get(row, 13))
     }
   }
 }
@@ -222,7 +222,7 @@ case class TypedCols15[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R
 
   def transform(row: Row): Tuple15[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15] = {
     cols match {
-      case (col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12, col13, col14, col15) => (col1.get(row), col2.get(row), col3.get(row), col4.get(row), col5.get(row), col6.get(row), col7.get(row), col8.get(row), col9.get(row), col10.get(row), col11.get(row), col12.get(row), col13.get(row), col14.get(row), col15.get(row))
+      case (col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12, col13, col14, col15) => (col1.get(row, 0), col2.get(row, 1), col3.get(row, 2), col4.get(row, 3), col5.get(row, 4), col6.get(row, 5), col7.get(row, 6), col8.get(row, 7), col9.get(row, 8), col10.get(row, 9), col11.get(row, 10), col12.get(row, 11), col13.get(row, 12), col14.get(row, 13), col15.get(row, 14))
     }
   }
 }
@@ -237,7 +237,7 @@ case class TypedCols16[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R
 
   def transform(row: Row): Tuple16[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16] = {
     cols match {
-      case (col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12, col13, col14, col15, col16) => (col1.get(row), col2.get(row), col3.get(row), col4.get(row), col5.get(row), col6.get(row), col7.get(row), col8.get(row), col9.get(row), col10.get(row), col11.get(row), col12.get(row), col13.get(row), col14.get(row), col15.get(row), col16.get(row))
+      case (col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12, col13, col14, col15, col16) => (col1.get(row, 0), col2.get(row, 1), col3.get(row, 2), col4.get(row, 3), col5.get(row, 4), col6.get(row, 5), col7.get(row, 6), col8.get(row, 7), col9.get(row, 8), col10.get(row, 9), col11.get(row, 10), col12.get(row, 11), col13.get(row, 12), col14.get(row, 13), col15.get(row, 14), col16.get(row, 15))
     }
   }
 }
@@ -252,7 +252,7 @@ case class TypedCols17[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R
 
   def transform(row: Row): Tuple17[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17] = {
     cols match {
-      case (col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12, col13, col14, col15, col16, col17) => (col1.get(row), col2.get(row), col3.get(row), col4.get(row), col5.get(row), col6.get(row), col7.get(row), col8.get(row), col9.get(row), col10.get(row), col11.get(row), col12.get(row), col13.get(row), col14.get(row), col15.get(row), col16.get(row), col17.get(row))
+      case (col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12, col13, col14, col15, col16, col17) => (col1.get(row, 0), col2.get(row, 1), col3.get(row, 2), col4.get(row, 3), col5.get(row, 4), col6.get(row, 5), col7.get(row, 6), col8.get(row, 7), col9.get(row, 8), col10.get(row, 9), col11.get(row, 10), col12.get(row, 11), col13.get(row, 12), col14.get(row, 13), col15.get(row, 14), col16.get(row, 15), col17.get(row, 16))
     }
   }
 }
@@ -267,7 +267,7 @@ case class TypedCols18[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R
 
   def transform(row: Row): Tuple18[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18] = {
     cols match {
-      case (col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12, col13, col14, col15, col16, col17, col18) => (col1.get(row), col2.get(row), col3.get(row), col4.get(row), col5.get(row), col6.get(row), col7.get(row), col8.get(row), col9.get(row), col10.get(row), col11.get(row), col12.get(row), col13.get(row), col14.get(row), col15.get(row), col16.get(row), col17.get(row), col18.get(row))
+      case (col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12, col13, col14, col15, col16, col17, col18) => (col1.get(row, 0), col2.get(row, 1), col3.get(row, 2), col4.get(row, 3), col5.get(row, 4), col6.get(row, 5), col7.get(row, 6), col8.get(row, 7), col9.get(row, 8), col10.get(row, 9), col11.get(row, 10), col12.get(row, 11), col13.get(row, 12), col14.get(row, 13), col15.get(row, 14), col16.get(row, 15), col17.get(row, 16), col18.get(row, 17))
     }
   }
 }
@@ -282,7 +282,7 @@ case class TypedCols19[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R
 
   def transform(row: Row): Tuple19[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19] = {
     cols match {
-      case (col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12, col13, col14, col15, col16, col17, col18, col19) => (col1.get(row), col2.get(row), col3.get(row), col4.get(row), col5.get(row), col6.get(row), col7.get(row), col8.get(row), col9.get(row), col10.get(row), col11.get(row), col12.get(row), col13.get(row), col14.get(row), col15.get(row), col16.get(row), col17.get(row), col18.get(row), col19.get(row))
+      case (col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12, col13, col14, col15, col16, col17, col18, col19) => (col1.get(row, 0), col2.get(row, 1), col3.get(row, 2), col4.get(row, 3), col5.get(row, 4), col6.get(row, 5), col7.get(row, 6), col8.get(row, 7), col9.get(row, 8), col10.get(row, 9), col11.get(row, 10), col12.get(row, 11), col13.get(row, 12), col14.get(row, 13), col15.get(row, 14), col16.get(row, 15), col17.get(row, 16), col18.get(row, 17), col19.get(row, 18))
     }
   }
 }
@@ -297,7 +297,7 @@ case class TypedCols20[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R
 
   def transform(row: Row): Tuple20[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20] = {
     cols match {
-      case (col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12, col13, col14, col15, col16, col17, col18, col19, col20) => (col1.get(row), col2.get(row), col3.get(row), col4.get(row), col5.get(row), col6.get(row), col7.get(row), col8.get(row), col9.get(row), col10.get(row), col11.get(row), col12.get(row), col13.get(row), col14.get(row), col15.get(row), col16.get(row), col17.get(row), col18.get(row), col19.get(row), col20.get(row))
+      case (col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12, col13, col14, col15, col16, col17, col18, col19, col20) => (col1.get(row, 0), col2.get(row, 1), col3.get(row, 2), col4.get(row, 3), col5.get(row, 4), col6.get(row, 5), col7.get(row, 6), col8.get(row, 7), col9.get(row, 8), col10.get(row, 9), col11.get(row, 10), col12.get(row, 11), col13.get(row, 12), col14.get(row, 13), col15.get(row, 14), col16.get(row, 15), col17.get(row, 16), col18.get(row, 17), col19.get(row, 18), col20.get(row, 19))
     }
   }
 }
@@ -312,7 +312,7 @@ case class TypedCols21[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R
 
   def transform(row: Row): Tuple21[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21] = {
     cols match {
-      case (col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12, col13, col14, col15, col16, col17, col18, col19, col20, col21) => (col1.get(row), col2.get(row), col3.get(row), col4.get(row), col5.get(row), col6.get(row), col7.get(row), col8.get(row), col9.get(row), col10.get(row), col11.get(row), col12.get(row), col13.get(row), col14.get(row), col15.get(row), col16.get(row), col17.get(row), col18.get(row), col19.get(row), col20.get(row), col21.get(row))
+      case (col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12, col13, col14, col15, col16, col17, col18, col19, col20, col21) => (col1.get(row, 0), col2.get(row, 1), col3.get(row, 2), col4.get(row, 3), col5.get(row, 4), col6.get(row, 5), col7.get(row, 6), col8.get(row, 7), col9.get(row, 8), col10.get(row, 9), col11.get(row, 10), col12.get(row, 11), col13.get(row, 12), col14.get(row, 13), col15.get(row, 14), col16.get(row, 15), col17.get(row, 16), col18.get(row, 17), col19.get(row, 18), col20.get(row, 19), col21.get(row, 20))
     }
   }
 }
@@ -327,7 +327,7 @@ case class TypedCols22[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R
 
   def transform(row: Row): Tuple22[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21, R22] = {
     cols match {
-      case (col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12, col13, col14, col15, col16, col17, col18, col19, col20, col21, col22) => (col1.get(row), col2.get(row), col3.get(row), col4.get(row), col5.get(row), col6.get(row), col7.get(row), col8.get(row), col9.get(row), col10.get(row), col11.get(row), col12.get(row), col13.get(row), col14.get(row), col15.get(row), col16.get(row), col17.get(row), col18.get(row), col19.get(row), col20.get(row), col21.get(row), col22.get(row))
+      case (col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12, col13, col14, col15, col16, col17, col18, col19, col20, col21, col22) => (col1.get(row, 0), col2.get(row, 1), col3.get(row, 2), col4.get(row, 3), col5.get(row, 4), col6.get(row, 5), col7.get(row, 6), col8.get(row, 7), col9.get(row, 8), col10.get(row, 9), col11.get(row, 10), col12.get(row, 11), col13.get(row, 12), col14.get(row, 13), col15.get(row, 14), col16.get(row, 15), col17.get(row, 16), col18.get(row, 17), col19.get(row, 18), col20.get(row, 19), col21.get(row, 20), col22.get(row, 21))
     }
   }
 }
