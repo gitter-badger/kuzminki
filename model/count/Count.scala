@@ -45,6 +45,8 @@ class JoinOn[A <: Model, B <: Model](join: Join[A, B], coll: CountCollector) {
 
 class Where[M <: Model](model: M, coll: CountCollector){
 
+  def all() = new RunCount(coll)
+
   def whereAll(pick: M => Seq[Filter]) = {
     new RunCount(
       coll.add(
@@ -81,6 +83,8 @@ class Where[M <: Model](model: M, coll: CountCollector){
 }
 
 class WhereJoin[A <: Model, B <: Model](join: Join[A, B], coll: CountCollector) {
+
+  def all() = new RunCount(coll)
 
   def whereAll(pick: Join[A, B] => Seq[Filter]) = {
     new RunCount(
