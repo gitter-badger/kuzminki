@@ -42,6 +42,14 @@ trait DoubleColValue extends TypeCol[Double] {
   def get(row: Row, index: Int) = row.double(index)
 }
 
+trait DecimalNumberColValue extends TypeCol[DecimalNumber] {
+  def get(row: Row, index: Int) = row.decimal(index)
+}
+
+trait BigDecimalColValue extends TypeCol[BigDecimal] {
+  def get(row: Row, index: Int) = row.bigDecimal(index)
+}
+
 
 trait SortingCol {
   def asc: Asc
@@ -113,32 +121,28 @@ case class DoubleCol(name: String, model: Model) extends RealCol
                                                     with ComparativeFilters[Double]
                                                     with IncrementUpdate[Double]
 
+
+case class DecimalNumberCol(name: String, model: Model) extends RealCol
+                                                           with DecimalNumberColValue
+                                                           with TypeCol[DecimalNumber]
+                                                           with UniversalFilters[DecimalNumber]
+                                                           with ComparativeFilters[DecimalNumber]
+                                                           with IncrementUpdate[DecimalNumber]
+
+
+case class BigDecimalCol(name: String, model: Model) extends RealCol
+                                                        with BigDecimalColValue
+                                                        with TypeCol[BigDecimal]
+                                                        with UniversalFilters[BigDecimal]
+                                                        with ComparativeFilters[BigDecimal]
+                                                        with IncrementUpdate[BigDecimal]
+
 /*
 case class CharCol(name: String, model: Model) extends ModelCol
                                                   with TypeCol[Char]
                                                   with UniversalFilters[Char] {
 
   def get(row: Row): Char = row.char(name)
-}
-
-
-case class BigDecimalCol(name: String, model: Model) extends ModelCol
-                                                        with TypeCol[BigDecimal]
-                                                        with UniversalFilters[BigDecimal]
-                                                        with ComparativeFilters[BigDecimal]
-                                                        with IncrementUpdate[BigDecimal] {
-
-  def get(row: Row): BigDecimal = row.bigDecimal(name)
-}
-
-
-case class DecimalNumberCol(name: String, model: Model) extends ModelCol
-                                                           with TypeCol[DecimalNumber]
-                                                           with UniversalFilters[DecimalNumber]
-                                                           with ComparativeFilters[DecimalNumber]
-                                                           with IncrementUpdate[DecimalNumber] {
-
-  def get(row: Row): DecimalNumber = row.decimal(name)
 }
 
 
