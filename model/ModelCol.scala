@@ -76,6 +76,14 @@ trait RealCol extends ModelCol with SortingCol {
 }
 
 
+trait AggCol {
+  def sum = Agg.sum(this)
+  def avg = Agg.avg(this)
+  def max = Agg.max(this)
+  def min = Agg.min(this)
+}
+
+
 case class StringCol(name: String, model: Model) extends RealCol
                                                     with StringColValue
                                                     with UniversalFilters[String]
@@ -96,6 +104,7 @@ case class ShortCol(name: String, model: Model) extends RealCol
 
 case class IntCol(name: String, model: Model) extends RealCol
                                                  with IntColValue
+                                                 with AggCol
                                                  with UniversalFilters[Int]
                                                  with ComparativeFilters[Int]
                                                  with IncrementUpdate[Int]
@@ -103,6 +112,7 @@ case class IntCol(name: String, model: Model) extends RealCol
 
 case class LongCol(name: String, model: Model) extends RealCol
                                                   with LongColValue
+                                                  with AggCol
                                                   with UniversalFilters[Long]
                                                   with ComparativeFilters[Long]
                                                   with IncrementUpdate[Long]
@@ -110,6 +120,7 @@ case class LongCol(name: String, model: Model) extends RealCol
 
 case class FloatCol(name: String, model: Model) extends RealCol
                                                    with FloatColValue
+                                                   with AggCol
                                                    with UniversalFilters[Float]
                                                    with ComparativeFilters[Float]
                                                    with IncrementUpdate[Float]
@@ -117,6 +128,7 @@ case class FloatCol(name: String, model: Model) extends RealCol
 
 case class DoubleCol(name: String, model: Model) extends RealCol
                                                     with DoubleColValue
+                                                    with AggCol
                                                     with UniversalFilters[Double]
                                                     with ComparativeFilters[Double]
                                                     with IncrementUpdate[Double]
@@ -124,6 +136,7 @@ case class DoubleCol(name: String, model: Model) extends RealCol
 
 case class DecimalNumberCol(name: String, model: Model) extends RealCol
                                                            with DecimalNumberColValue
+                                                           with AggCol
                                                            with TypeCol[DecimalNumber]
                                                            with UniversalFilters[DecimalNumber]
                                                            with ComparativeFilters[DecimalNumber]
@@ -132,6 +145,7 @@ case class DecimalNumberCol(name: String, model: Model) extends RealCol
 
 case class BigDecimalCol(name: String, model: Model) extends RealCol
                                                         with BigDecimalColValue
+                                                        with AggCol
                                                         with TypeCol[BigDecimal]
                                                         with UniversalFilters[BigDecimal]
                                                         with ComparativeFilters[BigDecimal]
