@@ -10,14 +10,42 @@ sealed trait TypedTransformer[R] {
   def transform(row: Row): R
 }
 
-case class TypedCols1[R](col: TypeCol[R]) extends TypedTransformer[R] {
+class ColSeq(cols: Seq[TypeCol[_]]) extends TypedTransformer[Seq[Any]] {
+
+  lazy val indexedCols = cols.zipWithIndex
+
+  def toSeq: Seq[ModelCol] = cols
+
+  def transform(row: Row): Seq[Any] = {
+    indexedCols.map {
+      case (col, index) =>
+        col.get(row, index)
+    }
+  }
+}
+
+class ColMap(cols: Seq[TypeCol[_]]) extends TypedTransformer[Map[String, Any]] {
+
+  lazy val indexedCols = cols.zipWithIndex
+
+  def toSeq: Seq[ModelCol] = cols
+
+  def transform(row: Row): Map[String, Any] = {
+    indexedCols.map {
+      case (col, index) => 
+        (col.name, col.get(row, index))
+    }.toMap
+  }
+}
+
+class TypedCols1[R](col: TypeCol[R]) extends TypedTransformer[R] {
 
   def toSeq: Seq[ModelCol] = Seq(col)
 
   def transform(row: Row): R = col.get(row, 0)
 }
 
-case class TypedCols2[R1, R2](cols: Tuple2[TypeCol[R1], TypeCol[R2]]) extends TypedTransformer[Tuple2[R1, R2]] {
+class TypedCols2[R1, R2](cols: Tuple2[TypeCol[R1], TypeCol[R2]]) extends TypedTransformer[Tuple2[R1, R2]] {
 
   def toSeq: Seq[ModelCol] = {
     cols match {
@@ -32,7 +60,7 @@ case class TypedCols2[R1, R2](cols: Tuple2[TypeCol[R1], TypeCol[R2]]) extends Ty
   }
 }
 
-case class TypedCols3[R1, R2, R3](cols: Tuple3[TypeCol[R1], TypeCol[R2], TypeCol[R3]]) extends TypedTransformer[Tuple3[R1, R2, R3]] {
+class TypedCols3[R1, R2, R3](cols: Tuple3[TypeCol[R1], TypeCol[R2], TypeCol[R3]]) extends TypedTransformer[Tuple3[R1, R2, R3]] {
 
   def toSeq: Seq[ModelCol] = {
     cols match {
@@ -47,7 +75,7 @@ case class TypedCols3[R1, R2, R3](cols: Tuple3[TypeCol[R1], TypeCol[R2], TypeCol
   }
 }
 
-case class TypedCols4[R1, R2, R3, R4](cols: Tuple4[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4]]) extends TypedTransformer[Tuple4[R1, R2, R3, R4]] {
+class TypedCols4[R1, R2, R3, R4](cols: Tuple4[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4]]) extends TypedTransformer[Tuple4[R1, R2, R3, R4]] {
 
   def toSeq: Seq[ModelCol] = {
     cols match {
@@ -62,7 +90,7 @@ case class TypedCols4[R1, R2, R3, R4](cols: Tuple4[TypeCol[R1], TypeCol[R2], Typ
   }
 }
 
-case class TypedCols5[R1, R2, R3, R4, R5](cols: Tuple5[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5]]) extends TypedTransformer[Tuple5[R1, R2, R3, R4, R5]] {
+class TypedCols5[R1, R2, R3, R4, R5](cols: Tuple5[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5]]) extends TypedTransformer[Tuple5[R1, R2, R3, R4, R5]] {
 
   def toSeq: Seq[ModelCol] = {
     cols match {
@@ -77,7 +105,7 @@ case class TypedCols5[R1, R2, R3, R4, R5](cols: Tuple5[TypeCol[R1], TypeCol[R2],
   }
 }
 
-case class TypedCols6[R1, R2, R3, R4, R5, R6](cols: Tuple6[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6]]) extends TypedTransformer[Tuple6[R1, R2, R3, R4, R5, R6]] {
+class TypedCols6[R1, R2, R3, R4, R5, R6](cols: Tuple6[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6]]) extends TypedTransformer[Tuple6[R1, R2, R3, R4, R5, R6]] {
 
   def toSeq: Seq[ModelCol] = {
     cols match {
@@ -92,7 +120,7 @@ case class TypedCols6[R1, R2, R3, R4, R5, R6](cols: Tuple6[TypeCol[R1], TypeCol[
   }
 }
 
-case class TypedCols7[R1, R2, R3, R4, R5, R6, R7](cols: Tuple7[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7]]) extends TypedTransformer[Tuple7[R1, R2, R3, R4, R5, R6, R7]] {
+class TypedCols7[R1, R2, R3, R4, R5, R6, R7](cols: Tuple7[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7]]) extends TypedTransformer[Tuple7[R1, R2, R3, R4, R5, R6, R7]] {
 
   def toSeq: Seq[ModelCol] = {
     cols match {
@@ -107,7 +135,7 @@ case class TypedCols7[R1, R2, R3, R4, R5, R6, R7](cols: Tuple7[TypeCol[R1], Type
   }
 }
 
-case class TypedCols8[R1, R2, R3, R4, R5, R6, R7, R8](cols: Tuple8[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8]]) extends TypedTransformer[Tuple8[R1, R2, R3, R4, R5, R6, R7, R8]] {
+class TypedCols8[R1, R2, R3, R4, R5, R6, R7, R8](cols: Tuple8[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8]]) extends TypedTransformer[Tuple8[R1, R2, R3, R4, R5, R6, R7, R8]] {
 
   def toSeq: Seq[ModelCol] = {
     cols match {
@@ -122,7 +150,7 @@ case class TypedCols8[R1, R2, R3, R4, R5, R6, R7, R8](cols: Tuple8[TypeCol[R1], 
   }
 }
 
-case class TypedCols9[R1, R2, R3, R4, R5, R6, R7, R8, R9](cols: Tuple9[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9]]) extends TypedTransformer[Tuple9[R1, R2, R3, R4, R5, R6, R7, R8, R9]] {
+class TypedCols9[R1, R2, R3, R4, R5, R6, R7, R8, R9](cols: Tuple9[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9]]) extends TypedTransformer[Tuple9[R1, R2, R3, R4, R5, R6, R7, R8, R9]] {
 
   def toSeq: Seq[ModelCol] = {
     cols match {
@@ -137,7 +165,7 @@ case class TypedCols9[R1, R2, R3, R4, R5, R6, R7, R8, R9](cols: Tuple9[TypeCol[R
   }
 }
 
-case class TypedCols10[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10](cols: Tuple10[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10]]) extends TypedTransformer[Tuple10[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10]] {
+class TypedCols10[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10](cols: Tuple10[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10]]) extends TypedTransformer[Tuple10[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10]] {
 
   def toSeq: Seq[ModelCol] = {
     cols match {
@@ -152,7 +180,7 @@ case class TypedCols10[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10](cols: Tuple10[Ty
   }
 }
 
-case class TypedCols11[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11](cols: Tuple11[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11]]) extends TypedTransformer[Tuple11[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11]] {
+class TypedCols11[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11](cols: Tuple11[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11]]) extends TypedTransformer[Tuple11[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11]] {
 
   def toSeq: Seq[ModelCol] = {
     cols match {
@@ -167,7 +195,7 @@ case class TypedCols11[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11](cols: Tuple
   }
 }
 
-case class TypedCols12[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12](cols: Tuple12[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12]]) extends TypedTransformer[Tuple12[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12]] {
+class TypedCols12[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12](cols: Tuple12[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12]]) extends TypedTransformer[Tuple12[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12]] {
 
   def toSeq: Seq[ModelCol] = {
     cols match {
@@ -182,7 +210,7 @@ case class TypedCols12[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12](cols: 
   }
 }
 
-case class TypedCols13[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13](cols: Tuple13[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13]]) extends TypedTransformer[Tuple13[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13]] {
+class TypedCols13[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13](cols: Tuple13[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13]]) extends TypedTransformer[Tuple13[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13]] {
 
   def toSeq: Seq[ModelCol] = {
     cols match {
@@ -197,7 +225,7 @@ case class TypedCols13[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13](c
   }
 }
 
-case class TypedCols14[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14](cols: Tuple14[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14]]) extends TypedTransformer[Tuple14[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14]] {
+class TypedCols14[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14](cols: Tuple14[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14]]) extends TypedTransformer[Tuple14[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14]] {
 
   def toSeq: Seq[ModelCol] = {
     cols match {
@@ -212,7 +240,7 @@ case class TypedCols14[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R
   }
 }
 
-case class TypedCols15[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15](cols: Tuple15[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15]]) extends TypedTransformer[Tuple15[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15]] {
+class TypedCols15[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15](cols: Tuple15[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15]]) extends TypedTransformer[Tuple15[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15]] {
 
   def toSeq: Seq[ModelCol] = {
     cols match {
@@ -227,7 +255,7 @@ case class TypedCols15[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R
   }
 }
 
-case class TypedCols16[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16](cols: Tuple16[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16]]) extends TypedTransformer[Tuple16[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16]] {
+class TypedCols16[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16](cols: Tuple16[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16]]) extends TypedTransformer[Tuple16[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16]] {
 
   def toSeq: Seq[ModelCol] = {
     cols match {
@@ -242,7 +270,7 @@ case class TypedCols16[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R
   }
 }
 
-case class TypedCols17[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17](cols: Tuple17[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17]]) extends TypedTransformer[Tuple17[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17]] {
+class TypedCols17[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17](cols: Tuple17[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17]]) extends TypedTransformer[Tuple17[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17]] {
 
   def toSeq: Seq[ModelCol] = {
     cols match {
@@ -257,7 +285,7 @@ case class TypedCols17[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R
   }
 }
 
-case class TypedCols18[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18](cols: Tuple18[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17], TypeCol[R18]]) extends TypedTransformer[Tuple18[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18]] {
+class TypedCols18[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18](cols: Tuple18[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17], TypeCol[R18]]) extends TypedTransformer[Tuple18[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18]] {
 
   def toSeq: Seq[ModelCol] = {
     cols match {
@@ -272,7 +300,7 @@ case class TypedCols18[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R
   }
 }
 
-case class TypedCols19[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19](cols: Tuple19[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17], TypeCol[R18], TypeCol[R19]]) extends TypedTransformer[Tuple19[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19]] {
+class TypedCols19[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19](cols: Tuple19[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17], TypeCol[R18], TypeCol[R19]]) extends TypedTransformer[Tuple19[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19]] {
 
   def toSeq: Seq[ModelCol] = {
     cols match {
@@ -287,7 +315,7 @@ case class TypedCols19[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R
   }
 }
 
-case class TypedCols20[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20](cols: Tuple20[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17], TypeCol[R18], TypeCol[R19], TypeCol[R20]]) extends TypedTransformer[Tuple20[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20]] {
+class TypedCols20[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20](cols: Tuple20[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17], TypeCol[R18], TypeCol[R19], TypeCol[R20]]) extends TypedTransformer[Tuple20[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20]] {
 
   def toSeq: Seq[ModelCol] = {
     cols match {
@@ -302,7 +330,7 @@ case class TypedCols20[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R
   }
 }
 
-case class TypedCols21[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21](cols: Tuple21[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17], TypeCol[R18], TypeCol[R19], TypeCol[R20], TypeCol[R21]]) extends TypedTransformer[Tuple21[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21]] {
+class TypedCols21[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21](cols: Tuple21[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17], TypeCol[R18], TypeCol[R19], TypeCol[R20], TypeCol[R21]]) extends TypedTransformer[Tuple21[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21]] {
 
   def toSeq: Seq[ModelCol] = {
     cols match {
@@ -317,7 +345,7 @@ case class TypedCols21[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R
   }
 }
 
-case class TypedCols22[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21, R22](cols: Tuple22[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17], TypeCol[R18], TypeCol[R19], TypeCol[R20], TypeCol[R21], TypeCol[R22]]) extends TypedTransformer[Tuple22[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21, R22]] {
+class TypedCols22[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21, R22](cols: Tuple22[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17], TypeCol[R18], TypeCol[R19], TypeCol[R20], TypeCol[R21], TypeCol[R22]]) extends TypedTransformer[Tuple22[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21, R22]] {
 
   def toSeq: Seq[ModelCol] = {
     cols match {

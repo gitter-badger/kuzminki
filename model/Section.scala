@@ -91,16 +91,23 @@ case class OnSec(leftCol: ModelCol, rightCol: ModelCol) extends Section with Use
 }
 
 
-case class WhereChainSec(parts: Seq[Render]) extends MultiPart with Used {
-  def expression = "WHERE %s"
-  def glue = " "
-}
-
-
 case class WhereAllSec(parts: Seq[Filter]) extends MultiPart {
   def expression = "WHERE %s"
   def glue = " AND "
   val isUsed = parts.nonEmpty
+}
+
+
+case class WhereAnySec(parts: Seq[Filter]) extends MultiPart {
+  def expression = "WHERE %s"
+  def glue = " OR "
+  val isUsed = parts.nonEmpty
+}
+
+
+case class WhereChainSec(parts: Seq[Render]) extends MultiPart with Used {
+  def expression = "WHERE %s"
+  def glue = " "
 }
 
 

@@ -22,12 +22,13 @@ import io.rdbc.pgsql.transport.netty.sapi.NettyPgConnectionFactory.Config
 import io.rdbc.pool.sapi.ConnectionPool
 import io.rdbc.pool.sapi.ConnectionPoolConfig
 
-import kuzminki.model.{Query, DbConn}
+import kuzminki.model.Conn
 
 //import transport.actions.{Action, Batch}
 
 
 case class KuzminkiException(message: String) extends Exception(message)
+
 
 object RdbcPool {
 
@@ -53,7 +54,57 @@ object RdbcPool {
 }
 
 
-class RdbcConn(conf: SystemConfig)(implicit system: ActorSystem) extends DbConn with LazyLogging {
+class RdbcConn(conf: SystemConfig)(implicit system: ActorSystem) extends Conn with LazyLogging {
+
+  logger.info("Start")
+
+  implicit val ec = system.dispatcher
+  implicit val materializer = ActorMaterializer()(system)
+  implicit val timeout = 5.seconds.timeout
+
+  private val inf = Timeout(Duration.Inf)
+
+  private val pool = RdbcPool.forConfig(conf, system.dispatcher)
+
+  def select[R](statement: SqlWithParams)(transform: Row => R): Future[List[R]] = {
+    pool.withConnection(_.statement(statement).executeForSet).map(_.toList).map { rows =>
+      rows.map { row =>
+        transform(row)
+      }
+    }
+  }
+
+  def selectHead[R](statement: SqlWithParams)(transform: Row => R): Future[R] = {
+    pool.withConnection(_.statement(statement).executeForSet).map { rows =>
+      transform(rows.head)
+    }
+  }
+
+  def selectHeadOption[R](statement: SqlWithParams)(transform: Row => R): Future[Option[R]] = {
+    pool.withConnection(_.statement(statement).executeForSet).map { rows =>
+      rows.headOption.map(transform)
+    }
+  }
+
+  def count(statement: SqlWithParams): Future[Int] = {
+    pool.withConnection(_.statement(statement).executeForSet).map { rows =>
+      rows.head.col[Int]("count")
+    }
+  }
+
+  def exec(statement: SqlWithParams): Future[Unit] = {
+    pool.withConnection(_.statement(statement).execute)
+  }
+
+  def execNum(statement: SqlWithParams): Future[Long] = {
+    pool.withConnection(_.statement(statement).executeForRowsAffected)
+  }
+
+  def shutdown(): Future[Unit] = pool.shutdown()
+}
+
+
+class RdbcOldConn(conf: SystemConfig)(implicit system: ActorSystem) extends LazyLogging {
 
   logger.info("Start")
 
@@ -77,10 +128,6 @@ class RdbcConn(conf: SystemConfig)(implicit system: ActorSystem) extends DbConn 
 
   def select(statement: SqlWithParams): Future[List[Row]] = {
     pool.withConnection(_.statement(statement).executeForSet).map(_.toList)
-
-    //.recover {
-    //  case ex: Exception => throw transformError(ex.getMessage, statement)
-    //}
   }
 
   // find

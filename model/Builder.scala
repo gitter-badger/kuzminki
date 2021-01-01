@@ -13,36 +13,34 @@ import kuzminki.model.implicits._
 
 object Builder {
 
-  def conn(implicit ec: ExecutionContext) = {
-    Connection(new DummyConn(), ec)
-  }
+  def db(implicit ec: ExecutionContext) = new DummyConn()
 
   def select[M <: Model](implicit tag: ClassTag[M]) = {
-    new Columns(Model.from[M], conn)
+    new Columns(Model.from[M], db)
   }
 
   def select[A <: Model, B <: Model](implicit tagA: ClassTag[A], tagB: ClassTag[B]) = {
-    new JoinColumns(Join(Model.from[A], Model.from[B]), conn)
+    new JoinColumns(Join(Model.from[A], Model.from[B]), db)
   }
 
   def update[M <: Model](implicit tag: ClassTag[M]) = {
-    new Update(Model.from[M], conn)
+    new Update(Model.from[M], db)
   }
 
   def insert[M <: Model](implicit tag: ClassTag[M]) = {
-    new Insert(Model.from[M], conn)
+    new Insert(Model.from[M], db)
   }
 
   def delete[M <: Model](implicit tag: ClassTag[M]) = {
-    Delete.from(Model.from[M], conn)
+    Delete.from(Model.from[M], db)
   }
 
   def count[M <: Model](implicit tag: ClassTag[M]) = {
-    Count.from(Model.from[M], conn)
+    Count.from(Model.from[M], db)
   }
 
   def count[A <: Model, B <: Model](implicit tagA: ClassTag[A], tagB: ClassTag[B]) = {
-    Count.fromJoin(Join(Model.from[A], Model.from[B]), conn)
+    Count.fromJoin(Join(Model.from[A], Model.from[B]), db)
   }
 }
 

@@ -5,11 +5,11 @@ import kuzminki.model._
 
 object Count {
 
-  def from[M <: Model](model: M, conn: Connection) = {
+  def from[M <: Model](model: M, db: Conn) = {
     new Where(
       model,
-      CountCollector(
-        conn,
+      Collector(
+        db,
         Array(
           CountFromSec(ModelTable(model))
         )
@@ -17,11 +17,11 @@ object Count {
     )
   }
 
-  def fromJoin[A <: Model, B <: Model](join: Join[A, B], conn: Connection) = {
+  def fromJoin[A <: Model, B <: Model](join: Join[A, B], db: Conn) = {
     new JoinOn(
       join,
-      CountCollector(
-        conn,
+      Collector(
+        db,
         Array(
           CountFromSec(ModelTable(join.a))
         )
@@ -30,7 +30,7 @@ object Count {
   }
 }
 
-class JoinOn[A <: Model, B <: Model](join: Join[A, B], coll: CountCollector) {
+class JoinOn[A <: Model, B <: Model](join: Join[A, B], coll: Collector) {
 
   def joinOn(pickLeft: A => ModelCol, pickRight: B => ModelCol) = {
     new WhereJoin(
@@ -43,7 +43,7 @@ class JoinOn[A <: Model, B <: Model](join: Join[A, B], coll: CountCollector) {
   }
 }
 
-class Where[M <: Model](model: M, coll: CountCollector){
+class Where[M <: Model](model: M, coll: Collector){
 
   def all() = new RunCount(coll)
 
@@ -82,7 +82,7 @@ class Where[M <: Model](model: M, coll: CountCollector){
   }
 }
 
-class WhereJoin[A <: Model, B <: Model](join: Join[A, B], coll: CountCollector) {
+class WhereJoin[A <: Model, B <: Model](join: Join[A, B], coll: Collector) {
 
   def all() = new RunCount(coll)
 
@@ -122,9 +122,14 @@ class WhereJoin[A <: Model, B <: Model](join: Join[A, B], coll: CountCollector) 
 }
 
 
-class RunCount[M <: Model](coll: CountCollector) extends Printing {
+class RunCount(coll: Collector) extends Printing {
 
-  def run = coll.executor
+  def run() = {
+    coll.db.selectHead(coll.statement) { row =>
+      row.int("count")
+    }
+  }
+
   def render = coll.render
 }
 

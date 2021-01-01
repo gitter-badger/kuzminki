@@ -4,19 +4,19 @@ import kuzminki.model._
 
 
 case class CollectSingle[M <: Model](model: M,
-                                    conn: Connection,
-                                    cols: Seq[ModelCol],
-                                    values: Seq[Any])
+                                     db: Conn,
+                                     cols: Seq[ModelCol],
+                                     values: Seq[Any])
 
 
-class Insert[M <: Model](model: M, conn: Connection) extends TypedInsert(model, conn) {
+class Insert[M <: Model](model: M, db: Conn) extends TypedInsert(model, db) {
 
   def data(pick: M => Seq[SetValue]) = {
     val changes = pick(model)
     new SingleRowInsert(
-      OperationCollector(
-        model,
-        conn,
+      model,
+      Collector(
+        db,
         Array(
           InsertIntoSec(ModelTable(model)),
           InsertColumnsSec(changes.map(_.col)),
@@ -27,17 +27,18 @@ class Insert[M <: Model](model: M, conn: Connection) extends TypedInsert(model, 
   }
 
   def uncheckedCols(pick: M => Seq[ModelCol]) = {
-    new UncheckedValues(model, conn, pick(model))
+    new UncheckedValues(model, db, pick(model))
   }
 }
 
-abstract class ValuesNext[M <: Model](model: M, conn: Connection) {
+
+abstract class ValuesNext[M <: Model](model: M, db: Conn) {
 
   protected def single(cols: Seq[ModelCol], values: Seq[Any]) = {
     new SingleRowInsert(
-      OperationCollector(
-        model,
-        conn,
+      model,
+      Collector(
+        db,
         Array(
           InsertIntoSec(ModelTable(model)),
           InsertColumnsSec(cols),
@@ -49,9 +50,9 @@ abstract class ValuesNext[M <: Model](model: M, conn: Connection) {
 
   protected def multiple(cols: Seq[ModelCol], valuesList: List[Seq[Any]]) = {
     new Returning(
-      OperationCollector(
-        model,
-        conn,
+      model,
+      Collector(
+        db,
         Array(
           InsertIntoSec(ModelTable(model)),
           InsertColumnsSec(cols),
@@ -62,7 +63,8 @@ abstract class ValuesNext[M <: Model](model: M, conn: Connection) {
   }
 }
 
-class TypedValues[M <: Model, R](model: M, conn: Connection, cols: InsertType[R]) extends ValuesNext(model, conn) {
+
+class TypedValues[M <: Model, R](model: M, db: Conn, cols: InsertType[R]) extends ValuesNext(model, db) {
 
   def values(data: R) = {
     single(
@@ -80,9 +82,9 @@ class TypedValues[M <: Model, R](model: M, conn: Connection, cols: InsertType[R]
 
   def valuesFromSelect(sub: SubQuery[R]) = {
     new Returning(
-      OperationCollector(
-        model,
-        conn,
+      model,
+      Collector(
+        db,
         Array(
           InsertIntoSec(ModelTable(model)),
           InsertColumnsSec(cols.toSeq),
@@ -93,7 +95,8 @@ class TypedValues[M <: Model, R](model: M, conn: Connection, cols: InsertType[R]
   }
 }
 
-class UncheckedValues[M <: Model](model: M, conn: Connection, cols: Seq[ModelCol]) extends ValuesNext(model, conn) {
+
+class UncheckedValues[M <: Model](model: M, db: Conn, cols: Seq[ModelCol]) extends ValuesNext(model, db) {
 
   private def verify(values: Seq[Any]): Unit = {
 
@@ -125,10 +128,12 @@ class UncheckedValues[M <: Model](model: M, conn: Connection, cols: Seq[ModelCol
   }
 }
 
-class SingleRowInsert[M <: Model](coll: OperationCollector[M]) extends Returning(coll) {
+
+class SingleRowInsert[M <: Model](model: M, coll: Collector) extends Returning(model, coll) {
 
   def onConflictDoNothing = {
     new Returning(
+      model,
       coll.extend(Array(
         InsertOnConflictSec,
         InsertDoNothingSec
@@ -138,38 +143,42 @@ class SingleRowInsert[M <: Model](coll: OperationCollector[M]) extends Returning
 
   def onConflictOnColumn(pick: M => ModelCol) = {
     new OnConflictDo(
-      pick(coll.model),
-      coll
+      model,
+      coll,
+      pick(model)
     )
   }
 
   def whereNotExistsOne(pick: M => Filter) = {
     whereNotExistsImplement(
-      Seq(pick(coll.model))
+      Seq(pick(model))
     )
   }
 
   def whereNotExistsAll(pick: M => Seq[Filter]) = {
-    whereNotExistsImplement(pick(coll.model))
+    whereNotExistsImplement(pick(model))
   }
 
   private def whereNotExistsImplement(conds: Seq[Filter]) = {
     val sections = coll.sections.map {
       case InsertValuesSec(values) =>
-        InsertWhereNotExistsSec(values, ModelTable(coll.model), WhereAllSec(conds))
+        InsertWhereNotExistsSec(values, ModelTable(model), WhereAllSec(conds))
       case sec: Section => sec 
     }
 
     new Returning(
+      model,
       coll.copy(sections = sections)
     )
   }
 }
 
-case class OnConflictDo[M <: Model](conflictCol: ModelCol, coll: OperationCollector[M]) {
+
+case class OnConflictDo[M <: Model](model: M, coll: Collector, conflictCol: ModelCol) {
 
   def doNothing = {
     new Returning(
+      model,
       coll.extend(Array(
         InsertOnConflictColumnSec(conflictCol),
         InsertDoNothingSec
@@ -184,9 +193,10 @@ case class OnConflictDo[M <: Model](conflictCol: ModelCol, coll: OperationCollec
   }
 
   def doUpdate(pick: M => Seq[SetValue]) = {
-    val changes = pick(coll.model)
+    val changes = pick(model)
     changes.foreach(validate)
     new Returning(
+      model,
       coll.extend(Array(
         InsertOnConflictColumnSec(conflictCol),
         InsertDoUpdateSec(changes)
@@ -195,9 +205,10 @@ case class OnConflictDo[M <: Model](conflictCol: ModelCol, coll: OperationCollec
   }
 
   def doUpdateOne(pick: M => SetValue) = {
-    val change = pick(coll.model)
+    val change = pick(model)
     validate(change)
     new Returning(
+      model,
       coll.extend(Array(
         InsertOnConflictColumnSec(conflictCol),
         InsertDoUpdateSec(Seq(change))

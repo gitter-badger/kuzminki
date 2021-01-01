@@ -1,8 +1,5 @@
 package kuzminki.model
 
-import kuzminki.model.select.typed.RunTyped
-import kuzminki.model.select.typedjoin.RunTypedJoin
-
 
 object implicits {
 
@@ -30,11 +27,11 @@ object implicits {
   implicit def typeColToComparativeFilters[T](col: TypeCol[T]) = col.asInstanceOf[ComparativeFilters[T]]
   implicit def typeColToIncrementUpdate[T](col: TypeCol[T]) = col.asInstanceOf[IncrementUpdate[T]]
   implicit def typeColToRealCol(col: TypeCol[_]) = col.asInstanceOf[RealCol]
+  implicit def typeColToAggCol(col: TypeCol[_]) = col.asInstanceOf[AggCol]
 
   // query
   implicit val modelColToSorting: ModelCol => Sorting = col => Sort(col)
 
   // subquery
-  implicit def runTypedToNested[R](rt: RunTyped[_, R]): SubQuery[R] = rt.asSub
-  implicit def runTypedJoinToNested[R](rtj: RunTypedJoin[_, _, R]): SubQuery[R] = rtj.asSub
+  implicit def runTypedToNested[R](rt: RunTyped[R]): SubQuery[R] = rt.asSub
 }
