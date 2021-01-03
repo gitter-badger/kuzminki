@@ -3,7 +3,8 @@ package kuzminki.model
 import io.rdbc.sapi.DecimalNumber
 
 
-trait AggMax extends AggFunction {
+trait AggMax extends ColFunction {
+  def name = "max"
   def template = "MAX(%s)"
 }
 

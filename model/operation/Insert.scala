@@ -3,12 +3,6 @@ package kuzminki.model.operation
 import kuzminki.model._
 
 
-case class CollectSingle[M <: Model](model: M,
-                                     db: Conn,
-                                     cols: Seq[ModelCol],
-                                     values: Seq[Any])
-
-
 class Insert[M <: Model](model: M, db: Conn) extends TypedInsert(model, db) {
 
   def data(pick: M => Seq[SetValue]) = {

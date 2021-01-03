@@ -2,7 +2,7 @@ package kuzminki.model
 
 
 trait Underlying {
-  def col: RealCol
+  def col: Render
 }
 
 trait UniversalFilters[T] extends Underlying {
@@ -37,16 +37,8 @@ trait UniversalFilters[T] extends Underlying {
 
   def in(opt: Option[Seq[T]]): Option[Filter] = opt.map(in)
   def notIn(opt: Option[Seq[T]]): Option[Filter] = opt.map(notIn)
-
-  // update
-
-  def ==>(value: T) = SetValue(col, value)
 }
 
-trait IncrementUpdate[T] extends Underlying {
-  def +=(value: T) = Increment(col, value)
-  def -=(value: T) = Decrement(col, value)
-}
 
 trait ComparativeFilters[T] extends Underlying {
 

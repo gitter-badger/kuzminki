@@ -3,7 +3,8 @@ package kuzminki.model
 import io.rdbc.sapi.DecimalNumber
 
 
-trait AggMin extends AggFunction {
+trait AggMin extends ColFunction {
+  def name = "min"
   def template = "MIN(%s)"
 }
 

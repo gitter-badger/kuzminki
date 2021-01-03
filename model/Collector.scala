@@ -16,8 +16,7 @@ trait ResultMethods {
 }
 
 
-case class Collector(db: Conn,
-                            sections: Array[Section]) extends ResultMethods {
+case class Collector(db: Conn, sections: Array[Section]) extends ResultMethods {
 
   def add(section: Section) = this.copy(sections = sections :+ section)
 

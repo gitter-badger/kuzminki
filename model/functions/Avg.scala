@@ -3,7 +3,8 @@ package kuzminki.model
 import io.rdbc.sapi.DecimalNumber
 
 
-trait AggAvg extends AggFunction {
+trait AggAvg extends ColFunction {
+  def name = "avg"
   def template = "AVG(%s)"
 }
 

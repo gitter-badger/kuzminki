@@ -3,17 +3,22 @@ package kuzminki.model
 import io.rdbc.sapi.DecimalNumber
 
 
-trait AggFunction extends Render {
+trait AggFunction extends ModelCol
+
+trait ColFunction extends AggFunction {
   def col: RealCol
+  def name: String
   def template: String
   def render = template.format(col.render)
   def args = col.args
 }
 
 
-object Agg {  
+object Agg {
 
-  def sum(aggCol: AggCol): ModelCol = {
+  def count(col: RealCol) = Count(col) 
+
+  def sum(aggCol: RealCol): ModelCol = {
     aggCol match {
       case col: ShortCol => SumShort(col)
       case col: IntCol => SumInt(col)
@@ -23,7 +28,7 @@ object Agg {
     }
   }
 
-  def avg(aggCol: AggCol): ModelCol = {
+  def avg(aggCol: RealCol): ModelCol = {
     aggCol match {
       case col: ShortCol => AvgShort(col)
       case col: IntCol => AvgInt(col)
@@ -33,7 +38,7 @@ object Agg {
     }
   }
 
-  def max(aggCol: AggCol): ModelCol = {
+  def max(aggCol: RealCol): ModelCol = {
     aggCol match {
       case col: ShortCol => MaxShort(col)
       case col: IntCol => MaxInt(col)
@@ -43,7 +48,7 @@ object Agg {
     }
   }
 
-  def min(aggCol: AggCol): ModelCol = {
+  def min(aggCol: RealCol): ModelCol = {
     aggCol match {
       case col: ShortCol => MinShort(col)
       case col: IntCol => MinInt(col)
