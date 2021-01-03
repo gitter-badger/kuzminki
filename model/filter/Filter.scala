@@ -1,18 +1,22 @@
 package kuzminki.model
 
 
-trait Filter extends Render {
+trait Filter extends Render
+
+trait ColumnFilter extends Filter {
   val col: Render
   def template: String
 }
 
-trait SingleArgFilter extends Filter {
+trait SingleArgFilter extends ColumnFilter {
   val arg: Any
   def render = template.format(col.render)
   def args = Seq(arg)
 }
 
-trait NoArgFilter extends Filter {
+trait NoArgFilter extends ColumnFilter {
+  val col: Render
+  def template: String
   def render = template.format(col.render)
   def args = Seq.empty[Any]
 }

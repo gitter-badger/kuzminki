@@ -36,7 +36,7 @@ object Builder {
     Delete.from(Model.from[M], db)
   }
 
-  def aggregate[M <: Model](implicit tag: ClassTag[M]) = {
+  def count[M <: Model](implicit tag: ClassTag[M]) = {
     new Aggregate(Model.from[M], db).cols1(t => CountAll)
   }
   /*

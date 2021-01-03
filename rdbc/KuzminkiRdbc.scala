@@ -25,6 +25,7 @@ import io.rdbc.pool.sapi.ConnectionPoolConfig
 
 import kuzminki.model.select._
 import kuzminki.model.operation.{Insert, Update, Delete}
+import kuzminki.model.aggregate.Aggregate
 import kuzminki.model.count.Count
 import kuzminki.model._
 import kuzminki.model.implicits._
@@ -59,7 +60,7 @@ class KuzminkiRdbc(conf: SystemConfig)(implicit system: ActorSystem) {
   }
 
   def count[M <: Model](implicit tag: ClassTag[M]) = {
-    Count.from(Model.from[M], db)
+    new Aggregate(Model.from[M], db).cols1(t => CountAll)
   }
 
   def count[A <: Model, B <: Model](implicit tagA: ClassTag[A], tagB: ClassTag[B]) = {

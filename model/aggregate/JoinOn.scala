@@ -1,0 +1,17 @@
+package kuzminki.model.aggregate
+
+import kuzminki.model._
+
+
+class JoinOn[A <: Model, B <: Model, R](join: Join[A, B], coll: TypedCollector[R]) {
+
+  def joinOn(pickLeft: A => ModelCol, pickRight: B => ModelCol) = {
+    new WhereJoin(
+      join,
+      coll.extend(Array(
+        InnerJoinSec(ModelTable(join.b)),
+        OnSec(pickLeft(join.a), pickRight(join.b))
+      ))
+    )
+  }
+}
