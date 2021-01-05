@@ -3,7 +3,7 @@ package kuzminki.model.select
 import kuzminki.model._
 
 
-class JoinColumns[A <: Model, B <: Model](join: Join[A, B], db: Conn) {
+class SelectJoin[A <: Model, B <: Model](join: Join[A, B], db: Conn) {
 
   private def next[R](transformer: TypedTransformer[R]) = {
     new JoinOn(

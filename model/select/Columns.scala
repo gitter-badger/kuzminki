@@ -3,7 +3,7 @@ package kuzminki.model.select
 import kuzminki.model._
 
 
-class Columns[M <: Model](model: M, db: Conn) {
+class Select[M <: Model](model: M, db: Conn) {
 
   private def next[R](transformer: TypedTransformer[R]) = {
     new Where(

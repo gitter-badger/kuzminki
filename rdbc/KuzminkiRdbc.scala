@@ -23,7 +23,7 @@ import io.rdbc.pgsql.transport.netty.sapi.NettyPgConnectionFactory.Config
 import io.rdbc.pool.sapi.ConnectionPool
 import io.rdbc.pool.sapi.ConnectionPoolConfig
 
-import kuzminki.model.select._
+import kuzminki.model.select.{Select, SelectJoin}
 import kuzminki.model.operation.{Insert, Update, Delete}
 import kuzminki.model.aggregate.{Aggregate, AggregateJoin}
 import kuzminki.model._
@@ -39,11 +39,11 @@ class KuzminkiRdbc(conf: SystemConfig)(implicit system: ActorSystem) {
   val db = new RdbcConn(conf)
 
   def select[M <: Model](implicit tag: ClassTag[M]) = {
-    new Columns(Model.from[M], db)
+    new Select(Model.from[M], db)
   }
 
   def select[A <: Model, B <: Model](implicit tagA: ClassTag[A], tagB: ClassTag[B]) = {
-    new JoinColumns(Join(Model.from[A], Model.from[B]), db)
+    new SelectJoin(Join(Model.from[A], Model.from[B]), db)
   }
 
   def insert[M <: Model](implicit tag: ClassTag[M]) = {
