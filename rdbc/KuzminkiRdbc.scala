@@ -58,12 +58,20 @@ class KuzminkiRdbc(conf: SystemConfig)(implicit system: ActorSystem) {
     Delete.from(Model.from[M], db)
   }
 
+  def aggregate[M <: Model](implicit tag: ClassTag[M]) = {
+    new Aggregate(Model.from[M], db)
+  }
+
+  def aggregate[A <: Model, B <: Model](implicit tagA: ClassTag[A], tagB: ClassTag[B]) = {
+    new AggregateJoin(Join(Model.from[A], Model.from[B]), db)
+  }
+
   def count[M <: Model](implicit tag: ClassTag[M]) = {
-    new Aggregate(Model.from[M], db).cols1(t => CountAll)
+    new Aggregate(Model.from[M], db).cols1(t => Count.all)
   }
 
   def count[A <: Model, B <: Model](implicit tagA: ClassTag[A], tagB: ClassTag[B]) = {
-    new AggregateJoin(Join(Model.from[A], Model.from[B]), db).cols1(t => CountAll)
+    new AggregateJoin(Join(Model.from[A], Model.from[B]), db).cols1(t => Count.all)
   }
 
   def shutdown(): Future[Unit] = db.shutdown()

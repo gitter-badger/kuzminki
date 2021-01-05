@@ -5,6 +5,17 @@ import kuzminki.model._
 
 class Where[M, R](model: M, coll: TypedCollector[R]) {
 
+  def groupByOne(pick: M => ModelCol) = {
+    new Having(
+      model,
+      coll.add(
+        GroupBySec(
+          Seq(pick(model))
+        )
+      )
+    )
+  }
+
   def groupBy(pick: M => Seq[ModelCol]) = {
     pick(model) match {
       case Nil =>

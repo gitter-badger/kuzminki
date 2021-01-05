@@ -7,8 +7,10 @@ import io.rdbc.sapi._
 
 case class ColConf(name: String, model: Model)
 
-trait ModelCol extends Render
-
+trait ModelCol extends Render {
+  def name: String
+  def ref = this
+}
 
 trait TypeCol[T] extends ModelCol {
   def get(row: Row, index: Int): T
@@ -52,8 +54,9 @@ trait BigDecimalColValue extends TypeCol[BigDecimal] {
 
 
 trait SortingCol {
-  def asc: Asc
-  def desc: Desc
+  def ref: Render
+  def asc = Asc(ref)
+  def desc = Desc(ref)
 }
 
 
@@ -61,9 +64,7 @@ trait RealCol extends ModelCol with SortingCol {
   val name: String
   val model: Model
 
-  def col = this
-  def asc = Asc(this)
-  def desc = Desc(this)
+  def real = this
 
   def render = {
     model.__prefix match {
@@ -82,22 +83,24 @@ trait AggCol {
   def min = Agg.min(this)
 }
 */
-trait ColAccess {
-  def col: RealCol
+
+trait UpdateMethod[T] {
+  def real: RealCol
+  def ==>(value: T) = SetValue(real, value)
 }
 
-trait UpdateMethod[T] extends ColAccess {
-  def ==>(value: T) = SetValue(col, value)
-}
-
-trait NumericMethods[T] extends ColAccess {
-  def ==>(value: T) = SetValue(col, value)
-  def +=(value: T) = Increment(col, value)
-  def -=(value: T) = Decrement(col, value)
+trait NumericMethods[T] {
+  def real: RealCol
+  def ==>(value: T) = SetValue(real, value)
+  def +=(value: T) = Increment(real, value)
+  def -=(value: T) = Decrement(real, value)
+  
+  /*
   def sum = Agg.sum(col)
   def avg = Agg.avg(col)
-  def max = Agg.max(col)
+  def max: TypeCol[_] = Agg.max(col)
   def min = Agg.min(col)
+  */
 }
 
 
@@ -123,6 +126,7 @@ case class ShortCol(name: String, model: Model) extends RealCol
 
 case class IntCol(name: String, model: Model) extends RealCol
                                                  with IntColValue
+                                                 with IntAggregations
                                                  with NumericMethods[Int]
                                                  with UniversalFilters[Int]
                                                  with ComparativeFilters[Int]

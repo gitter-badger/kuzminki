@@ -3,7 +3,7 @@ package kuzminki.model
 
 
 trait Assign extends Render {
-  val col: RealCol
+  val col: Render
   val value: Any
   def args = Seq(value)
 

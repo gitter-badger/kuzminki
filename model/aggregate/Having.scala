@@ -9,7 +9,7 @@ class Having[M, R](model: M, coll: TypedCollector[R]) extends OrderBy(model, col
     new OrderBy(
       model,
       coll.add(
-        WhereAllSec(
+        HavingSec(
           Seq(pick(model))
         )
       )
@@ -23,7 +23,7 @@ class Having[M, R](model: M, coll: TypedCollector[R]) extends OrderBy(model, col
       case conds =>
         new OrderBy(
           model,
-          coll.add(WhereAllSec(conds))
+          coll.add(HavingSec(conds))
         )
     }
   }
@@ -35,7 +35,7 @@ class Having[M, R](model: M, coll: TypedCollector[R]) extends OrderBy(model, col
       case conds =>
         new OrderBy(
           model,
-          coll.add(WhereAllSec(conds))
+          coll.add(HavingSec(conds))
         )
     }
   }

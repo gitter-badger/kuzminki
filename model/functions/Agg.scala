@@ -3,58 +3,31 @@ package kuzminki.model
 import io.rdbc.sapi.DecimalNumber
 
 
-trait AggFunction extends ModelCol
-
-trait ColFunction extends AggFunction {
-  def col: RealCol
-  def name: String
-  def template: String
-  def render = template.format(col.render)
-  def args = col.args
-}
-
-
 object Agg {
 
   def count(col: RealCol) = Count(col) 
 
-  def sum(aggCol: RealCol): ModelCol = {
-    aggCol match {
-      case col: ShortCol => SumShort(col)
-      case col: IntCol => SumInt(col)
-      case col: LongCol => SumLong(col)
-      case col: FloatCol => SumFloat(col)
-      case col: DoubleCol => SumDouble(col)
-    }
-  }
+  def sum(col: ShortCol) = SumShort(col)
+  def sum(col: IntCol) = SumInt(col)
+  def sum(col: LongCol) = SumLong(col)
+  def sum(col: FloatCol) = SumFloat(col)
+  def sum(col: DoubleCol) = SumDouble(col)
 
-  def avg(aggCol: RealCol): ModelCol = {
-    aggCol match {
-      case col: ShortCol => AvgShort(col)
-      case col: IntCol => AvgInt(col)
-      case col: LongCol => AvgLong(col)
-      case col: FloatCol => AvgFloat(col)
-      case col: DoubleCol => AvgDouble(col)
-    }
-  }
+  def avg(col: ShortCol) = AvgShort(col)
+  def avg(col: IntCol) = AvgInt(col)
+  def avg(col: LongCol) = AvgLong(col)
+  def avg(col: FloatCol) = AvgFloat(col)
+  def avg(col: DoubleCol) = AvgDouble(col)
 
-  def max(aggCol: RealCol): ModelCol = {
-    aggCol match {
-      case col: ShortCol => MaxShort(col)
-      case col: IntCol => MaxInt(col)
-      case col: LongCol => MaxLong(col)
-      case col: FloatCol => MaxFloat(col)
-      case col: DoubleCol => MaxDouble(col)
-    }
-  }
+  def max(col: ShortCol) = MaxShort(col)
+  def max(col: IntCol) = MaxInt(col)
+  def max(col: LongCol) = MaxLong(col)
+  def max(col: FloatCol) = MaxFloat(col)
+  def max(col: DoubleCol) = MaxDouble(col)
 
-  def min(aggCol: RealCol): ModelCol = {
-    aggCol match {
-      case col: ShortCol => MinShort(col)
-      case col: IntCol => MinInt(col)
-      case col: LongCol => MinLong(col)
-      case col: FloatCol => MinFloat(col)
-      case col: DoubleCol => MinDouble(col)
-    }
-  }
+  def min(col: ShortCol) = MinShort(col)
+  def min(col: IntCol) = MinInt(col)
+  def min(col: LongCol) = MinLong(col)
+  def min(col: FloatCol) = MinFloat(col)
+  def min(col: DoubleCol) = MinDouble(col)
 }

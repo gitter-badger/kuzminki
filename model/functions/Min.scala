@@ -3,37 +3,37 @@ package kuzminki.model
 import io.rdbc.sapi.DecimalNumber
 
 
-trait AggMin extends ColFunction {
+trait AggMin extends AggFunction {
   def name = "min"
   def template = "MIN(%s)"
 }
 
 
-case class MinShort(col: ShortCol) extends AggMin
-                                      with ShortColValue
-                                      with UniversalFilters[Long]
-                                      with ComparativeFilters[Long]
+case class MinShort(col: Render) extends AggMin
+                                    with ShortColValue
+                                    with UniversalFilters[Long]
+                                    with ComparativeFilters[Long]
 
 
-case class MinInt(col: IntCol) extends AggMin
+case class MinInt(col: Render) extends AggMin
                                   with LongColValue
                                   with UniversalFilters[Long]
                                   with ComparativeFilters[Long]
 
 
-case class MinLong(col: LongCol) extends AggMin
-                                    with LongColValue
-                                    with UniversalFilters[Long]
-                                    with ComparativeFilters[Long]
+case class MinLong(col: Render) extends AggMin
+                                   with LongColValue
+                                   with UniversalFilters[Long]
+                                   with ComparativeFilters[Long]
 
 
-case class MinFloat(col: FloatCol) extends AggMin
-                                      with FloatColValue
-                                      with UniversalFilters[Double]
-                                      with ComparativeFilters[Double]
+case class MinFloat(col: Render) extends AggMin
+                                    with FloatColValue
+                                    with UniversalFilters[Double]
+                                    with ComparativeFilters[Double]
 
 
-case class MinDouble(col: DoubleCol) extends AggMin
-                                        with DoubleColValue
-                                        with UniversalFilters[Double]
-                                        with ComparativeFilters[Double]
+case class MinDouble(col: Render) extends AggMin
+                                     with DoubleColValue
+                                     with UniversalFilters[Double]
+                                     with ComparativeFilters[Double]

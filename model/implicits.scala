@@ -36,6 +36,9 @@ object implicits {
   implicit def typeColToRealCol(col: TypeCol[_]) = col.asInstanceOf[RealCol]
   //implicit def typeColToAggCol(col: TypeCol[_]) = col.asInstanceOf[AggCol]
 
+  // col function
+  //implicit val modelColToTypeColAny: ModelCol => TypeCol[_] = col => col.asInstanceOf[TypeCol[_]]
+
   // query
   implicit val modelColToSorting: ModelCol => Sorting = col => Sort(col)
 

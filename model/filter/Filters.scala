@@ -2,27 +2,27 @@ package kuzminki.model
 
 
 trait Underlying {
-  def col: Render
+  def ref: Render
 }
 
 trait UniversalFilters[T] extends Underlying {
   
-  def matches(value: T): Filter = FilterMatches(col, value)
+  def matches(value: T): Filter = FilterMatches(ref, value)
   def ===(value: T): Filter = matches(value)
 
-  def not(value: T): Filter = FilterNot(col, value)
+  def not(value: T): Filter = FilterNot(ref, value)
   def !==(value: T): Filter = not(value)
   
   // not optional
 
-  def isNull: Filter = FilterIsNull(col)
-  def isNotNull: Filter = FilterIsNotNull(col)
+  def isNull: Filter = FilterIsNull(ref)
+  def isNotNull: Filter = FilterIsNotNull(ref)
 
-  def in(values: Seq[T]): Filter = FilterIn(col, values)
-  def notIn(value: Seq[T]): Filter = FilterNotIn(col, value)
+  def in(values: Seq[T]): Filter = FilterIn(ref, values)
+  def notIn(value: Seq[T]): Filter = FilterNotIn(ref, value)
 
-  def in(sub: SubQuery[T]): Filter = FilterInSubquery(col, sub.untyped)
-  def notIn(sub: SubQuery[T]): Filter = FilterNotInSubquery(col, sub.untyped)
+  def in(sub: SubQuery[T]): Filter = FilterInSubquery(ref, sub.untyped)
+  def notIn(sub: SubQuery[T]): Filter = FilterNotInSubquery(ref, sub.untyped)
 
   // optional
 
@@ -42,16 +42,16 @@ trait UniversalFilters[T] extends Underlying {
 
 trait ComparativeFilters[T] extends Underlying {
 
-  def gt(value: T): Filter = FilterGt(col, value)
+  def gt(value: T): Filter = FilterGt(ref, value)
   def >(value: T): Filter = gt(value)
 
-  def gte(value: T): Filter = FilterGte(col, value)
+  def gte(value: T): Filter = FilterGte(ref, value)
   def >=(value: T): Filter = gte(value)
 
-  def lt(value: T): Filter = FilterLt(col, value)
+  def lt(value: T): Filter = FilterLt(ref, value)
   def <(value: T): Filter = lt(value)
 
-  def lte(value: T): Filter = FilterLte(col, value)
+  def lte(value: T): Filter = FilterLte(ref, value)
   def <=(value: T): Filter = lte(value)
 
   // optional
@@ -72,23 +72,23 @@ trait ComparativeFilters[T] extends Underlying {
 
 trait StringFilters extends Underlying {
 
-  def like(value: String): Filter = FilterLike(col, value)
-  def startsWith(value: String): Filter = FilterStartsWith(col, value)
-  def endsWith(value: String): Filter = FilterEndsWith(col, value)
-  def similarTo(value: String): Filter = FilterSimilarTo(col, value)
+  def like(value: String): Filter = FilterLike(ref, value)
+  def startsWith(value: String): Filter = FilterStartsWith(ref, value)
+  def endsWith(value: String): Filter = FilterEndsWith(ref, value)
+  def similarTo(value: String): Filter = FilterSimilarTo(ref, value)
 
   // re
 
-  def reMatch(value: String): Filter = FilterReIMatch(col, value)
+  def reMatch(value: String): Filter = FilterReIMatch(ref, value)
   def ~(value: String): Filter = reMatch(value)
 
-  def reIMatch(value: String): Filter = FilterReIMatch(col, value)
+  def reIMatch(value: String): Filter = FilterReIMatch(ref, value)
   def ~*(value: String): Filter = reIMatch(value)
 
-  def reNotMatch(value: String): Filter = FilterReNotMatch(col, value)
+  def reNotMatch(value: String): Filter = FilterReNotMatch(ref, value)
   def !~(value: String): Filter = reNotMatch(value)
 
-  def reNotIMatch(value: String): Filter = FilterReNotImatch(col, value)
+  def reNotIMatch(value: String): Filter = FilterReNotImatch(ref, value)
   def !~*(value: String): Filter = reNotIMatch(value)
 }
 

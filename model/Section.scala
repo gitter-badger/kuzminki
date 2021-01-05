@@ -104,7 +104,7 @@ case class GroupBySec(parts: Seq[ModelCol]) extends MultiPart {
 }
 
 
-case class HavingAllSec(parts: Seq[Render]) extends MultiPart {
+case class HavingSec(parts: Seq[Render]) extends MultiPart {
   def expression = "HAVING %s"
   def glue = " AND "
 }
