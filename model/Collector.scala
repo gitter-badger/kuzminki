@@ -10,8 +10,8 @@ import kuzminki.model.select._
 
 trait ResultMethods {
   val sections: Array[Section]
-  def render = sections.filter(_.isUsed).map(_.render).mkString(" ")
-  def args = sections.toSeq.filter(_.isUsed).map(_.args).flatten
+  def render = sections.map(_.render).mkString(" ")
+  def args = sections.toSeq.map(_.args).flatten
   def statement = SqlWithParams(render, args.toVector)
 }
 
