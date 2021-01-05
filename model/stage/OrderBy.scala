@@ -1,7 +1,7 @@
 package kuzminki.model
 
 
-class OrderBy[M <: Model, R](model: M, coll: TypedCollector[R]) extends Offset(coll) {
+class OrderBy[M, R](model: M, coll: TypedCollector[R]) extends Offset(coll) {
 
   def orderBy(pick: M => Seq[Sorting]) = {
     new Offset(

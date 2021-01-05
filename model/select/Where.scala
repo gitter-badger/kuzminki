@@ -1,14 +1,15 @@
-package kuzminki.model.aggregate
+package kuzminki.model.select
 
 import kuzminki.model._
 
 
 class Where[M, R](model: M, coll: TypedCollector[R]) {
 
-  def all() = new RunAggregation(coll)
+  def all() = new OrderBy(model, coll)
 
   def whereOne(pick: M => Filter) = {
-    new RunAggregation(
+    new OrderBy(
+      model,
       coll.add(
         WhereAllSec(
           Seq(pick(model))
@@ -22,7 +23,8 @@ class Where[M, R](model: M, coll: TypedCollector[R]) {
       case Nil =>
         throw KuzminkiModelException("WHERE conditions cannot be empty")
       case conds =>
-        new RunAggregation(
+        new OrderBy(
+          model,
           coll.add(WhereAllSec(conds))
         )
     }
@@ -31,9 +33,10 @@ class Where[M, R](model: M, coll: TypedCollector[R]) {
   def whereOpt(pick: M => Seq[Option[Filter]]) = {
     pick(model).flatten match {
       case Nil =>
-        new RunAggregation(coll)
+        new OrderBy(model, coll)
       case conds =>
-        new RunAggregation(
+        new OrderBy(
+          model,
           coll.add(WhereAllSec(conds))
         )
     }
