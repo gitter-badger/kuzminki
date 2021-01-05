@@ -25,5 +25,5 @@ class RunAggregation[R](coll: TypedCollector[R]) extends Printing {
   }
 
   def render = coll.render
-  //def asSub = coll.sub
+  def asSub = new AggSubQuery(coll)
 }

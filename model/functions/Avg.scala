@@ -10,25 +10,25 @@ trait AggAvg extends AggFunction {
 
 
 case class AvgShort(col: Render) extends AggAvg
-                                    with ShortColValue
+                                    with DecimalNumberColValue
                                     with UniversalFilters[Long]
                                     with ComparativeFilters[Long]
 
 
 case class AvgInt(col: Render) extends AggAvg
-                                  with IntColValue
+                                  with DecimalNumberColValue
                                   with UniversalFilters[Long]
                                   with ComparativeFilters[Long]
 
 
 case class AvgLong(col: Render) extends AggAvg
-                                   with LongColValue
+                                   with DecimalNumberColValue
                                    with UniversalFilters[Long]
                                    with ComparativeFilters[Long]
 
 
 case class AvgFloat(col: Render) extends AggAvg
-                                    with FloatColValue
+                                    with DoubleColValue
                                     with UniversalFilters[Double]
                                     with ComparativeFilters[Double]
 
