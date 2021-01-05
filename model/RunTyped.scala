@@ -1,7 +1,7 @@
 package kuzminki.model
 
 
-class RunTyped[R](coll: TypedCollector[R]) extends Printing {
+class RunTyped[R](coll: TypedCollector[R]) {
   
   def run() = {
     coll.db.select(coll.statement) { row =>
@@ -32,6 +32,11 @@ class RunTyped[R](coll: TypedCollector[R]) extends Printing {
   }
 
   def render = coll.render
+
+  def renderTo(printer: String => Unit) = {
+    printer(render)
+    this
+  }
   
   def asSub = new SubQuery(coll)
 }

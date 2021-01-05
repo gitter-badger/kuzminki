@@ -3,7 +3,7 @@ package kuzminki.model.aggregate
 import kuzminki.model._
 
 
-class RunAggregation[R](coll: TypedCollector[R]) extends Printing {
+class RunAggregation[R](coll: TypedCollector[R]) {
 
   coll.transformer.toSeq.foreach {
     case f: AggFunction =>
@@ -25,5 +25,11 @@ class RunAggregation[R](coll: TypedCollector[R]) extends Printing {
   }
 
   def render = coll.render
+
+  def renderTo(printer: String => Unit) = {
+    printer(render)
+    this
+  }
+
   def asSub = new AggSubQuery(coll)
 }
