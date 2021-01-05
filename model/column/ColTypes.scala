@@ -20,6 +20,7 @@ case class BooleanCol(name: String, model: Model) extends RealCol
 
 case class ShortCol(name: String, model: Model) extends RealCol
                                                    with ShortColValue
+                                                   with ShortAggregations
                                                    with NumericMethods[Short]
                                                    with UniversalFilters[Int]
                                                    with ComparativeFilters[Short]
@@ -35,6 +36,7 @@ case class IntCol(name: String, model: Model) extends RealCol
 
 case class LongCol(name: String, model: Model) extends RealCol
                                                   with LongColValue
+                                                  with LongAggregations
                                                   with NumericMethods[Long]
                                                   with UniversalFilters[Long]
                                                   with ComparativeFilters[Long]
@@ -42,6 +44,7 @@ case class LongCol(name: String, model: Model) extends RealCol
 
 case class FloatCol(name: String, model: Model) extends RealCol
                                                    with FloatColValue
+                                                   with FloatAggregations
                                                    with NumericMethods[Float]
                                                    with UniversalFilters[Float]
                                                    with ComparativeFilters[Float]
@@ -49,6 +52,7 @@ case class FloatCol(name: String, model: Model) extends RealCol
 
 case class DoubleCol(name: String, model: Model) extends RealCol
                                                     with DoubleColValue
+                                                    with DoubleAggregations
                                                     with NumericMethods[Double]
                                                     with UniversalFilters[Double]
                                                     with ComparativeFilters[Double]
