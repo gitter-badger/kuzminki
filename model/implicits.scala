@@ -1,7 +1,7 @@
 package kuzminki.model
 
 import io.rdbc.sapi.DecimalNumber
-
+import kuzminki.model.aggregate.RunAggregation
 
 object implicits {
 
@@ -44,4 +44,5 @@ object implicits {
 
   // subquery
   implicit def runTypedToNested[R](rt: RunTyped[R]): SubQuery[R] = rt.asSub
+  implicit def runTypedToNested[R](rt: RunAggregation[R]): AggSubQuery[R] = rt.asSub
 }
