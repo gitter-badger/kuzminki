@@ -1,11 +1,7 @@
 package kuzminki.model
 
 
-trait Underlying {
-  def ref: Render
-}
-
-trait UniversalFilters[T] extends Underlying {
+trait UniversalFilters[T] extends Ref {
   
   def matches(value: T): Filter = FilterMatches(ref, value)
   def ===(value: T): Filter = matches(value)
@@ -40,7 +36,7 @@ trait UniversalFilters[T] extends Underlying {
 }
 
 
-trait ComparativeFilters[T] extends Underlying {
+trait ComparativeFilters[T] extends Ref {
 
   def gt(value: T): Filter = FilterGt(ref, value)
   def >(value: T): Filter = gt(value)
@@ -70,7 +66,7 @@ trait ComparativeFilters[T] extends Underlying {
 }
 
 
-trait StringFilters extends Underlying {
+trait StringFilters extends Ref {
 
   def like(value: String): Filter = FilterLike(ref, value)
   def startsWith(value: String): Filter = FilterStartsWith(ref, value)
