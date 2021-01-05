@@ -3,7 +3,7 @@ package kuzminki.model.aggregate
 import kuzminki.model._
 
 
-class Where[M <: Model, R](model: M, coll: TypedCollector[R]){
+class Where[M, R](model: M, coll: TypedCollector[R]) {
 
   def all() = new RunAggregation(coll)
 
@@ -34,14 +34,6 @@ class Where[M <: Model, R](model: M, coll: TypedCollector[R]){
           coll.add(WhereAllSec(conds))
         )
     }
-  }
-
-  def whereChain(pick: ChainStart[M] => FilteringChain[M]) = {
-    new RunAggregation(
-      coll.add(
-        WhereChainSec(pick(ChainStart(model)).filters)
-      )
-    )
   }
 }
 

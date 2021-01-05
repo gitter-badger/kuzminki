@@ -19,6 +19,18 @@ class Aggregate[M <: Model](model: M, db: Conn) {
     )
   }
 
+  def colSeq(pick: M => Seq[TypeCol[_]]) = {
+    next(
+      new ColSeq(pick(model))
+    )
+  }
+
+  def colMap(pick: M => Seq[TypeCol[_]]) = {
+    next(
+      new ColMap(pick(model))
+    )
+  }
+
   def cols1[R](pick: M => TypeCol[R]) = {
     next(
       new TypedCols1(pick(model))

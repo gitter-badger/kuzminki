@@ -71,50 +71,6 @@ class Where[M <: Model, R](model: M, coll: TypedCollector[R]) {
 }
 
 
-class OrderBy[M <: Model, R](model: M, coll: TypedCollector[R]) extends Offset(coll) {
-
-  def orderBy(pick: M => Seq[Sorting]) = {
-    new Offset(
-      coll.add(
-        OrderBySec(pick(model))
-      )
-    )
-  }
-
-  def orderByOne(pick: M => Sorting) = {
-    new Offset(
-      coll.add(
-        OrderBySec(
-          Seq(pick(model))
-        )
-      )
-    )
-  }
-}
-
-
-class Offset[M <: Model, R](coll: TypedCollector[R]) extends Limit(coll) {
-
-  def offset(num: Int) = {
-    new Limit(
-      coll.add(
-        OffsetSec(num)
-      )
-    )
-  }
-}
-
-
-class Limit[M <: Model, R](coll: TypedCollector[R]) extends RunTyped(coll) {
-
-  def limit(num: Int) = {
-    new RunTyped(
-      coll.add(
-        LimitSec(num)
-      )
-    )
-  }
-}
 
 
 

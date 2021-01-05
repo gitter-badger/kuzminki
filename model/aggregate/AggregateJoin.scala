@@ -19,6 +19,18 @@ class AggregateJoin[A <: Model, B <: Model](join: Join[A, B], db: Conn) {
     )
   }
 
+  def colSeq(pick: Join[A, B] => Seq[TypeCol[_]]) = {
+    next(
+      new ColSeq(pick(join))
+    )
+  }
+
+  def colMap(pick: Join[A, B] => Seq[TypeCol[_]]) = {
+    next(
+      new ColMap(pick(join))
+    )
+  }
+
   def cols1[R](pick: Join[A, B] => TypeCol[R]) = {
     next(
       new TypedCols1(pick(join))

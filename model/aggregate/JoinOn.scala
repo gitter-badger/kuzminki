@@ -6,7 +6,7 @@ import kuzminki.model._
 class JoinOn[A <: Model, B <: Model, R](join: Join[A, B], coll: TypedCollector[R]) {
 
   def joinOn(pickLeft: A => ModelCol, pickRight: B => ModelCol) = {
-    new WhereJoin(
+    new Where(
       join,
       coll.extend(Array(
         InnerJoinSec(ModelTable(join.b)),
