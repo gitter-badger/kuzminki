@@ -16,7 +16,7 @@ case class AvgShort(col: Render) extends AggAvg
 
 
 case class AvgInt(col: Render) extends AggAvg
-                                  with DecimalNumberColValue
+                                  with IntColValue
                                   with UniversalFilters[Long]
                                   with ComparativeFilters[Long]
 

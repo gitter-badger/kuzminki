@@ -7,7 +7,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import io.rdbc.sapi._
 import kuzminki.model.select.{Select, SelectJoin}
 import kuzminki.model.operation.{Update, Insert, Delete}
-import kuzminki.model.aggregate.{Aggregate, AggregateJoin}
+import kuzminki.model.aggregate.{Aggregate, AggregateJoin, SubqueryNumber, SubqueryNumberJoin}
 import kuzminki.model.implicits._
 
 
@@ -50,7 +50,28 @@ object Builder {
   def count[A <: Model, B <: Model](implicit tagA: ClassTag[A], tagB: ClassTag[B]) = {
     new AggregateJoin(Join(Model.from[A], Model.from[B]), db)
   }
+
+  // sub query
+
+  def subqueryNumber[M <: Model](implicit tag: ClassTag[M]): SubqueryNumber[M] = {
+    subqueryNumber(Model.from[M])
+  }
+
+  def subqueryNumber[M <: Model](model: M): SubqueryNumber[M] = {
+    new SubqueryNumber(model)
+  }
+
+  def subqueryNumber[A <: Model, B <: Model](implicit tagA: ClassTag[A], tagB: ClassTag[B]): SubqueryNumberJoin[A, B] = {
+    subqueryNumber(Model.from[A], Model.from[B])
+  }
+
+  def subqueryNumber[A <: Model, B <: Model](a: A, b: B): SubqueryNumberJoin[A, B] = {
+    new SubqueryNumberJoin(Join(a, b))
+  }
 }
+
+
+
 
 
 
