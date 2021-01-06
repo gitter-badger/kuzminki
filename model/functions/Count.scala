@@ -10,14 +10,14 @@ object AllCols extends Render {
   def args = Seq.empty[Any]
 }
 
-trait AggCount extends AggFunction {
+trait AggCount extends AggNumeric {
   def name = "count"
   def template = "COUNT(%s)"
 }
 
 
 case class Count(col: Render) extends AggCount
-                                  with LongColValue
-                                  with UniversalFilters[Long]
-                                  with ComparativeFilters[Long]
+                                 with LongColValue
+                                 with UniversalFilters[Long]
+                                 with ComparativeFilters[Long]
 

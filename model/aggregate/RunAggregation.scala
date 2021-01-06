@@ -6,7 +6,7 @@ import kuzminki.model._
 class RunAggregation[R](coll: TypedCollector[R]) {
 
   coll.transformer.toSeq.foreach {
-    case f: AggFunction =>
+    case f: AggNumeric =>
     case _ => throw KuzminkiModelException("all columns must be aggregate functions")
   }
 

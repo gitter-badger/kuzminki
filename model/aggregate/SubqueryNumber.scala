@@ -5,7 +5,7 @@ import kuzminki.model._
 
 class SubqueryNumber[M <: Model](model: M) {
 
-  def cols1(pick: M => AggFunction) = {
+  def cols1(pick: M => AggNumeric) = {
     new WhereSubqueryNumber(
       model,
       SubCollector(
@@ -23,7 +23,7 @@ class SubqueryNumber[M <: Model](model: M) {
 
 class SubqueryNumberJoin[A <: Model, B <: Model](join: Join[A, B]) {
 
-  def cols1(pick: Join[A, B] => AggFunction) = {
+  def cols1(pick: Join[A, B] => AggNumeric) = {
     new SubqueryNumberJoinOn(
       join,
       SubCollector(

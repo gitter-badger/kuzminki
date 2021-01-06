@@ -1,7 +1,7 @@
 package kuzminki.model
 
 
-trait AggFunction extends ModelCol with SortingCol {
+trait AggNumeric extends ModelCol with SortingCol {
   def col: Render
   def name: String
   def template: String

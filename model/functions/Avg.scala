@@ -3,7 +3,7 @@ package kuzminki.model
 import io.rdbc.sapi.DecimalNumber
 
 
-trait AggAvg extends AggFunction {
+trait AggAvg extends AggNumeric {
   def name = "avg"
   def template = "AVG(%s)"
 }
@@ -16,7 +16,7 @@ case class AvgShort(col: Render) extends AggAvg
 
 
 case class AvgInt(col: Render) extends AggAvg
-                                  with IntColValue
+                                  with DecimalNumberColValue
                                   with UniversalFilters[Long]
                                   with ComparativeFilters[Long]
 

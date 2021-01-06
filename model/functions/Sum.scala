@@ -3,7 +3,7 @@ package kuzminki.model
 import io.rdbc.sapi.DecimalNumber
 
 
-trait AggSum extends AggFunction {
+trait AggSum extends AggNumeric {
   def name = "sum"
   def template = "SUM(%s)"
 }
