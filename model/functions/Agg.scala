@@ -5,19 +5,27 @@ import io.rdbc.sapi.DecimalNumber
 
 object Agg {
 
-  def count(col: RealCol) = Count(col) 
+  def count(col: RealCol) = Count(col)
+
+  def avg(col: ShortCol) = AvgNumber(col)
+  def avgShort(col: ShortCol) = AvgCastShort(col)
+
+  def avg(col: IntCol) = AvgNumber(col)
+  def avgInt(col: IntCol) = AvgCastInt(col)
+
+  def avg(col: LongCol) = AvgNumber(col)
+  def avgLong(col: LongCol) = AvgCastLong(col)
+
+  def avg(col: FloatCol) = AvgFloating(col)
+  def avgFloat(col: FloatCol) = AvgCastFloat(col)
+
+  def avg(col: DoubleCol) = AvgFloating(col)
 
   def sum(col: ShortCol) = SumShort(col)
   def sum(col: IntCol) = SumInt(col)
   def sum(col: LongCol) = SumLong(col)
   def sum(col: FloatCol) = SumFloat(col)
   def sum(col: DoubleCol) = SumDouble(col)
-
-  def avg(col: ShortCol) = AvgShort(col)
-  def avg(col: IntCol) = AvgInt(col)
-  def avg(col: LongCol) = AvgLong(col)
-  def avg(col: FloatCol) = AvgFloat(col)
-  def avg(col: DoubleCol) = AvgDouble(col)
 
   def max(col: ShortCol) = MaxShort(col)
   def max(col: IntCol) = MaxInt(col)
