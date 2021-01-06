@@ -25,7 +25,7 @@ import io.rdbc.pool.sapi.ConnectionPoolConfig
 
 import kuzminki.model.select.{Select, SelectJoin}
 import kuzminki.model.operation.{Insert, Update, Delete}
-import kuzminki.model.aggregate.{Aggregate, AggregateJoin}
+import kuzminki.model.aggregate.{Aggregate, AggregateJoin, SubqueryNumber, SubqueryNumberJoin}
 import kuzminki.model._
 import kuzminki.model.implicits._
 
@@ -72,6 +72,24 @@ class KuzminkiRdbc(conf: SystemConfig)(implicit system: ActorSystem) {
 
   def count[A <: Model, B <: Model](implicit tagA: ClassTag[A], tagB: ClassTag[B]) = {
     new AggregateJoin(Join(Model.from[A], Model.from[B]), db).cols1(t => Count.all)
+  }
+
+  // sub query
+
+  def subqueryNumber[M <: Model](implicit tag: ClassTag[M]): SubqueryNumber[M] = {
+    subqueryNumber(Model.from[M])
+  }
+
+  def subqueryNumber[M <: Model](model: M): SubqueryNumber[M] = {
+    new SubqueryNumber(model)
+  }
+
+  def subqueryNumber[A <: Model, B <: Model](implicit tagA: ClassTag[A], tagB: ClassTag[B]): SubqueryNumberJoin[A, B] = {
+    subqueryNumber(Model.from[A], Model.from[B])
+  }
+
+  def subqueryNumber[A <: Model, B <: Model](a: A, b: B): SubqueryNumberJoin[A, B] = {
+    new SubqueryNumberJoin(Join(a, b))
   }
 
   def shutdown(): Future[Unit] = db.shutdown()

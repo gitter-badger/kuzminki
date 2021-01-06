@@ -30,7 +30,7 @@ trait ComparativeFilters[T] extends Ref {
   def <=(opt: Option[T]): Option[Filter] = opt.map(lte)
 
   // sub agg
-
+  /*
   def matches(sub: AggSubQuery[T]): Filter = FilterAggMatches(ref, sub.untyped)
   def ===(sub: AggSubQuery[T]): Filter = matches(sub)
 
@@ -50,7 +50,7 @@ trait ComparativeFilters[T] extends Ref {
   def <=(sub: AggSubQuery[T]): Filter = lte(sub)
 
   // sub agg optional
-  /*
+  
   def matches(opt: Option[AggSubQuery[T]]): Option[Filter] = opt.map(matches)
   def ===(opt: Option[AggSubQuery[T]]): Option[Filter] = opt.map(matches)
 

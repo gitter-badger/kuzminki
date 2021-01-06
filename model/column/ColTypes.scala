@@ -29,6 +29,7 @@ case class ShortCol(name: String, model: Model) extends RealCol
 case class IntCol(name: String, model: Model) extends RealCol
                                                  with IntColValue
                                                  with IntAggregations
+                                                 with SubqueryNumberFilters
                                                  with NumericMethods[Int]
                                                  with UniversalFilters[Int]
                                                  with ComparativeFilters[Int]
