@@ -1,4 +1,4 @@
-package kuzminki.model.result
+package kuzminki.model
 
 import java.time._
 import java.util.UUID
@@ -8,8 +8,6 @@ import scala.util.{ Try, Success, Failure }
 import scala.reflect.{classTag, ClassTag}
 import scala.reflect.runtime.universe._
 import io.rdbc.sapi._
-
-import kuzminki.model._
 
 
 trait AnyMember {
@@ -74,7 +72,7 @@ object RowReader {
              .map(standardName)
   }
   
-  def read[T : ClassTag : TypeTag](cols: Seq[ModelCol]): RowRead[T] = {
+  def create[T : ClassTag : TypeTag](cols: Seq[ModelCol]): RowRead[T] = {
 
     val queryTypes = getQueryTypes(cols)
     val memberTypes = getMemberTypes[T]
