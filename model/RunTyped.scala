@@ -1,7 +1,5 @@
 package kuzminki.model
 
-import scala.reflect.{classTag, ClassTag}
-
 
 class RunTyped[R](coll: TypedCollector[R]) {
   
