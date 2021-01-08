@@ -47,7 +47,7 @@ object RowFormater {
     case name => throw new Exception(s"Unsupported type: $name")
   }
 
-  private def members[T: TypeTag]: Seq[AnyCol] = {
+  private def members[T : TypeTag]: Seq[AnyCol] = {
     typeOf[T].members
              .sorted
              .collect { case m: MethodSymbol if m.isCaseAccessor => m }
@@ -56,7 +56,7 @@ object RowFormater {
              .map(stringToCol)
   }
   
-  def read[T: ClassTag: TypeTag]: RowFormat[T] = new RowFormater[T](members[T])
+  def read[T : ClassTag : TypeTag]: RowFormat[T] = new RowFormater[T](members[T])
 
 }
 
