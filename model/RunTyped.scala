@@ -1,5 +1,7 @@
 package kuzminki.model
 
+import scala.reflect.{classTag, ClassTag}
+
 
 class RunTyped[R](coll: TypedCollector[R]) {
   
@@ -9,7 +11,7 @@ class RunTyped[R](coll: TypedCollector[R]) {
     }  
   }
 
-  def headOption() = {
+  def first() = {
     coll.db.selectHeadOption(coll.statement) { row =>
       coll.transformer.transform(row)
     }
@@ -23,12 +25,24 @@ class RunTyped[R](coll: TypedCollector[R]) {
     }  
   }
 
-  def headOptionAs[T](implicit custom: R => T) = {
+  def firstAs[T](implicit custom: R => T) = {
     coll.db.selectHeadOption(coll.statement) { row =>
       custom(
         coll.transformer.transform(row)
       )
     }  
+  }
+
+  def read[T](implicit reader: TypeReader[T]) = {
+    coll.db.select(coll.statement) { row =>
+      reader.read(row)
+    }
+  }
+
+  def readFirst[T](implicit reader: TypeReader[T]) = {
+    coll.db.selectHeadOption(coll.statement) { row =>
+      reader.read(row)
+    }
   }
 
   def render = coll.render
