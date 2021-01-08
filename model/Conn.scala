@@ -2,6 +2,8 @@ package kuzminki.model
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext
+import akka.stream.scaladsl._
+import akka.Done
 import io.rdbc.sapi._
 import kuzminki.rdbc._
 import kuzminki.model.select._
@@ -13,6 +15,7 @@ trait Conn {
   def selectHeadOption[R](statement: SqlWithParams)(transform: Row => R): Future[Option[R]]
   def exec(statement: SqlWithParams): Future[Unit]
   def execNum(statement: SqlWithParams): Future[Long]
+  def stream[R](statement: SqlWithParams, sink: Sink[R, Future[Done]])(transform: Row => R): Future[Done]
 }
 
 class DummyConn extends Conn {
@@ -34,6 +37,10 @@ class DummyConn extends Conn {
   }
   
   def execNum(statement: SqlWithParams): Future[Long] = {
+    throw new Exception("dummy")
+  }
+
+  def stream[R](statement: SqlWithParams, sink: Sink[R, Future[Done]])(transform: Row => R): Future[Done] = {
     throw new Exception("dummy")
   }
 }

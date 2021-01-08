@@ -100,6 +100,14 @@ class RdbcConn(conf: SystemConfig)(implicit system: ActorSystem) extends Conn wi
     pool.withConnection(_.statement(statement).executeForRowsAffected)
   }
 
+  def stream[R](statement: SqlWithParams, sink: Sink[R, Future[Done]])(transform: Row => R): Future[Done] = {
+    pool.withConnection { conn =>
+      Source.fromPublisher(
+        conn.statement(statement).stream()(inf)
+      ).map(transform).runWith(sink)
+    }
+  }
+
   def shutdown(): Future[Unit] = pool.shutdown()
 }
 

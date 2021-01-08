@@ -1,6 +1,11 @@
 package kuzminki.model
 
 
+import scala.concurrent.Future
+import akka.stream.scaladsl._
+import akka.Done
+
+
 class RunTyped[R](coll: TypedCollector[R]) {
   
   def run() = {
@@ -43,6 +48,12 @@ class RunTyped[R](coll: TypedCollector[R]) {
     }
   }
 
+  def stream(sink: Sink[R, Future[Done]]) = {
+    coll.db.stream(coll.statement, sink) { row =>
+      coll.transformer.transform(row)
+    }
+  }
+
   def render = coll.render
 
   def renderTo(printer: String => Unit) = {
@@ -52,3 +63,24 @@ class RunTyped[R](coll: TypedCollector[R]) {
   
   def asSub = new SubQuery(coll)
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
