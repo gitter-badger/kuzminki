@@ -19,7 +19,7 @@ class SelectJoin[A <: Model, B <: Model](join: Join[A, B], db: Conn) {
     )
   }
 
-  def colSeq(pick: Join[A, B] => Seq[TypeCol[_]]) = {
+  def cols(pick: Join[A, B] => Seq[TypeCol[_]]) = {
     next(
       new ColSeq(pick(join))
     )
