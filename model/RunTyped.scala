@@ -54,6 +54,20 @@ class RunTyped[R](coll: TypedCollector[R]) {
     }
   }
 
+  def streamAs[T](sink: Sink[T, Future[Done]])(implicit custom: R => T) = {
+    coll.db.stream(coll.statement, sink) { row =>
+      custom(
+        coll.transformer.transform(row)
+      )
+    }
+  }
+
+  def streamRead[T](sink: Sink[T, Future[Done]])(implicit reader: TypeReader[T]) = {
+    coll.db.stream(coll.statement, sink) { row =>
+      reader.read(row)
+    }
+  }
+
   def render = coll.render
 
   def renderTo(printer: String => Unit) = {
