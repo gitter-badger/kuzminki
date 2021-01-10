@@ -55,7 +55,7 @@ case class InsertCollector[T](db: Conn,
 
   def extend(added: Array[Section]) = this.copy(sections = sections ++ added)
 
-  def cache = new InsertStreamCache(render, args, form, db)
+  def cache = new InsertStreamCache(render, form, db)
 }
 
 

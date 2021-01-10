@@ -7,9 +7,13 @@ import kuzminki.model._
 
 class InsertStreamValues[M, T](model: M, coll: InsertCollector[T]) {
 
-  def stream(source: Source[T, NotUsed]) = {
-    coll.add(InsertBlankValuesSec(coll.form.size)).cache.stream(source)
-  }
+  private def cache = coll.add(InsertBlankValuesSec(coll.form.size)).cache
+
+  def run(data: T) = cache.run(data)
+
+  def runNum(data: T) = cache.runNum(data)
+
+  def stream(source: Source[T, NotUsed]) = cache.stream(source)
 
   def streamList(data: List[T]) = stream(Source(data))
 }
