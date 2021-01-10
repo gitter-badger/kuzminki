@@ -58,19 +58,19 @@ abstract class ValuesNext[M <: Model](model: M, db: Conn) {
 }
 
 
-class TypedValues[M <: Model, R](model: M, db: Conn, cols: InsertType[R]) extends ValuesNext(model, db) {
+class TypedValues[M <: Model, R](model: M, db: Conn, form: InsertForm[R]) extends ValuesNext(model, db) {
 
   def values(data: R) = {
     single(
-      cols.toSeq,
-      cols.argsToSeq(data)
+      form.colSeq,
+      form.toSeq(data)
     )
   }
 
   def valuesList(dataList: List[R]) = {
     multiple(
-      cols.toSeq,
-      dataList.map(cols.argsToSeq(_))
+      form.colSeq,
+      dataList.map(form.toSeq(_))
     )
   }
 
@@ -81,7 +81,7 @@ class TypedValues[M <: Model, R](model: M, db: Conn, cols: InsertType[R]) extend
         db,
         Array(
           InsertIntoSec(ModelTable(model)),
-          InsertColumnsSec(cols.toSeq),
+          InsertColumnsSec(form.colSeq),
           InsertSubQuerySec(sub.untyped)
         )
       )

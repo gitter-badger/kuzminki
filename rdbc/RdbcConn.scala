@@ -1,5 +1,7 @@
 package kuzminki.rdbc
 
+import org.reactivestreams.Publisher
+
 import scala.concurrent.ExecutionContext
 import scala.concurrent.{Future, Promise}
 import scala.util.{Try, Success, Failure}
@@ -105,6 +107,16 @@ class RdbcConn(conf: SystemConfig)(implicit system: ActorSystem) extends Conn wi
       Source.fromPublisher(
         conn.statement(statement).stream()(inf)
       ).map(transform).runWith(sink)
+    }
+  }
+
+  def insertStream(template: String, source: Source[Vector[Any], NotUsed]): Future[Unit] = {
+    pool.withConnection { conn =>
+      conn.withTransaction {
+        conn.statement(template).streamArgsByIdx(
+          source.runWith(Sink.asPublisher(fanout = false))
+        )
+      }
     }
   }
 
