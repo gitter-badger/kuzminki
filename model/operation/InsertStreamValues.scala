@@ -19,11 +19,15 @@ class InsertStreamOptions[M <: Model, T](model: M, coll: InsertCollector[T]) ext
 
   private def whereNotExistsApply(uniqueCols: Seq[ModelCol]) = {
 
+    if (uniqueCols.isEmpty) {
+      throw KuzminkiModelException("whereNotExists")
+    }
+
     val insertCols = coll.form.colSeq
 
     val indexes = uniqueCols.map { col => 
       insertCols.indexOf(col) match {
-        case -1 => throw KuzminkiModelException(s"column [%s] is not among inserted columns")
+        case -1 => throw KuzminkiModelException("column [%s] is not among inserted columns".format(col.name))
         case index: Int => index
       }
     }
@@ -52,6 +56,10 @@ class InsertStreamRun[M, T](model: M, coll: InsertCollector[T]) {
   def run(data: T) = cache.run(data)
 
   def runNum(data: T) = cache.runNum(data)
+
+  def list(list: List[T]) = cache.list(list)
+
+  def listNum(list: List[T]) = cache.listNum(list)
 
   def stream(source: Source[T, NotUsed]) = cache.stream(source)
 
