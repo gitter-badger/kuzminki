@@ -140,7 +140,11 @@ case class FilterAggLte(col: Render, sub: UntypedSubQuery) extends SubQueryFilte
   def template = "%s <= (%s)"
 }
 
+// where not exists
 
+case class FilterMatchesNoArg(col: Render) extends NoArgFilter {
+  def template = "%s = ?"
+}
 
 
 

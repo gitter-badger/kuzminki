@@ -6,15 +6,14 @@ import kuzminki.model._
 class InsertStream[M <: Model](model: M, db: Conn) {
 
   private def next[T](form: InsertForm[T]) = {
-    new InsertStreamValues(
+    new InsertStreamOptions(
       model,
       InsertCollector(
         db,
         form,
         Array(
           InsertIntoSec(ModelTable(model)),
-          InsertColumnsSec(form.colSeq),
-          InsertBlankValuesSec(form.size)
+          InsertColumnsSec(form.colSeq)
         )
       )
     )
