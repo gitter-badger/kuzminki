@@ -6,3 +6,7 @@ trait Render {
   def render: String
   def args: Seq[Any]
 }
+
+trait NoArgs {
+  def args = Seq.empty[Any]
+}

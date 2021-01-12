@@ -6,7 +6,6 @@ trait Assign extends Render {
   val col: Render
   val value: Any
   def args = Seq(value)
-
 }
 
 case class SetValue(col: RealCol, value: Any) extends Assign {
