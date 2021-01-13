@@ -1,13 +1,13 @@
-package kuzminki.model.operation
+package kuzminki.model.insert
 
 import akka.stream.scaladsl._
 import akka.{NotUsed, Done}
 import kuzminki.model._
 
 
-class RunConditionalInsert[M, S](model: M, indexes: Vector[Int], coll: InsertCollector[S]) {
+class RunConditionalInsert[M, S](model: M, reuse: Reuse, coll: InsertCollector[S]) {
 
-  def cache = coll.cacheUnique(indexes)
+  def cache = coll.cacheConditional(reuse)
 
   def run(data: S) = cache.run(data)
 

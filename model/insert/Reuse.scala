@@ -3,10 +3,12 @@ package kuzminki.model.insert
 import kuzminki.model._
 
 
-object ValueReuse {
+object Reuse {
 
-  def create(insertCols: Seq[ModelCol], reuseCols: Seq[ModelCol]) = {
-    
+  def noChange: Reuse = NoChange
+
+  def fromIndex(insertCols: Seq[ModelCol], reuseCols: Seq[ModelCol]): Reuse = {
+
     val indexes = reuseCols.map { col =>
       insertCols.indexOf(col) match {
         case -1 =>
@@ -17,14 +19,20 @@ object ValueReuse {
       }
     }
 
-    new ValueReuse(indexes)
+    new ReuseIndexes(indexes.toVector)
   }
 }  
 
+trait Reuse {
+  def extend(values: Vector[Any]): Vector[Any]
+}
 
-class ValueReuse(indexes: Vector[Int]) {
-
+class ReuseIndexes(indexes: Vector[Int]) extends Reuse {
   def extend(values: Vector[Any]): Vector[Any] = {
     values ++ indexes.map(values)
   }
+}
+
+object NoChange extends Reuse {
+  def extend(values: Vector[Any]) = values
 }

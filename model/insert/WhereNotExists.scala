@@ -3,9 +3,9 @@ package kuzminki.model.insert
 import kuzminki.model._
 
 
-trait WhereNotExists[M, S] {
+trait WhereNotExists[M <: Model, S] {
 
-  protected val model: M,
+  protected val model: M
   protected val coll: InsertCollector[S]
 
   def whereNotExistsOne(pick: M => ModelCol) = {
@@ -24,24 +24,12 @@ trait WhereNotExists[M, S] {
       throw KuzminkiModelException("whereNotExists")
     }
 
-    val insertCols = coll.form.colSeq
-
-    val indexes = uniqueCols.map { col => 
-      insertCols.indexOf(col) match {
-        case -1 =>
-          throw KuzminkiModelException(
-            "column [%s] is not among inserted columns".format(col.name)
-          )
-        case index: Int => index
-      }
-    }
-
-    new InsertStreamUniqueRun(
+    new RunConditionalInsert(
       model,
-      indexes.toVector,
+      Reuse.fromIndex(coll.shape.cols, uniqueCols),
       coll.add(
         InsertBlankWhereNotExistsSec(
-          coll.form.size,
+          coll.shape.size,
           ModelTable(model),
           WhereAllSec(
             uniqueCols.map(FilterMatchesNoArg(_))

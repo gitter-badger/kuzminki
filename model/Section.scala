@@ -250,7 +250,7 @@ object InsertDoNothingSec extends TextOnly {
 }
 
 
-case class InsertDoUpdateSec(parts: Seq[Assign]) extends MultiPart {
+case class InsertDoUpdateSec(parts: Seq[Render]) extends MultiPart {
   def expression = "DO UPDATE SET %s"
   def glue = ", "
 }

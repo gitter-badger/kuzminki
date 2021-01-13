@@ -1,4 +1,4 @@
-package kuzminki.model.operation
+package kuzminki.model.insert
 
 import kuzminki.model._
 
@@ -9,13 +9,13 @@ trait InsertShape[S] {
   def transform(data: S): Vector[Any]
 }
 
-case class InsertShape1[S](col: TypeCol[S]) extends InsertShape[S] {
+class InsertShape1[S](col: TypeCol[S]) extends InsertShape[S] {
 
   def size = 1
 
   def cols = Vector(col)
 
-  def transform(data: S) = Seq(data) 
+  def transform(data: S) = Vector(data) 
 }
 
 class InsertShape2[R1, R2](shape: Tuple2[TypeCol[R1], TypeCol[R2]]) extends InsertShape[Tuple2[R1, R2]] {

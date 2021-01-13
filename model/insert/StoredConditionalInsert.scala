@@ -6,12 +6,12 @@ import io.rdbc.sapi.SqlWithParams
 import kuzminki.model._
 
 
-class StoredConditionalInsert[S](template: String, shape: InsertShape[S], indexes: Vector[Int], db: Conn) {
+class StoredConditionalInsert[S](template: String, shape: InsertShape[S], reuse: Reuse, db: Conn) {
 
   private def transform(data: S) = {
-    val values = shape.transform(data)
-    val duplicates = indexes.map(i => values(i))
-    values ++ duplicates
+    reuse.extend(
+      shape.transform(data)
+    )
   }
 
   def run(data: S) = {

@@ -1,12 +1,15 @@
 package kuzminki.model.insert
 
+import akka.stream.scaladsl._
+import akka.{NotUsed, Done}
 import kuzminki.model._
 
 
-class RunInsert[M <: Model, S](
+class InsertOptions[M <: Model, S](
       protected val model: M,
-      protected val coll: InsertCollector[S]) extends Returning[M, S]
-                                                 with WhereNotExists[M, S] {
+      protected val coll: InsertCollector[S]) extends PickInsertReturning[M, S]
+                                                 with WhereNotExists[M, S]
+                                                 with OnConflict[M, S] {
 
   def cache = coll.add(InsertBlankValuesSec(coll.shape.size)).cache
 

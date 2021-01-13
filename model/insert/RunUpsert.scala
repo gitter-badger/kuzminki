@@ -1,13 +1,13 @@
-package kuzminki.model.operation
+package kuzminki.model.insert
 
 import akka.stream.scaladsl._
 import akka.{NotUsed, Done}
 import kuzminki.model._
 
 
-class RunUpsert[M, S](model: M, coll: InsertCollector[S]) {
+class RunUpsert[M, S](model: M, reuse: Reuse, coll: InsertCollector[S]) {
 
-  def cache = coll.cacheUpsert(indexes)
+  def cache = coll.cacheUpsert(reuse)
 
   def run(data: S) = cache.run(data)
 

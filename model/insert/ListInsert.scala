@@ -12,16 +12,16 @@ trait ListInsert[S] {
   protected def transform(data: S) = shape.transform(data)
   protected def statement(data: S) = SqlWithParams(template, transform(data))
 
-  private lazy val argsTempl = "(%s)".format(Vector.fill(in.size)("?").mkString(", "))
+  private lazy val argsTempl = "(%s)".format(Vector.fill(shape.size)("?").mkString(", "))
 
   private def extend(template: String, num: Int) = {
     template.replace(
-      args,
+      argsTempl,
       Seq.fill(num)(argsTempl).mkString(", ")
     )
   }
 
-  protected def listStatement(list: List[N]) = {
+  protected def listStatement(list: List[S]) = {
     list.size match {
       case 0 =>
         throw KuzminkiModelException("insert list cannot be empty")

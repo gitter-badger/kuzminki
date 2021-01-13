@@ -8,6 +8,7 @@ class DoUpdate[M, S](model: M, coll: InsertCollector[S], conflictCol: ModelCol) 
   def doNothing = {
     new RunUpsert(
       model,
+      Reuse.noChange,
       coll.extend(Array(
         InsertOnConflictColumnSec(conflictCol),
         InsertDoNothingSec
@@ -28,28 +29,25 @@ class DoUpdate[M, S](model: M, coll: InsertCollector[S], conflictCol: ModelCol) 
 
   def doUpdate(pick: M => Seq[ModelCol]) = {
     doUpdateApply(
-      pick(model).map(validate)
+      pick(model)
     )
   }
 
   def doUpdateOne(pick: M => ModelCol) = {
     doUpdateApply(
-      Seq(
-        validate(
-          pick(model)
-        )
-      )
+      Seq(pick(model))
     )
   }
 
-  private def doUpdateApply(cols: Seq[ModelCol]) = {
-    validate(cols)
+  private def doUpdateApply(updateCols: Seq[ModelCol]) = {
+    validate(updateCols)
     new RunUpsert(
       model,
+      Reuse.fromIndex(coll.shape.cols, updateCols),
       coll.extend(Array(
         InsertOnConflictColumnSec(conflictCol),
         InsertDoUpdateSec(
-          cols.map(NoArgMatches(_))
+          updateCols.map(NoArgMatches(_))
         )
       ))
     )

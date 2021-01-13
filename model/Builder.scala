@@ -6,7 +6,8 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
 import io.rdbc.sapi._
 import kuzminki.model.select.{Select, SelectJoin}
-import kuzminki.model.operation.{Update, Insert, Delete}
+import kuzminki.model.insert.Insert
+import kuzminki.model.operation.{Update, Delete}
 import kuzminki.model.aggregate.{Aggregate, AggregateJoin, SubqueryNumber, SubqueryNumberJoin}
 import kuzminki.model.implicits._
 

@@ -6,11 +6,12 @@ import kuzminki.model._
 trait OnConflict[M, S] {
 
   protected val model: M
-  protected val coll: InsertCollector[S])
+  protected val coll: InsertCollector[S]
 
   def onConflictDoNothing = {
     new RunUpsert(
       model,
+      Reuse.noChange,
       coll.extend(Array(
         InsertOnConflictSec,
         InsertDoNothingSec

@@ -6,9 +6,16 @@ import io.rdbc.sapi.SqlWithParams
 import kuzminki.model._
 
 
-class StoredUpsert[S](template: String, shape: InsertShape[S], db: Conn) {
+class StoredUpsert[S](template: String, shape: InsertShape[S], reuse: Reuse, db: Conn) {
 
-  private def statement(data: S) = SqlWithParams(template, shape.transform(data))
+  private def statement(data: S) = {
+    SqlWithParams(
+      template,
+      reuse.extend(
+        shape.transform(data)
+      )
+    )
+  }
 
   def run(data: S) = {
     db.exec(statement(data))

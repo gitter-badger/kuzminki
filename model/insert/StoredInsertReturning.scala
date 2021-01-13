@@ -1,4 +1,4 @@
-package kuzminki.model.operation
+package kuzminki.model.insert
 
 import io.rdbc.sapi.SqlWithParams
 import kuzminki.model._
@@ -31,7 +31,7 @@ class StoredInsertReturning[S, R](
   }
 
 
-  def listAs[T](data: S)(implicit custom: R => T) = {
+  def listAs[T](list: List[S])(implicit custom: R => T) = {
     db.select(listStatement(list)) { row =>
       custom(
         transformer.transform(row)

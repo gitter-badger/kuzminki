@@ -24,7 +24,8 @@ import io.rdbc.pool.sapi.ConnectionPool
 import io.rdbc.pool.sapi.ConnectionPoolConfig
 
 import kuzminki.model.select.{Select, SelectJoin}
-import kuzminki.model.operation.{Insert, Update, Delete}
+import kuzminki.model.insert.Insert
+import kuzminki.model.operation.{Update, Delete}
 import kuzminki.model.aggregate.{Aggregate, AggregateJoin, SubqueryNumber, SubqueryNumberJoin}
 import kuzminki.model._
 import kuzminki.model.implicits._

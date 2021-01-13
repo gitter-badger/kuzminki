@@ -1,218 +1,109 @@
-package kuzminki.model.operation
+package kuzminki.model.insert
 
 import kuzminki.model._
 
 
-class Insert[M <: Model](model: M, db: Conn) extends TypedInsert(model, db) {
+class Insert[M <: Model](model: M, db: Conn) {
 
-  def data(pick: M => Seq[SetValue]) = {
-    val changes = pick(model)
-    new SingleRowInsert(
+  private def next[S](shape: InsertShape[S]) = {
+    new InsertOptions(
       model,
-      Collector(
+      InsertCollector(
         db,
+        shape,
         Array(
           InsertIntoSec(ModelTable(model)),
-          InsertColumnsSec(changes.map(_.col)),
-          InsertValuesSec(changes.map(_.value))
+          InsertColumnsSec(shape.cols)
         )
       )
     )
   }
 
-  def uncheckedCols(pick: M => Seq[ModelCol]) = {
-    new UncheckedValues(model, db, pick(model))
+  def cols1[S](pick: M => TypeCol[S]) = {
+    next(new InsertShape1(pick(model)))
+  }
+  
+  def cols2[R1, R2](pick: M => Tuple2[TypeCol[R1], TypeCol[R2]]) = {
+    next(new InsertShape2(pick(model)))
+  }
+
+  def cols3[R1, R2, R3](pick: M => Tuple3[TypeCol[R1], TypeCol[R2], TypeCol[R3]]) = {
+    next(new InsertShape3(pick(model)))
+  }
+
+  def cols4[R1, R2, R3, R4](pick: M => Tuple4[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4]]) = {
+    next(new InsertShape4(pick(model)))
+  }
+
+  def cols5[R1, R2, R3, R4, R5](pick: M => Tuple5[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5]]) = {
+    next(new InsertShape5(pick(model)))
+  }
+
+  def cols6[R1, R2, R3, R4, R5, R6](pick: M => Tuple6[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6]]) = {
+    next(new InsertShape6(pick(model)))
+  }
+
+  def cols7[R1, R2, R3, R4, R5, R6, R7](pick: M => Tuple7[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7]]) = {
+    next(new InsertShape7(pick(model)))
+  }
+
+  def cols8[R1, R2, R3, R4, R5, R6, R7, R8](pick: M => Tuple8[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8]]) = {
+    next(new InsertShape8(pick(model)))
+  }
+
+  def cols9[R1, R2, R3, R4, R5, R6, R7, R8, R9](pick: M => Tuple9[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9]]) = {
+    next(new InsertShape9(pick(model)))
+  }
+
+  def cols10[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10](pick: M => Tuple10[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10]]) = {
+    next(new InsertShape10(pick(model)))
+  }
+
+  def cols11[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11](pick: M => Tuple11[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11]]) = {
+    next(new InsertShape11(pick(model)))
+  }
+
+  def cols12[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12](pick: M => Tuple12[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12]]) = {
+    next(new InsertShape12(pick(model)))
+  }
+
+  def cols13[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13](pick: M => Tuple13[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13]]) = {
+    next(new InsertShape13(pick(model)))
+  }
+
+  def cols14[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14](pick: M => Tuple14[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14]]) = {
+    next(new InsertShape14(pick(model)))
+  }
+
+  def cols15[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15](pick: M => Tuple15[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15]]) = {
+    next(new InsertShape15(pick(model)))
+  }
+
+  def cols16[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16](pick: M => Tuple16[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16]]) = {
+    next(new InsertShape16(pick(model)))
+  }
+
+  def cols17[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17](pick: M => Tuple17[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17]]) = {
+    next(new InsertShape17(pick(model)))
+  }
+
+  def cols18[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18](pick: M => Tuple18[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17], TypeCol[R18]]) = {
+    next(new InsertShape18(pick(model)))
+  }
+
+  def cols19[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19](pick: M => Tuple19[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17], TypeCol[R18], TypeCol[R19]]) = {
+    next(new InsertShape19(pick(model)))
+  }
+
+  def cols20[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20](pick: M => Tuple20[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17], TypeCol[R18], TypeCol[R19], TypeCol[R20]]) = {
+    next(new InsertShape20(pick(model)))
+  }
+
+  def cols21[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21](pick: M => Tuple21[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17], TypeCol[R18], TypeCol[R19], TypeCol[R20], TypeCol[R21]]) = {
+    next(new InsertShape21(pick(model)))
+  }
+
+  def cols22[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21, R22](pick: M => Tuple22[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17], TypeCol[R18], TypeCol[R19], TypeCol[R20], TypeCol[R21], TypeCol[R22]]) = {
+    next(new InsertShape22(pick(model)))
   }
 }
-
-
-abstract class ValuesNext[M <: Model](model: M, db: Conn) {
-
-  protected def single(cols: Seq[ModelCol], values: Seq[Any]) = {
-    new SingleRowInsert(
-      model,
-      Collector(
-        db,
-        Array(
-          InsertIntoSec(ModelTable(model)),
-          InsertColumnsSec(cols),
-          InsertValuesSec(values)
-        )
-      )
-    )
-  }
-
-  protected def multiple(cols: Seq[ModelCol], valuesList: List[Seq[Any]]) = {
-    new Returning(
-      model,
-      Collector(
-        db,
-        Array(
-          InsertIntoSec(ModelTable(model)),
-          InsertColumnsSec(cols),
-          InsertMultipleValuesSec(valuesList)
-        )
-      )
-    )
-  }
-}
-
-
-class TypedValues[M <: Model, R](model: M, db: Conn, form: InsertForm[R]) extends ValuesNext(model, db) {
-
-  def values(data: R) = {
-    single(
-      form.colSeq,
-      form.toSeq(data)
-    )
-  }
-
-  def valuesList(dataList: List[R]) = {
-    multiple(
-      form.colSeq,
-      dataList.map(form.toSeq(_))
-    )
-  }
-
-  def valuesFromSelect(sub: SubQuery[R]) = {
-    new Returning(
-      model,
-      Collector(
-        db,
-        Array(
-          InsertIntoSec(ModelTable(model)),
-          InsertColumnsSec(form.colSeq),
-          InsertSubQuerySec(sub.untyped)
-        )
-      )
-    )
-  }
-}
-
-
-class UncheckedValues[M <: Model](model: M, db: Conn, cols: Seq[ModelCol]) extends ValuesNext(model, db) {
-
-  private def verify(values: Seq[Any]): Unit = {
-
-    if (values.isEmpty) {
-      throw KuzminkiModelException("no columns selected")
-    }
-
-    if (cols.size != values.size) {
-      throw KuzminkiModelException("values size does not match columns size")
-    }
-  }
-
-  def uncheckedValues(values: Seq[Any]) {
-    verify(values)
-    single(cols, values)
-  }
-
-  def uncheckedValuesAs[T](values: T)(implicit transform: T => Seq[Any]) {
-    uncheckedValues(transform(values))
-  }
-
-  def uncheckedValuesList(valuesList: List[Seq[Any]]) {
-    valuesList.foreach(verify)
-    multiple(cols, valuesList)
-  }
-
-  def uncheckedValuesListAs[T](valuesList: List[T])(implicit transform: T => Seq[Any]) {
-    uncheckedValuesList(valuesList.map(transform))
-  }
-}
-
-
-class SingleRowInsert[M <: Model](model: M, coll: Collector) extends Returning(model, coll) {
-
-  def onConflictDoNothing = {
-    new Returning(
-      model,
-      coll.extend(Array(
-        InsertOnConflictSec,
-        InsertDoNothingSec
-      ))
-    )
-  }
-
-  def onConflictOnColumn(pick: M => ModelCol) = {
-    new OnConflictDo(
-      model,
-      coll,
-      pick(model)
-    )
-  }
-
-  def whereNotExistsOne(pick: M => Filter) = {
-    whereNotExistsImplement(
-      Seq(pick(model))
-    )
-  }
-
-  def whereNotExistsAll(pick: M => Seq[Filter]) = {
-    whereNotExistsImplement(pick(model))
-  }
-
-  private def whereNotExistsImplement(conds: Seq[Filter]) = {
-    val sections = coll.sections.map {
-      case InsertValuesSec(values) =>
-        InsertWhereNotExistsSec(values, ModelTable(model), WhereAllSec(conds))
-      case sec: Section => sec 
-    }
-
-    new Returning(
-      model,
-      coll.copy(sections = sections)
-    )
-  }
-}
-
-
-case class OnConflictDo[M <: Model](model: M, coll: Collector, conflictCol: ModelCol) {
-
-  def doNothing = {
-    new Returning(
-      model,
-      coll.extend(Array(
-        InsertOnConflictColumnSec(conflictCol),
-        InsertDoNothingSec
-      ))
-    )
-  }
-
-  private def validate(change: SetValue): Unit = {
-    if (change.col == conflictCol) {
-      throw KuzminkiModelException("cannot update the conflicting column")
-    }
-  }
-
-  def doUpdate(pick: M => Seq[SetValue]) = {
-    val changes = pick(model)
-    changes.foreach(validate)
-    new Returning(
-      model,
-      coll.extend(Array(
-        InsertOnConflictColumnSec(conflictCol),
-        InsertDoUpdateSec(changes)
-      ))
-    )
-  }
-
-  def doUpdateOne(pick: M => SetValue) = {
-    val change = pick(model)
-    validate(change)
-    new Returning(
-      model,
-      coll.extend(Array(
-        InsertOnConflictColumnSec(conflictCol),
-        InsertDoUpdateSec(Seq(change))
-      ))
-    )
-  }
-}
-
-
-
-
-
-
