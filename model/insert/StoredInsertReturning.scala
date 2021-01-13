@@ -38,4 +38,8 @@ class StoredInsertReturning[S, R](
       )
     }  
   }
+
+  def renderTo(printer: String => Unit): Unit = {
+    printer(template)
+  }
 }

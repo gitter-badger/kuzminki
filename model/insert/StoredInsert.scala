@@ -34,6 +34,10 @@ class StoredInsert[S](protected val template: String,
   }
 
   def streamList(data: List[S]) = stream(Source(data))
+
+  def renderTo(printer: String => Unit): Unit = {
+    printer(template)
+  }
 }
 
 

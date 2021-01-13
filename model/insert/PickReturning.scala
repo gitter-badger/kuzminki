@@ -3,11 +3,12 @@ package kuzminki.model.insert
 import kuzminki.model._
 
 
-trait PickReturning[M, N] {
+trait PickReturning[M, S] {
 
   protected val model: M
+  protected val coll: InsertCollector[S]
 
-  protected def next[R](transformer: TypedTransformer[R]): N
+  protected def next[R](transformer: TypedTransformer[R]): RunReturning[S, R]
 
   def returning1[R](pick: M => TypeCol[R]) = {
     next(
