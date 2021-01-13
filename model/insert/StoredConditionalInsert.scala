@@ -6,7 +6,12 @@ import io.rdbc.sapi.SqlWithParams
 import kuzminki.model._
 
 
-class StoredConditionalInsert[S](template: String, shape: InsertShape[S], reuse: Reuse, db: Conn) {
+class StoredConditionalInsert[S](val template: String,
+                                     shape: InsertShape[S],
+                                     reuse: Reuse,
+                                     db: Conn) extends Printing {
+
+  protected def sql = template
 
   private def transform(data: S) = {
     reuse.extend(
@@ -14,12 +19,19 @@ class StoredConditionalInsert[S](template: String, shape: InsertShape[S], reuse:
     )
   }
 
+  private def statement(data: S) = {
+    SqlWithParams(
+      template,
+      transform(data)
+    )
+  }
+
   def run(data: S) = {
-    db.exec(SqlWithParams(template, transform(data)))
+    db.exec(statement(data))
   }
 
   def runNum(data: S) = {
-    db.execNum(SqlWithParams(template, transform(data)))
+    db.execNum(statement(data))
   }
 
   def stream(source: Source[S, NotUsed]) = {

@@ -6,7 +6,7 @@ import kuzminki.model._
 class RunInsertReturning[S, R](coll: InsertCollector[S],
                                transformer: TypedTransformer[R]) extends RunReturning[S, R] {
 
-  def cache = coll.cacheReturning(transformer)
+  def cache = coll.cacheInsertReturning(transformer)
 
   def run(data: S) = cache.run(data)
 

@@ -6,7 +6,7 @@ import kuzminki.model._
 class Insert[M <: Model](model: M, db: Conn) {
 
   private def next[S](shape: InsertShape[S]) = {
-    new InsertOptions(
+    new RunInsert(
       model,
       InsertCollector(
         db,

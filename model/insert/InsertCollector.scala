@@ -11,11 +11,23 @@ case class InsertCollector[S](db: Conn,
 
   def extend(added: Array[Section]) = this.copy(sections = sections ++ added)
 
-  def cache = new StoredInsert(render, shape, db)
+  def cacheInsert = {
+    new StoredInsert(render, shape, db)
+  }
 
-  def cacheUpsert(reuse: Reuse) = new StoredUpsert(render, shape, reuse, db)
+  def cacheInsertReturning[R](transformer: TypedTransformer[R]) = {
+    new StoredInsertReturning(render, shape, transformer, db)
+  }
 
-  def cacheConditional(reuse: Reuse) = new StoredConditionalInsert(render, shape, reuse, db)
+  def cacheUpsert(reuse: Reuse) = {
+    new StoredUpsert(render, shape, reuse, db)
+  }
 
-  def cacheReturning[R](transformer: TypedTransformer[R]) = new StoredInsertReturning(render, shape, transformer, db)
+  def cacheUpsertReturning[R](transformer: TypedTransformer[R], reuse: Reuse) = {
+    new StoredUpsertReturning(render, shape, transformer, reuse, db)
+  }
+
+  def cacheConditional(reuse: Reuse) = {
+    new StoredConditionalInsert(render, shape, reuse, db)
+  }
 }

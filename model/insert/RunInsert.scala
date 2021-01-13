@@ -5,7 +5,7 @@ import akka.{NotUsed, Done}
 import kuzminki.model._
 
 
-class InsertOptions[M <: Model, S](
+class RunInsert[M <: Model, S](
       protected val model: M,
       protected val coll: InsertCollector[S]) extends PickReturning[M, S]
                                                  with WhereNotExists[M, S]
@@ -21,7 +21,7 @@ class InsertOptions[M <: Model, S](
     )
   }
 
-  def cache = coll.add(InsertBlankValuesSec(coll.shape.size)).cache
+  def cache = coll.add(InsertBlankValuesSec(coll.shape.size)).cacheInsert
 
   def run(data: S) = cache.run(data)
 
