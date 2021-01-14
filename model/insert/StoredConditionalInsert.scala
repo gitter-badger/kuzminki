@@ -11,7 +11,7 @@ class StoredConditionalInsert[S](val template: String,
                                      reuse: Reuse,
                                      db: Conn) extends Printing {
 
-  protected def sql = template
+  protected def render = template
 
   private def transform(data: S) = {
     reuse.extend(

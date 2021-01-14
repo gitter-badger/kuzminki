@@ -10,7 +10,9 @@ class StoredUpsertReturning[S, R](template: String,
                                   shape: InsertShape[S],
                                   transformer: TypedTransformer[R],
                                   reuse: Reuse,
-                                  db: Conn) {
+                                  db: Conn) extends Printing {
+
+  protected def render = template
 
   private def statement(data: S) = {
     SqlWithParams(

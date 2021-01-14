@@ -9,7 +9,9 @@ import kuzminki.model._
 class StoredUpsert[S](template: String,
                       shape: InsertShape[S],
                       reuse: Reuse,
-                      db: Conn) {
+                      db: Conn) extends Printing {
+
+  protected def render = template
 
   private def statement(data: S) = {
     SqlWithParams(

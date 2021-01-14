@@ -8,7 +8,10 @@ class StoredInsertReturning[S, R](
       protected val template: String,
       protected val shape: InsertShape[S],
                     transformer: TypedTransformer[R],
-                    db: Conn) extends ListInsert[S] {
+                    db: Conn) extends ListInsert[S]
+                                 with Printing {
+
+  protected def render = template
 
   def run(data: S) = {
     db.selectHead(statement(data)) { row =>
@@ -37,9 +40,5 @@ class StoredInsertReturning[S, R](
         transformer.transform(row)
       )
     }  
-  }
-
-  def renderTo(printer: String => Unit): Unit = {
-    printer(template)
   }
 }

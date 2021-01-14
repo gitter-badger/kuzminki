@@ -48,7 +48,8 @@ object implicits {
   implicit def runTypedToNested[R](rt: RunAggregation[R]): AggSubQuery[R] = rt.asSub
 
   // insert
-  implicit def storedInsertReturning[S, R](part: RunReturning[S, R]): RunInsertReturning[S, R] = part.asInstanceOf[RunInsertReturning[S, R]]
+  implicit def storedInsertReturning[S, R](part: InsertReturning[S, R]): RunInsertReturning[S, R] = part.asInstanceOf[RunInsertReturning[S, R]]
+  //implicit def storedUpsertReturning[S, R](part: UpsertReturning[S, R]): RunUpsertReturning[S, R] = part.asInstanceOf[RunUpsertReturning[S, R]]
 }
 
 

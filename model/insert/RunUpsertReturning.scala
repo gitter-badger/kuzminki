@@ -6,7 +6,7 @@ import kuzminki.model._
 class RunUpsertReturning[S, R](
       reuse: Reuse,
       coll: InsertCollector[S],
-      transformer: TypedTransformer[R]) extends RunReturning[S, R] {
+      transformer: TypedTransformer[R]) extends UpsertReturning[S, R] {
 
   def cache = coll.cacheUpsertReturning(transformer, reuse)
 

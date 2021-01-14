@@ -7,19 +7,10 @@ import kuzminki.model._
 
 class RunInsert[M <: Model, S](
       protected val model: M,
-      protected val coll: InsertCollector[S]) extends PickReturning[M, S]
-                                                 with WhereNotExists[M, S]
-                                                 with OnConflict[M, S] {
-
-  protected def next[R](transformer: TypedTransformer[R]) = {
-    new RunInsertReturning(
-      coll.extend(Array(
-        InsertBlankValuesSec(coll.shape.size),
-        ReturningSec(transformer.toSeq)
-      )),
-      transformer
-    )
-  }
+      protected val coll: InsertCollector[S]
+    ) extends PickInsertReturning[M, S]
+         with WhereNotExists[M, S]
+         with OnConflict[M, S] {
 
   def cache = coll.add(InsertBlankValuesSec(coll.shape.size)).cacheInsert
 
