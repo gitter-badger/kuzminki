@@ -1,8 +1,7 @@
-package kuzminki.model
+/*package kuzminki.model
 
 import io.rdbc.sapi._
 
-/*
 trait CustomCol extends AnyCol {
   val arg: Any
   def render = "?"

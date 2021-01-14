@@ -6,10 +6,12 @@ import io.rdbc.sapi.SqlWithParams
 import kuzminki.model._
 
 
-class StoredConditionalInsert[S](val template: String,
-                                     shape: InsertShape[S],
-                                     reuse: Reuse,
-                                     db: Conn) extends Printing {
+class StoredInsertWhereNotExists[S](
+      template: String,
+      shape: InsertShape[S],
+      reuse: Reuse,
+      db: Conn
+    ) extends Printing {
 
   protected def render = template
 

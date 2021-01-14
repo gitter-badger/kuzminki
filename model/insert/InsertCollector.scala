@@ -27,7 +27,11 @@ case class InsertCollector[S](db: Conn,
     new StoredUpsertReturning(render, shape, transformer, reuse, db)
   }
 
-  def cacheConditional(reuse: Reuse) = {
-    new StoredConditionalInsert(render, shape, reuse, db)
+  def cacheInsertWhereNotExists(reuse: Reuse) = {
+    new StoredInsertWhereNotExists(render, shape, reuse, db)
+  }
+
+  def cacheInsertWhereNotExistsReturning[R](transformer: TypedTransformer[R], reuse: Reuse) = {
+    new StoredInsertWhereNotExistsReturning(render, shape, transformer, reuse, db)
   }
 }

@@ -5,9 +5,13 @@ import akka.{NotUsed, Done}
 import kuzminki.model._
 
 
-class RunConditionalInsert[M, S](model: M, reuse: Reuse, coll: InsertCollector[S]) {
+class RunInsertWhereNotExists[M, S](
+      model: M,
+      reuse: Reuse,
+      coll: InsertCollector[S]
+    ) extends PickInsertWhereNotExistsReturning(model, reuse, coll) {
 
-  def cache = coll.cacheConditional(reuse)
+  def cache = coll.cacheInsertWhereNotExists(reuse)
 
   def run(data: S) = cache.run(data)
 

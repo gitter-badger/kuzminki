@@ -24,7 +24,7 @@ trait WhereNotExists[M <: Model, S] {
       throw KuzminkiModelException("whereNotExists")
     }
 
-    new RunConditionalInsert(
+    new RunInsertWhereNotExists(
       model,
       Reuse.fromIndex(coll.shape.cols, uniqueCols),
       coll.add(
