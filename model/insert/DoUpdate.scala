@@ -10,6 +10,7 @@ class DoUpdate[M, S](model: M, coll: InsertCollector[S], conflictCol: ModelCol) 
       model,
       Reuse.noChange,
       coll.extend(Array(
+        InsertBlankValuesSec(coll.shape.size),
         InsertOnConflictColumnSec(conflictCol),
         InsertDoNothingSec
       ))
@@ -45,6 +46,7 @@ class DoUpdate[M, S](model: M, coll: InsertCollector[S], conflictCol: ModelCol) 
       model,
       Reuse.fromIndex(coll.shape.cols, updateCols),
       coll.extend(Array(
+        InsertBlankValuesSec(coll.shape.size),
         InsertOnConflictColumnSec(conflictCol),
         InsertDoUpdateSec(
           updateCols.map(NoArgMatches(_))

@@ -13,6 +13,7 @@ trait OnConflict[M, S] {
       model,
       Reuse.noChange,
       coll.extend(Array(
+        InsertBlankValuesSec(coll.shape.size),
         InsertOnConflictSec,
         InsertDoNothingSec
       ))

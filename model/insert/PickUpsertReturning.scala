@@ -4,16 +4,13 @@ import kuzminki.model._
 
 
 abstract class PickUpsertReturning[M, S](model: M,
-                                         reuse: Reuse,
-                                         coll: InsertCollector[S]) {
+                                        reuse: Reuse,
+                                        coll: InsertCollector[S]) {
 
   private def next[R](transformer: TypedTransformer[R]) = {
     new RunUpsertReturning(
       reuse,
-      coll.extend(Array(
-        InsertBlankValuesSec(coll.shape.size),
-        ReturningSec(transformer.toSeq)
-      )),
+      coll.add(ReturningSec(transformer.toSeq)),
       transformer
     )
   }
