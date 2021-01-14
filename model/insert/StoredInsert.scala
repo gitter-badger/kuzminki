@@ -6,10 +6,12 @@ import io.rdbc.sapi.SqlWithParams
 import kuzminki.model._
 
 
-class StoredInsert[S](protected val template: String,
-                      protected val shape: InsertShape[S],
-                                    db: Conn) extends ListInsert[S]
-                                                 with Printing {
+class StoredInsert[S](
+      protected val template: String,
+      protected val shape: InsertShape[S],
+                    db: Conn
+    ) extends ListInsert[S]
+         with Printing {
 
   protected def render = template
 

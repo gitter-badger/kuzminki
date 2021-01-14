@@ -19,6 +19,14 @@ case class InsertCollector[S](db: Conn,
     new StoredInsertReturning(render, shape, transformer, db)
   }
 
+  def cacheInsertDoNothing = {
+    new StoredInsertDoNothing(render, shape, db)
+  }
+
+  def cacheInsertDoNothingReturning[R](transformer: TypedTransformer[R]) = {
+    new StoredInsertDoNothingReturning(render, shape, transformer, db)
+  }
+
   def cacheUpsert(reuse: Reuse) = {
     new StoredUpsert(render, shape, reuse, db)
   }

@@ -6,9 +6,8 @@ import kuzminki.model._
 class DoUpdate[M, S](model: M, coll: InsertCollector[S], conflictCol: ModelCol) {
 
   def doNothing = {
-    new RunUpsert(
+    new RunInsertDoNothing(
       model,
-      Reuse.noChange,
       coll.extend(Array(
         InsertBlankValuesSec(coll.shape.size),
         InsertOnConflictColumnSec(conflictCol),

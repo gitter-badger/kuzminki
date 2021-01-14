@@ -1,7 +1,5 @@
 package kuzminki.model.insert
 
-import akka.stream.scaladsl._
-import akka.{NotUsed, Done}
 import io.rdbc.sapi.SqlWithParams
 import kuzminki.model._
 
@@ -11,7 +9,8 @@ class StoredInsertWhereNotExistsReturning[S, R](
       shape: InsertShape[S],
       transformer: TypedTransformer[R],
       reuse: Reuse,
-      db: Conn) extends Printing {
+      db: Conn
+    ) extends Printing {
 
   protected def render = template
 

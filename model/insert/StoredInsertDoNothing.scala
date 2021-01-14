@@ -4,21 +4,17 @@ import io.rdbc.sapi.SqlWithParams
 import kuzminki.model._
 
 
-class StoredUpsert[S](
+class StoredInsertDoNothing[S](
       template: String,
       shape: InsertShape[S],
-      reuse: Reuse,
-      db: Conn
-    ) extends Printing {
+      db: Conn) extends Printing {
 
   protected def render = template
 
   private def statement(data: S) = {
     SqlWithParams(
       template,
-      reuse.extend(
-        shape.transform(data)
-      )
+      shape.transform(data)
     )
   }
 

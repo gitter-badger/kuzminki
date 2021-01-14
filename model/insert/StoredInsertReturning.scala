@@ -8,8 +8,9 @@ class StoredInsertReturning[S, R](
       protected val template: String,
       protected val shape: InsertShape[S],
                     transformer: TypedTransformer[R],
-                    db: Conn) extends ListInsert[S]
-                                 with Printing {
+                    db: Conn
+    ) extends ListInsert[S]
+         with Printing {
 
   protected def render = template
 

@@ -9,9 +9,8 @@ trait OnConflict[M, S] {
   protected val coll: InsertCollector[S]
 
   def onConflictDoNothing = {
-    new RunUpsert(
+    new RunInsertDoNothing(
       model,
-      Reuse.noChange,
       coll.extend(Array(
         InsertBlankValuesSec(coll.shape.size),
         InsertOnConflictSec,

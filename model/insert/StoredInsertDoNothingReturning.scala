@@ -4,11 +4,10 @@ import io.rdbc.sapi.SqlWithParams
 import kuzminki.model._
 
 
-class StoredUpsertReturning[S, R](
+class StoredInsertDoNothingReturning[S, R](
       template: String,
       shape: InsertShape[S],
       transformer: TypedTransformer[R],
-      reuse: Reuse,
       db: Conn
     ) extends Printing {
 
@@ -17,20 +16,18 @@ class StoredUpsertReturning[S, R](
   private def statement(data: S) = {
     SqlWithParams(
       template,
-      reuse.extend(
-        shape.transform(data)
-      )
+      shape.transform(data)
     )
   }
 
   def run(data: S) = {
-    db.selectHead(statement(data)) { row =>
+    db.selectHeadOption(statement(data)) { row =>
       transformer.transform(row)
     }  
   }
 
   def runAs[T](data: S)(implicit custom: R => T) = {
-    db.selectHead(statement(data)) { row =>
+    db.selectHeadOption(statement(data)) { row =>
       custom(
         transformer.transform(row)
       )
