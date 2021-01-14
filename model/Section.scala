@@ -32,11 +32,8 @@ trait MultiPart extends Section {
 }
 
 trait Values extends Section {
-  def fill(size: Int) = {
-    "(%s)".format(
-      Vector.fill(size)("?").mkString(", ")
-    )
-  }
+  def blank(size: Int) = Vector.fill(size)("?").mkString(", ")
+  def fill(size: Int) = "(%s)".format(blank(size))
 }
 
 // Select
@@ -204,7 +201,7 @@ case class InsertWhereNotExistsSec(values: Seq[Any], table: ModelTable, where: W
   def expression = "SELECT %s WHERE NOT EXISTS (SELECT 1 FROM %s %s)"
   def render = {
     expression.format(
-      fill(values.size),
+      blank(values.size),
       table.render,
       where.render
     )
@@ -216,7 +213,7 @@ case class InsertBlankWhereNotExistsSec(size: Int, table: ModelTable, where: Whe
   def expression = "SELECT %s WHERE NOT EXISTS (SELECT 1 FROM %s %s)"
   def render = {
     expression.format(
-      fill(size),
+      blank(size),
       table.render,
       where.render
     )

@@ -24,13 +24,13 @@ class StoredUpsertReturning[S, R](template: String,
   }
 
   def run(data: S) = {
-    db.selectHead(statement(data)) { row =>
+    db.selectHeadOption(statement(data)) { row =>
       transformer.transform(row)
     }  
   }
 
   def runAs[T](data: S)(implicit custom: R => T) = {
-    db.selectHead(statement(data)) { row =>
+    db.selectHeadOption(statement(data)) { row =>
       custom(
         transformer.transform(row)
       )
