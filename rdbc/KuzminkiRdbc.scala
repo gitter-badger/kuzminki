@@ -37,7 +37,7 @@ class KuzminkiRdbc(conf: SystemConfig)(implicit system: ActorSystem) {
   implicit val materializer = ActorMaterializer()(system)
   implicit val timeout = 5.seconds.timeout
 
-  val db = new RdbcConn(conf)
+  val db = new Conn(conf)
 
   def select[M <: Model](implicit tag: ClassTag[M]) = {
     new Select(Model.from[M], db)

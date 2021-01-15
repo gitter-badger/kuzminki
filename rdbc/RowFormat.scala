@@ -1,4 +1,4 @@
-package kuzminki.rdbc
+package kuzminki.model
 
 import java.time._
 import java.util.UUID

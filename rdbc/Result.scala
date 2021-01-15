@@ -1,4 +1,4 @@
-package kuzminki.rdbc
+package kuzminki.model
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.{Future, Promise}

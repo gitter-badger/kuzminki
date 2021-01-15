@@ -1,4 +1,4 @@
-package kuzminki.rdbc
+package kuzminki.model
 
 import org.reactivestreams.Publisher
 
@@ -24,7 +24,9 @@ import io.rdbc.pgsql.transport.netty.sapi.NettyPgConnectionFactory.Config
 import io.rdbc.pool.sapi.ConnectionPool
 import io.rdbc.pool.sapi.ConnectionPoolConfig
 
-import kuzminki.model.Conn
+import org.reactivestreams.Publisher
+
+//import kuzminki.model.Conn
 
 //import transport.actions.{Action, Batch}
 
@@ -56,7 +58,7 @@ object RdbcPool {
 }
 
 
-class RdbcConn(conf: SystemConfig)(implicit system: ActorSystem) extends Conn with LazyLogging {
+class Conn(conf: SystemConfig)(implicit system: ActorSystem) extends LazyLogging {
 
   logger.info("Start")
 
