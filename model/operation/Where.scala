@@ -5,10 +5,10 @@ import kuzminki.model._
 
 class Where[M](model: M, coll: Collector) {
 
-  def all() = new Returning(model, coll)
+  def all() = new RunOperation(model, coll)
 
   def whereOne(pick: M => Filter) = {
-    new Returning(
+    new RunOperation(
       model,
       coll.add(
         WhereAllSec(
@@ -23,7 +23,7 @@ class Where[M](model: M, coll: Collector) {
       case Nil =>
         throw KuzminkiModelException("WHERE conditions cannot be empty")
       case conds =>
-        new Returning(
+        new RunOperation(
           model,
           coll.add(WhereAllSec(conds))
         )
@@ -33,9 +33,9 @@ class Where[M](model: M, coll: Collector) {
   def whereOpt(pick: M => Seq[Option[Filter]]) = {
     pick(model).flatten match {
       case Nil =>
-        new Returning(model, coll)
+        new RunOperation(model, coll)
       case conds =>
-        new Returning(
+        new RunOperation(
           model,
           coll.add(WhereAllSec(conds))
         )
