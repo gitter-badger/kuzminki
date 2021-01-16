@@ -19,6 +19,14 @@ class Select[M <: Model](model: M, db: Conn) {
     )
   }
 
+  /*
+  def readCols[R](pick: M => Seq[TypeCol[_]])(implicit reader: TypeReader[T]) = {
+    next(
+      new ColSeq(pick(model))
+    )
+  }
+  */
+  
   def cols(pick: M => Seq[TypeCol[_]]) = {
     next(
       new ColSeq(pick(model))
