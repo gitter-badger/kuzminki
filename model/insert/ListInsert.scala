@@ -7,7 +7,7 @@ import kuzminki.model._
 trait ListInsert[S] {
 
   protected val template: String
-  protected val shape: InsertShape[S]
+  protected val shape: DataShape[S]
 
   protected def transform(data: S) = shape.transform(data)
   protected def statement(data: S) = SqlWithParams(template, transform(data))

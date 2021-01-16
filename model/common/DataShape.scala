@@ -1,15 +1,13 @@
-package kuzminki.model.insert
-
-import kuzminki.model._
+package kuzminki.model
 
 
-trait InsertShape[S] {
+trait DataShape[S] {
   def size: Int
   def cols: Seq[ModelCol]
   def transform(data: S): Vector[Any]
 }
 
-class InsertShape1[S](col: TypeCol[S]) extends InsertShape[S] {
+class DataShape1[S](col: TypeCol[S]) extends DataShape[S] {
 
   def size = 1
 
@@ -18,7 +16,7 @@ class InsertShape1[S](col: TypeCol[S]) extends InsertShape[S] {
   def transform(data: S) = Vector(data) 
 }
 
-class InsertShape2[R1, R2](shape: Tuple2[TypeCol[R1], TypeCol[R2]]) extends InsertShape[Tuple2[R1, R2]] {
+class DataShape2[R1, R2](shape: Tuple2[TypeCol[R1], TypeCol[R2]]) extends DataShape[Tuple2[R1, R2]] {
 
   def size = 2
 
@@ -37,7 +35,7 @@ class InsertShape2[R1, R2](shape: Tuple2[TypeCol[R1], TypeCol[R2]]) extends Inse
   }
 }
 
-class InsertShape3[R1, R2, R3](shape: Tuple3[TypeCol[R1], TypeCol[R2], TypeCol[R3]]) extends InsertShape[Tuple3[R1, R2, R3]] {
+class DataShape3[R1, R2, R3](shape: Tuple3[TypeCol[R1], TypeCol[R2], TypeCol[R3]]) extends DataShape[Tuple3[R1, R2, R3]] {
 
   def size = 3
 
@@ -56,7 +54,7 @@ class InsertShape3[R1, R2, R3](shape: Tuple3[TypeCol[R1], TypeCol[R2], TypeCol[R
   }
 }
 
-class InsertShape4[R1, R2, R3, R4](shape: Tuple4[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4]]) extends InsertShape[Tuple4[R1, R2, R3, R4]] {
+class DataShape4[R1, R2, R3, R4](shape: Tuple4[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4]]) extends DataShape[Tuple4[R1, R2, R3, R4]] {
 
   def size = 4
 
@@ -75,7 +73,7 @@ class InsertShape4[R1, R2, R3, R4](shape: Tuple4[TypeCol[R1], TypeCol[R2], TypeC
   }
 }
 
-class InsertShape5[R1, R2, R3, R4, R5](shape: Tuple5[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5]]) extends InsertShape[Tuple5[R1, R2, R3, R4, R5]] {
+class DataShape5[R1, R2, R3, R4, R5](shape: Tuple5[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5]]) extends DataShape[Tuple5[R1, R2, R3, R4, R5]] {
 
   def size = 5
 
@@ -94,7 +92,7 @@ class InsertShape5[R1, R2, R3, R4, R5](shape: Tuple5[TypeCol[R1], TypeCol[R2], T
   }
 }
 
-class InsertShape6[R1, R2, R3, R4, R5, R6](shape: Tuple6[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6]]) extends InsertShape[Tuple6[R1, R2, R3, R4, R5, R6]] {
+class DataShape6[R1, R2, R3, R4, R5, R6](shape: Tuple6[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6]]) extends DataShape[Tuple6[R1, R2, R3, R4, R5, R6]] {
 
   def size = 6
 
@@ -113,7 +111,7 @@ class InsertShape6[R1, R2, R3, R4, R5, R6](shape: Tuple6[TypeCol[R1], TypeCol[R2
   }
 }
 
-class InsertShape7[R1, R2, R3, R4, R5, R6, R7](shape: Tuple7[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7]]) extends InsertShape[Tuple7[R1, R2, R3, R4, R5, R6, R7]] {
+class DataShape7[R1, R2, R3, R4, R5, R6, R7](shape: Tuple7[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7]]) extends DataShape[Tuple7[R1, R2, R3, R4, R5, R6, R7]] {
 
   def size = 7
 
@@ -132,7 +130,7 @@ class InsertShape7[R1, R2, R3, R4, R5, R6, R7](shape: Tuple7[TypeCol[R1], TypeCo
   }
 }
 
-class InsertShape8[R1, R2, R3, R4, R5, R6, R7, R8](shape: Tuple8[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8]]) extends InsertShape[Tuple8[R1, R2, R3, R4, R5, R6, R7, R8]] {
+class DataShape8[R1, R2, R3, R4, R5, R6, R7, R8](shape: Tuple8[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8]]) extends DataShape[Tuple8[R1, R2, R3, R4, R5, R6, R7, R8]] {
 
   def size = 8
 
@@ -151,7 +149,7 @@ class InsertShape8[R1, R2, R3, R4, R5, R6, R7, R8](shape: Tuple8[TypeCol[R1], Ty
   }
 }
 
-class InsertShape9[R1, R2, R3, R4, R5, R6, R7, R8, R9](shape: Tuple9[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9]]) extends InsertShape[Tuple9[R1, R2, R3, R4, R5, R6, R7, R8, R9]] {
+class DataShape9[R1, R2, R3, R4, R5, R6, R7, R8, R9](shape: Tuple9[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9]]) extends DataShape[Tuple9[R1, R2, R3, R4, R5, R6, R7, R8, R9]] {
 
   def size = 9
 
@@ -170,7 +168,7 @@ class InsertShape9[R1, R2, R3, R4, R5, R6, R7, R8, R9](shape: Tuple9[TypeCol[R1]
   }
 }
 
-class InsertShape10[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10](shape: Tuple10[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10]]) extends InsertShape[Tuple10[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10]] {
+class DataShape10[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10](shape: Tuple10[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10]]) extends DataShape[Tuple10[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10]] {
 
   def size = 10
 
@@ -189,7 +187,7 @@ class InsertShape10[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10](shape: Tuple10[Type
   }
 }
 
-class InsertShape11[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11](shape: Tuple11[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11]]) extends InsertShape[Tuple11[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11]] {
+class DataShape11[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11](shape: Tuple11[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11]]) extends DataShape[Tuple11[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11]] {
 
   def size = 11
 
@@ -208,7 +206,7 @@ class InsertShape11[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11](shape: Tuple11
   }
 }
 
-class InsertShape12[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12](shape: Tuple12[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12]]) extends InsertShape[Tuple12[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12]] {
+class DataShape12[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12](shape: Tuple12[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12]]) extends DataShape[Tuple12[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12]] {
 
   def size = 12
 
@@ -227,7 +225,7 @@ class InsertShape12[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12](shape: Tu
   }
 }
 
-class InsertShape13[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13](shape: Tuple13[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13]]) extends InsertShape[Tuple13[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13]] {
+class DataShape13[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13](shape: Tuple13[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13]]) extends DataShape[Tuple13[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13]] {
 
   def size = 13
 
@@ -246,7 +244,7 @@ class InsertShape13[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13](shap
   }
 }
 
-class InsertShape14[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14](shape: Tuple14[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14]]) extends InsertShape[Tuple14[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14]] {
+class DataShape14[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14](shape: Tuple14[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14]]) extends DataShape[Tuple14[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14]] {
 
   def size = 14
 
@@ -265,7 +263,7 @@ class InsertShape14[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14]
   }
 }
 
-class InsertShape15[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15](shape: Tuple15[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15]]) extends InsertShape[Tuple15[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15]] {
+class DataShape15[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15](shape: Tuple15[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15]]) extends DataShape[Tuple15[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15]] {
 
   def size = 15
 
@@ -284,7 +282,7 @@ class InsertShape15[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14,
   }
 }
 
-class InsertShape16[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16](shape: Tuple16[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16]]) extends InsertShape[Tuple16[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16]] {
+class DataShape16[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16](shape: Tuple16[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16]]) extends DataShape[Tuple16[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16]] {
 
   def size = 16
 
@@ -303,7 +301,7 @@ class InsertShape16[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14,
   }
 }
 
-class InsertShape17[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17](shape: Tuple17[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17]]) extends InsertShape[Tuple17[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17]] {
+class DataShape17[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17](shape: Tuple17[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17]]) extends DataShape[Tuple17[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17]] {
 
   def size = 17
 
@@ -322,7 +320,7 @@ class InsertShape17[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14,
   }
 }
 
-class InsertShape18[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18](shape: Tuple18[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17], TypeCol[R18]]) extends InsertShape[Tuple18[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18]] {
+class DataShape18[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18](shape: Tuple18[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17], TypeCol[R18]]) extends DataShape[Tuple18[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18]] {
 
   def size = 18
 
@@ -341,7 +339,7 @@ class InsertShape18[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14,
   }
 }
 
-class InsertShape19[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19](shape: Tuple19[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17], TypeCol[R18], TypeCol[R19]]) extends InsertShape[Tuple19[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19]] {
+class DataShape19[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19](shape: Tuple19[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17], TypeCol[R18], TypeCol[R19]]) extends DataShape[Tuple19[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19]] {
 
   def size = 19
 
@@ -360,7 +358,7 @@ class InsertShape19[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14,
   }
 }
 
-class InsertShape20[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20](shape: Tuple20[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17], TypeCol[R18], TypeCol[R19], TypeCol[R20]]) extends InsertShape[Tuple20[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20]] {
+class DataShape20[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20](shape: Tuple20[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17], TypeCol[R18], TypeCol[R19], TypeCol[R20]]) extends DataShape[Tuple20[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20]] {
 
   def size = 20
 
@@ -379,7 +377,7 @@ class InsertShape20[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14,
   }
 }
 
-class InsertShape21[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21](shape: Tuple21[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17], TypeCol[R18], TypeCol[R19], TypeCol[R20], TypeCol[R21]]) extends InsertShape[Tuple21[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21]] {
+class DataShape21[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21](shape: Tuple21[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17], TypeCol[R18], TypeCol[R19], TypeCol[R20], TypeCol[R21]]) extends DataShape[Tuple21[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21]] {
 
   def size = 21
 
@@ -398,7 +396,7 @@ class InsertShape21[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14,
   }
 }
 
-class InsertShape22[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21, R22](shape: Tuple22[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17], TypeCol[R18], TypeCol[R19], TypeCol[R20], TypeCol[R21], TypeCol[R22]]) extends InsertShape[Tuple22[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21, R22]] {
+class DataShape22[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21, R22](shape: Tuple22[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5], TypeCol[R6], TypeCol[R7], TypeCol[R8], TypeCol[R9], TypeCol[R10], TypeCol[R11], TypeCol[R12], TypeCol[R13], TypeCol[R14], TypeCol[R15], TypeCol[R16], TypeCol[R17], TypeCol[R18], TypeCol[R19], TypeCol[R20], TypeCol[R21], TypeCol[R22]]) extends DataShape[Tuple22[R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21, R22]] {
 
   def size = 22
 

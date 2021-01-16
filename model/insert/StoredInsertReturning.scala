@@ -6,7 +6,7 @@ import kuzminki.model._
 
 class StoredInsertReturning[S, R](
       protected val template: String,
-      protected val shape: InsertShape[S],
+      protected val shape: DataShape[S],
                     transformer: TypedTransformer[R],
                     db: Conn
     ) extends ListInsert[S]

@@ -6,7 +6,7 @@ import kuzminki.model._
 
 class StoredInsertWhereNotExistsReturning[S, R](
       template: String,
-      shape: InsertShape[S],
+      shape: DataShape[S],
       transformer: TypedTransformer[R],
       reuse: Reuse,
       db: Conn

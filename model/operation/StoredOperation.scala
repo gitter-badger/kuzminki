@@ -4,13 +4,12 @@ import akka.stream.scaladsl._
 import akka.{NotUsed, Done}
 import io.rdbc.sapi.SqlWithParams
 import kuzminki.model._
-import kuzminki.model.insert.InsertShape
 
 
 class StoredOperation[S](
       template: String,
       args: Vector[Any],
-      shape: InsertShape[S],
+      shape: DataShape[S],
       db: Conn) {
 
   protected def render = template

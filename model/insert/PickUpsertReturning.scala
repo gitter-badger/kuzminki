@@ -3,9 +3,10 @@ package kuzminki.model.insert
 import kuzminki.model._
 
 
-abstract class PickUpsertReturning[M, S](model: M,
-                                        reuse: Reuse,
-                                        coll: InsertCollector[S]) {
+abstract class PickUpsertReturning[M, S](
+      model: M,
+      reuse: Reuse,
+      coll: InsertCollector[S]) {
 
   private def next[R](transformer: TypedTransformer[R]) = {
     new RunUpsertReturning(

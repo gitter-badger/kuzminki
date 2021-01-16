@@ -1,7 +1,6 @@
 package kuzminki.model.operation
 
 import kuzminki.model._
-import kuzminki.model.insert.InsertShape
 
 
 case class OpCollector(db: Conn, sections: Array[Section]) extends ResultMethods {
@@ -14,7 +13,7 @@ case class OpCollector(db: Conn, sections: Array[Section]) extends ResultMethods
     TypedCollector(db, transformer, sections :+ ReturningSec(transformer.toSeq))
   }
 
-  def cache[S](shape: InsertShape[S]) = {
+  def cache[S](shape: DataShape[S]) = {
     new StoredOperation(render, args, shape, db)
   }
 }

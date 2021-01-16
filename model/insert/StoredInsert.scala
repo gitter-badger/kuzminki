@@ -8,7 +8,7 @@ import kuzminki.model._
 
 class StoredInsert[S](
       protected val template: String,
-      protected val shape: InsertShape[S],
+      protected val shape: DataShape[S],
                     db: Conn
     ) extends ListInsert[S]
          with Printing {

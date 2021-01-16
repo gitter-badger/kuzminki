@@ -4,7 +4,7 @@ import kuzminki.model._
 
 
 case class InsertCollector[S](db: Conn,
-                              shape: InsertShape[S],
+                              shape: DataShape[S],
                               sections: Array[Section]) extends ResultMethods {
 
   def add(section: Section) = this.copy(sections = sections :+ section)

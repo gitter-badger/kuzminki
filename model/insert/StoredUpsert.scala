@@ -6,7 +6,7 @@ import kuzminki.model._
 
 class StoredUpsert[S](
       template: String,
-      shape: InsertShape[S],
+      shape: DataShape[S],
       reuse: Reuse,
       db: Conn
     ) extends Printing {
