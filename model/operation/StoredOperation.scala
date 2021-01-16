@@ -1,18 +1,28 @@
 package kuzminki.model.operation
 
+import akka.stream.scaladsl._
+import akka.{NotUsed, Done}
+import io.rdbc.sapi.SqlWithParams
 import kuzminki.model._
+import kuzminki.model.insert.InsertShape
 
 
-class StoredOperation[S](template: String, args: Seq[Any], shape: InsertShape[S]) {
+class StoredOperation[S](
+      template: String,
+      args: Vector[Any],
+      shape: InsertShape[S],
+      db: Conn) {
 
   protected def render = template
+
+  private def transform(data: S) = {
+    args ++ shape.transform(data)
+  }
 
   private def statement(data: S) = {
     SqlWithParams(
       template,
-      reuse.extend(
-        shape.transform(data)
-      )
+      transform(data)
     )
   }
 

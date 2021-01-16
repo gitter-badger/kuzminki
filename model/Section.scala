@@ -91,7 +91,7 @@ case class OnSec(leftCol: ModelCol, rightCol: ModelCol) extends Section {
 }
 
 
-case class WhereAllSec(parts: Seq[Filter]) extends MultiPart {
+case class WhereAllSec(parts: Seq[Render]) extends MultiPart {
   def expression = "WHERE %s"
   def glue = " AND "
 }

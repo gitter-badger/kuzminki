@@ -8,7 +8,7 @@ class Update[M <: Model](model: M, db: Conn) {
   def set(pick: M => Seq[Assign]) = {
     new Where(
       model,
-      Collector(
+      OpCollector(
         db,
         Array(
           UpdateSec(ModelTable(model)),
@@ -21,7 +21,7 @@ class Update[M <: Model](model: M, db: Conn) {
   def setOne(pick: M => Assign) = {
     new Where(
       model,
-      Collector(
+      OpCollector(
         db,
         Array(
           UpdateSec(ModelTable(model)),

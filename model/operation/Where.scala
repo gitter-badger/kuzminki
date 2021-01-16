@@ -1,9 +1,10 @@
 package kuzminki.model.operation
 
 import kuzminki.model._
+import kuzminki.model.insert.{InsertShape, InsertShape1, InsertShape2, InsertShape3, InsertShape4, InsertShape5}
 
 
-class Where[M](model: M, coll: Collector) {
+class Where[M](model: M, coll: OpCollector) {
 
   def all() = new RunOperation(model, coll)
 
@@ -42,24 +43,32 @@ class Where[M](model: M, coll: Collector) {
     }
   }
 
+  private def cache[S](shape: InsertShape[S]) = {
+    coll.add(
+      WhereAllSec(
+        shape.cols.map(NoArgMatches(_))
+      )
+    ).cache(shape)
+  }
+
   def cacheWhere1[R](pick: M => TypeCol[R]) = {
-    new StoredOperation(coll, new TypedCols1(pick(model)))
+    cache(new InsertShape1(pick(model)))
   }
   
   def cacheWhere2[R1, R2](pick: M => Tuple2[TypeCol[R1], TypeCol[R2]]) = {
-    new StoredOperation(coll, new TypedCols1(pick(model)))
+    cache(new InsertShape2(pick(model)))
   }
 
   def cacheWhere3[R1, R2, R3](pick: M => Tuple3[TypeCol[R1], TypeCol[R2], TypeCol[R3]]) = {
-    new StoredOperation(coll, new TypedCols1(pick(model)))
+    cache(new InsertShape3(pick(model)))
   }
 
   def cacheWhere4[R1, R2, R3, R4](pick: M => Tuple4[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4]]) = {
-    new StoredOperation(coll, new TypedCols1(pick(model)))
+    cache(new InsertShape4(pick(model)))
   }
 
   def cacheWhere5[R1, R2, R3, R4, R5](pick: M => Tuple5[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5]]) = {
-    new StoredOperation(coll, new TypedCols1(pick(model)))
+    cache(new InsertShape5(pick(model)))
   }
 }
 

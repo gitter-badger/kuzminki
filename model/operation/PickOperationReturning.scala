@@ -3,7 +3,7 @@ package kuzminki.model.operation
 import kuzminki.model._
 
 
-abstract class PickOperationReturning[M](model: M, coll: Collector) { 
+abstract class PickOperationReturning[M](model: M, coll: OpCollector) { 
 
   private def next[R](transformer: TypedTransformer[R]) = {
     new RunOperationReturning(coll.returning(transformer))
