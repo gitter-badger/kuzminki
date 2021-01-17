@@ -26,12 +26,12 @@ object RowReader {
   }
 
   private val cleanString: String => String = {
-    case "java.time.Instant" => "Instant"
+    case "java.time.Instant"       => "Instant"
     case "java.time.ZonedDateTime" => "ZonedDateTime"
     case "java.time.LocalDateTime" => "LocalDateTime"
-    case "java.time.LocalDate" => "LocalDate"
-    case "java.util.UUID" => "UUID"
-    case name => name
+    case "java.time.LocalDate"     => "LocalDate"
+    case "java.util.UUID"          => "UUID"
+    case name                      => name
   }
 
   private def productMembers[T](implicit tag: TypeTag[T]) = {
@@ -44,10 +44,11 @@ object RowReader {
       .map(cleanString)
   }
 
-  def create[M <: Model, T <: Product](pick: M => Seq[TypeCol[_]])(implicit mTag: ClassTag[M], cTag: ClassTag[T], tTag: TypeTag[T]) = {
-    
-    val model = Model.from[M]
-    val cols = pick(model)
+  private def create[M, T](
+        cols: Seq[TypeCol[_]],
+        mTag: ClassTag[M],
+        cTag: ClassTag[T],
+        tTag: TypeTag[T]) = {
     
     val colTypes = cols.map(colStringType)
     val memberTypes = productMembers(tTag)
@@ -62,12 +63,33 @@ object RowReader {
       )
     }
 
-    new RowReader(cols)(cTag)
+    new RowReader(cols, mTag)(cTag)
+  }
+
+  class AsReader[M](cols: Seq[TypeCol[_]], mTag: ClassTag[M]) {
+
+    def as[T](implicit cTag: ClassTag[T], tTag: TypeTag[T]) = {
+      create(cols, mTag, cTag, tTag)
+    }
+  }
+
+  class PickCols[M](model: M, mTag: ClassTag[M]) {
+
+    def cols(pick: M => Seq[TypeCol[_]]) = {
+      new AsReader(pick(model), mTag)
+    }
+  }
+
+  def model[M <: Model](implicit mTag: ClassTag[M]) = {
+    val model = Model.from[M]
+    new PickCols(model, mTag)
   }
 }
 
+//val userReader = RowReader.to[BaseUser].from[User](t => Seq(t.id, t.username, t.email))
 
-class RowReader[R](val cols: Seq[TypeCol[_]])(implicit tag: ClassTag[R]) extends RowShape[R] {
+class RowReader[M, R](val cols: Seq[TypeCol[_]], mTag: ClassTag[M])
+                     (implicit tag: ClassTag[R]) extends RowShape[R] {
 
   private val indexedCols = cols.zipWithIndex
 
@@ -93,58 +115,15 @@ class RowReader[R](val cols: Seq[TypeCol[_]])(implicit tag: ClassTag[R]) extends
       case Failure(ex) =>
         val name = classTag[R].runtimeClass.getName
         val message = ex.getMessage
-        throw KuzminkiModelException(s"Failed to read ($name) $message")
+        throw KuzminkiModelException(
+          s"Failed to read ($name) $message"
+        )
     }
   }
 }
 
 
 
-
-/*
-
-  private val standardName: String => String = {
-    case "java.time.Instant" => "Instant"
-    case "java.time.ZonedDateTime" => "ZonedDateTime"
-    case "java.time.LocalDateTime" => "LocalDateTime"
-    case "java.time.LocalDate" => "LocalDate"
-    case "java.util.UUID" => "UUID"
-    case name => name
-  }  
-
-  private val stringToMember: String => AnyMember = {
-    case "String" => new TypedMember[String]
-    case "Int" => new TypedMember[Int]
-    case "Boolean" => new TypedMember[Boolean]
-    case "Char" => new TypedMember[Char]
-    case "Short" => new TypedMember[Short]
-    case "Long" => new TypedMember[Long]
-    case "BigDecimal" => new TypedMember[BigDecimal]
-    case "DecimalNumber" => new TypedMember[DecimalNumber]
-    case "Double" => new TypedMember[Double]
-    case "Float" => new TypedMember[Float]
-    case "java.time.Instant" => new TypedMember[Instant]
-    case "java.time.ZonedDateTime" => new TypedMember[ZonedDateTime]
-    case "java.time.LocalDateTime" => new TypedMember[LocalDateTime]
-    case "java.time.LocalDate" => new TypedMember[LocalDate]
-    case "java.util.UUID" => new TypedMember[UUID]
-    case name => throw KuzminkiModelException(s"Unsupported type: $name")
-  }
-
-  private val modelColTypeName: ModelCol => String = {
-    case c: StringColValue => "String"
-    case c: BooleanColValue => "Boolean"
-    case c: ShortColValue => "Short"
-    case c: IntColValue => "Int"
-    case c: LongColValue => "Long"
-    case c: FloatColValue => "Float"
-    case c: DoubleColValue => "Double"
-    case c: DecimalNumberColValue => "DecimalNumber"
-    case c: BigDecimalColValue => "BigDecimal"
-    case c => throw KuzminkiModelException("Unsupported column (%s)".format(c.getClass.getName))
-  }
-
-*/
 
 
 
