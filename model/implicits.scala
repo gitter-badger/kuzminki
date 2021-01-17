@@ -44,7 +44,7 @@ object implicits {
   implicit val modelColToSorting: ModelCol => Sorting = col => Sort(col)
 
   // subquery
-  implicit def runTypedToNested[R](rt: RunTyped[R]): SubQuery[R] = rt.asSub
+  implicit def runTypedToNested[R](rt: RunSelect[R]): SubQuery[R] = rt.asSub
   implicit def runTypedToNested[R](rt: RunAggregation[R]): AggSubQuery[R] = rt.asSub
 }
 

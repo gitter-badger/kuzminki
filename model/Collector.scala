@@ -47,6 +47,16 @@ case class TypedCollector[R](db: Conn,
 }
 
 
+case class SelectCollector[R](db: Conn,
+                              shape: RowShape[R],
+                              sections: Array[Section]) extends ResultMethods {
+
+  def add(section: Section) = this.copy(sections = sections :+ section)
+
+  def extend(added: Array[Section]) = this.copy(sections = sections ++ added)
+}
+
+
 
 
 

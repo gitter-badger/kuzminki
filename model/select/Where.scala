@@ -3,7 +3,7 @@ package kuzminki.model.select
 import kuzminki.model._
 
 
-class Where[M, R](model: M, coll: TypedCollector[R]) {
+class Where[M, R](model: M, coll: SelectCollector[R]) {
 
   def all() = new OrderBy(model, coll)
 

@@ -3,7 +3,7 @@ package kuzminki.model.aggregate
 import kuzminki.model._
 
 
-class Having[M, R](model: M, coll: TypedCollector[R]) extends OrderBy(model, coll) {
+class Having[M, R](model: M, coll: SelectCollector[R]) extends OrderBy(model, coll) {
 
   def havingOne(pick: M => Filter) = {
     new OrderBy(

@@ -1,10 +1,10 @@
 package kuzminki.model
 
 
-class Limit[M, R](coll: TypedCollector[R]) extends RunTyped(coll) {
+class Limit[M, R](coll: SelectCollector[R]) extends RunSelect(coll) {
 
   def limit(num: Int) = {
-    new RunTyped(
+    new RunSelect(
       coll.add(
         LimitSec(num)
       )

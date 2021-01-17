@@ -1,11 +1,11 @@
 package kuzminki.model
 
 
-class SubQuery[R](coll: TypedCollector[R]) {
+class SubQuery[R](coll: SelectCollector[R]) {
   def untyped = UntypedSubQuery(coll.sections)
 }
 
-class AggSubQuery[R](coll: TypedCollector[R]) {
+class AggSubQuery[R](coll: SelectCollector[R]) {
   def untyped = UntypedSubQuery(coll.sections)
 }
 

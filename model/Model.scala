@@ -1,6 +1,7 @@
 package kuzminki.model
 
-import scala.reflect.ClassTag
+import scala.reflect.{classTag, ClassTag}
+import scala.reflect.runtime.universe._
 
 
 object Model {
@@ -9,7 +10,7 @@ object Model {
   }
 }
 
-abstract class Model(val __name: String) {
+abstract class Model(val __name: String) extends ModelRead {
 
   var __prefix: Option[String] = None
 

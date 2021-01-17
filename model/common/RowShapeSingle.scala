@@ -5,7 +5,7 @@ import io.rdbc.sapi.Row
 
 class RowShape1[R](col: TypeCol[R]) extends RowShape[R] {
 
-  def cols: Seq[ModelCol] = Seq(col)
+  def cols = Seq(col)
 
-  def fromRow(row: Row): R = col.get(row, 0)
+  def fromRow(row: Row) = col.get(row, 0)
 }

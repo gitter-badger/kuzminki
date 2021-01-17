@@ -1,7 +1,7 @@
 package kuzminki.model
 
 
-class Offset[M, R](coll: TypedCollector[R]) extends Limit(coll) {
+class Offset[M, R](coll: SelectCollector[R]) extends Limit(coll) {
 
   def offset(num: Int) = {
     new Limit(

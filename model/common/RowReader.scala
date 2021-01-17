@@ -44,11 +44,11 @@ object RowReader {
       .map(cleanString)
   }
 
-  private def create[M, T](
+  def create[T](
         cols: Seq[TypeCol[_]],
-        mTag: ClassTag[M],
         cTag: ClassTag[T],
-        tTag: TypeTag[T]) = {
+        tTag: TypeTag[T]
+      ) = {
     
     val colTypes = cols.map(colStringType)
     val memberTypes = productMembers(tTag)
@@ -56,40 +56,20 @@ object RowReader {
     if (colTypes != memberTypes) {
       throw KuzminkiModelException(
         Seq(
-          "RowReader error",
+          "Read error",
           "Column types: (%s)".format(colTypes.mkString(", ")),
           "Type members: (%s)".format(memberTypes.mkString(", "))
         ).mkString("\n")
       )
     }
 
-    new RowReader(cols, mTag)(cTag)
-  }
-
-  class AsReader[M](cols: Seq[TypeCol[_]], mTag: ClassTag[M]) {
-
-    def as[T](implicit cTag: ClassTag[T], tTag: TypeTag[T]) = {
-      create(cols, mTag, cTag, tTag)
-    }
-  }
-
-  class PickCols[M](model: M, mTag: ClassTag[M]) {
-
-    def cols(pick: M => Seq[TypeCol[_]]) = {
-      new AsReader(pick(model), mTag)
-    }
-  }
-
-  def model[M <: Model](implicit mTag: ClassTag[M]) = {
-    val model = Model.from[M]
-    new PickCols(model, mTag)
+    new RowReader(cols)(cTag)
   }
 }
 
-//val userReader = RowReader.to[BaseUser].from[User](t => Seq(t.id, t.username, t.email))
 
-class RowReader[M, R](val cols: Seq[TypeCol[_]], mTag: ClassTag[M])
-                     (implicit tag: ClassTag[R]) extends RowShape[R] {
+class RowReader[R](val cols: Seq[TypeCol[_]])
+                  (implicit tag: ClassTag[R]) extends RowShape[R] {
 
   private val indexedCols = cols.zipWithIndex
 
@@ -124,13 +104,45 @@ class RowReader[M, R](val cols: Seq[TypeCol[_]], mTag: ClassTag[M])
 
 
 
+/*
+class AsReader[M](cols: Seq[TypeCol[_]], mTag: ClassTag[M]) {
 
+    def as[T](implicit cTag: ClassTag[T], tTag: TypeTag[T]) = {
+      create(cols, mTag, cTag, tTag)
+    }
+  }
 
+  class PickCols[M](model: M, mTag: ClassTag[M]) {
 
+    def cols(pick: M => Seq[TypeCol[_]]) = {
+      new AsReader(pick(model), mTag)
+    }
+  }
 
+  def model[M <: Model](implicit mTag: ClassTag[M]) = {
+    val model = Model.from[M]
+    new PickCols(model, mTag)
+  }
 
+  def model[M <: Model](model: M)(implicit mTag: ClassTag[M]) = {
+    new PickCols(model, mTag)
+  }
 
+  class ModelCreate[M](mTag: ClassTag[M]) {
 
+    def createFrom[T](cols: Seq[TypeCol[_]], cTag: ClassTag[T], tTag: TypeTag[T]) = {
+      create(cols, mTag, cTag, tTag)
+    }
+  }  
+
+  def modelTag[M >: Model](model: M)(implicit mTag: ClassTag[M]) = {
+    println("< - - - >")
+    println(model.getClass.getName)
+    println(mTag)
+    println("< - - - >")
+    new ModelCreate(mTag)
+  }
+  */
 
 
 

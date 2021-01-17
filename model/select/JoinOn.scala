@@ -3,7 +3,7 @@ package kuzminki.model.select
 import kuzminki.model._
 
 
-class JoinOn[A <: Model, B <: Model, R](join: Join[A, B], coll: TypedCollector[R]) {
+class JoinOn[A <: Model, B <: Model, R](join: Join[A, B], coll: SelectCollector[R]) {
 
   def joinOn(pickLeft: A => ModelCol, pickRight: B => ModelCol) = {
     new Where(
