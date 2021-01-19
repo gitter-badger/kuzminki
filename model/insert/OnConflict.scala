@@ -12,7 +12,7 @@ trait OnConflict[M, S] {
     new RunInsertDoNothing(
       model,
       coll.extend(Array(
-        InsertBlankValuesSec(coll.shape.size),
+        InsertBlankValuesSec(coll.inShape.size),
         InsertOnConflictSec,
         InsertDoNothingSec
       ))

@@ -5,20 +5,20 @@ import java.util.UUID
 import io.rdbc.sapi._
 
 
-case class StringCol(name: String, model: Model) extends RealCol
+case class StringCol(name: String, model: String) extends ModelCol
                                                     with StringColValue
                                                     with UpdateMethod[String]
                                                     with UniversalFilters[String]
                                                     with StringFilters
 
 
-case class BooleanCol(name: String, model: Model) extends RealCol
+case class BooleanCol(name: String, model: String) extends ModelCol
                                                      with BooleanColValue
                                                      with UpdateMethod[Boolean]
                                                      with UniversalFilters[Boolean]
 
 
-case class ShortCol(name: String, model: Model) extends RealCol
+case class ShortCol(name: String, model: String) extends ModelCol
                                                    with ShortColValue
                                                    with ShortAggregations
                                                    with NumericMethods[Short]
@@ -26,7 +26,7 @@ case class ShortCol(name: String, model: Model) extends RealCol
                                                    with ComparativeFilters[Short]
 
 
-case class IntCol(name: String, model: Model) extends RealCol
+case class IntCol(name: String, model: String) extends ModelCol
                                                  with IntColValue
                                                  with IntAggregations
                                                  with SubqueryNumberFilters
@@ -35,7 +35,7 @@ case class IntCol(name: String, model: Model) extends RealCol
                                                  with ComparativeFilters[Int]
 
 
-case class LongCol(name: String, model: Model) extends RealCol
+case class LongCol(name: String, model: String) extends ModelCol
                                                   with LongColValue
                                                   with LongAggregations
                                                   with NumericMethods[Long]
@@ -43,7 +43,7 @@ case class LongCol(name: String, model: Model) extends RealCol
                                                   with ComparativeFilters[Long]
 
 
-case class FloatCol(name: String, model: Model) extends RealCol
+case class FloatCol(name: String, model: String) extends ModelCol
                                                    with FloatColValue
                                                    with FloatAggregations
                                                    with NumericMethods[Float]
@@ -51,7 +51,7 @@ case class FloatCol(name: String, model: Model) extends RealCol
                                                    with ComparativeFilters[Float]
 
 
-case class DoubleCol(name: String, model: Model) extends RealCol
+case class DoubleCol(name: String, model: String) extends ModelCol
                                                     with DoubleColValue
                                                     with DoubleAggregations
                                                     with NumericMethods[Double]
@@ -59,21 +59,21 @@ case class DoubleCol(name: String, model: Model) extends RealCol
                                                     with ComparativeFilters[Double]
 
 
-case class DecimalNumberCol(name: String, model: Model) extends RealCol
+case class DecimalNumberCol(name: String, model: String) extends ModelCol
                                                            with DecimalNumberColValue
                                                            with NumericMethods[DecimalNumber]
                                                            with UniversalFilters[DecimalNumber]
                                                            with ComparativeFilters[DecimalNumber]
 
 
-case class BigDecimalCol(name: String, model: Model) extends RealCol
+case class BigDecimalCol(name: String, model: String) extends ModelCol
                                                         with BigDecimalColValue
                                                         with NumericMethods[BigDecimal]
                                                         with UniversalFilters[BigDecimal]
                                                         with ComparativeFilters[BigDecimal]
 
 /*
-case class CharCol(name: String, model: Model) extends ModelCol
+case class CharCol(name: String, model: String) extends ModelCol
                                                   with TypeCol[Char]
                                                   with UniversalFilters[Char] {
 
@@ -81,7 +81,7 @@ case class CharCol(name: String, model: Model) extends ModelCol
 }
 
 
-case class InstantCol(name: String, model: Model) extends ModelCol
+case class InstantCol(name: String, model: String) extends ModelCol
                                                      with TypeCol[Instant]
                                                      with UniversalFilters[Instant] {
 
@@ -89,7 +89,7 @@ case class InstantCol(name: String, model: Model) extends ModelCol
 }
 
 
-case class ZonedDateTimeCol(name: String, model: Model) extends ModelCol
+case class ZonedDateTimeCol(name: String, model: String) extends ModelCol
                                                            with TypeCol[ZonedDateTime]
                                                            with UniversalFilters[ZonedDateTime]
                                                            with ComparativeFilters[ZonedDateTime] {
@@ -98,7 +98,7 @@ case class ZonedDateTimeCol(name: String, model: Model) extends ModelCol
 }
 
 
-case class LocalDateTimeCol(name: String, model: Model) extends ModelCol
+case class LocalDateTimeCol(name: String, model: String) extends ModelCol
                                                            with TypeCol[LocalDateTime]
                                                            with UniversalFilters[LocalDateTime]
                                                            with ComparativeFilters[LocalDateTime] {
@@ -107,7 +107,7 @@ case class LocalDateTimeCol(name: String, model: Model) extends ModelCol
 }
 
 
-case class LocalDateCol(name: String, model: Model) extends ModelCol
+case class LocalDateCol(name: String, model: String) extends ModelCol
                                                        with TypeCol[LocalDate]
                                                        with UniversalFilters[LocalDate]
                                                        with ComparativeFilters[LocalDate] {
@@ -116,7 +116,7 @@ case class LocalDateCol(name: String, model: Model) extends ModelCol
 }
 
 
-case class UUIDCol(name: String, model: Model) extends ModelCol
+case class UUIDCol(name: String, model: String) extends ModelCol
                                                   with TypeCol[UUID]
                                                   with UniversalFilters[UUID]
                                                   with ComparativeFilters[UUID] {

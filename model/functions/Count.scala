@@ -5,10 +5,9 @@ object Count {
   def all = Count(AllCols)
 }
 
-object AllCols extends Renderable {
+object AllCols extends RenderableCol with NoArgs {
   def render = "*"
   def prefix(picker: Prefix) = render
-  def args = Seq.empty[Any]
 }
 
 trait AggCount extends AggNumeric {
@@ -17,7 +16,7 @@ trait AggCount extends AggNumeric {
 }
 
 
-case class Count(col: Render) extends AggCount
+case class Count(col: RenderableCol) extends AggCount
                                  with LongColValue
                                  with UniversalFilters[Long]
                                  with ComparativeFilters[Long]

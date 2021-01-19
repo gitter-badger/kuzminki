@@ -6,9 +6,9 @@ import kuzminki.model._
 class RunInsertWhereNotExistsReturning[S, R](
       reuse: Reuse,
       coll: InsertCollector[S],
-      transformer: TypedTransformer[R]) {
+      outShape: RowShape[R]) {
 
-  def cache = coll.cacheInsertWhereNotExistsReturning(transformer, reuse)
+  def cache = coll.cacheInsertWhereNotExistsReturning(outShape, reuse)
 
   def run(data: S) = cache.run(data)
 

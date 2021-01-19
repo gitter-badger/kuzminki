@@ -5,9 +5,9 @@ import kuzminki.model._
 
 class RunInsertDoNothingReturning[S, R](
       coll: InsertCollector[S],
-      transformer: TypedTransformer[R]) {
+      outShape: RowShape[R]) {
 
-  def cache = coll.cacheInsertDoNothingReturning(transformer)
+  def cache = coll.cacheInsertDoNothingReturning(outShape)
 
   def run(data: S) = cache.run(data)
 

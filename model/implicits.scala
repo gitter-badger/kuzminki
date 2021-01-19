@@ -7,13 +7,13 @@ import kuzminki.model.insert._
 object implicits {
 
   // column
-  implicit val implColString: ColConf => TypeCol[String] = c => StringCol(c.name, c.model)
-  implicit val implColBoolean: ColConf => TypeCol[Boolean] = c => BooleanCol(c.name, c.model)
-  implicit val implColShort: ColConf => TypeCol[Short] = c => ShortCol(c.name, c.model)
-  implicit val implColInt: ColConf => TypeCol[Int] = c => IntCol(c.name, c.model)
-  implicit val implColLong: ColConf => TypeCol[Long] = c => LongCol(c.name, c.model)
-  implicit val implColFloat: ColConf => TypeCol[Float] = c => FloatCol(c.name, c.model)
-  implicit val implColDouble: ColConf => TypeCol[Double] = c => DoubleCol(c.name, c.model)
+  implicit val implColString: ColConf => TypeCol[String] = c => StringCol(c.name, c.table)
+  implicit val implColBoolean: ColConf => TypeCol[Boolean] = c => BooleanCol(c.name, c.table)
+  implicit val implColShort: ColConf => TypeCol[Short] = c => ShortCol(c.name, c.table)
+  implicit val implColInt: ColConf => TypeCol[Int] = c => IntCol(c.name, c.table)
+  implicit val implColLong: ColConf => TypeCol[Long] = c => LongCol(c.name, c.table)
+  implicit val implColFloat: ColConf => TypeCol[Float] = c => FloatCol(c.name, c.table)
+  implicit val implColDouble: ColConf => TypeCol[Double] = c => DoubleCol(c.name, c.table)
 
   // filters
   
@@ -34,7 +34,7 @@ object implicits {
   implicit def typeColToUpdateMethod[T](col: TypeCol[T]) = col.asInstanceOf[UpdateMethod[T]]
   implicit def typeColToNumericMethods[T](col: TypeCol[T]) = col.asInstanceOf[NumericMethods[T]]
   */
-  implicit def typeColToRealCol(col: TypeCol[_]) = col.asInstanceOf[RealCol]
+  //implicit def typeColToRealCol(col: TypeCol[_]) = col.asInstanceOf[RealCol]
   //implicit def typeColToAggCol(col: TypeCol[_]) = col.asInstanceOf[AggCol]
 
   // col function

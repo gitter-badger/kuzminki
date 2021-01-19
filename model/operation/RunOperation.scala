@@ -5,7 +5,7 @@ import kuzminki.model._
 
 class RunOperation[M](
       model: M,
-      coll: OpCollector
+      coll: OperationCollector
     ) extends PickOperationReturning(model, coll) {
   
   def run() = coll.db.exec(coll.statement)

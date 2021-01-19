@@ -18,7 +18,7 @@ class TypedMember[T : ClassTag] extends AnyMember {
   def resolve(row: Row, index: Int): T = row.col[T](index)
 }
 
-object TypeReader { 
+object TypeReader {
 
   private val stringToMember: String => AnyMember = {
     case "String" => new TypedMember[String]
@@ -36,7 +36,7 @@ object TypeReader {
     case "java.time.LocalDateTime" => new TypedMember[LocalDateTime]
     case "java.time.LocalDate" => new TypedMember[LocalDate]
     case "java.util.UUID" => new TypedMember[UUID]
-    case name => throw KuzminkiModelException(s"Unsupported type: $name")
+    case name => throw KuzminkiException(s"Unsupported type: $name")
   }
   
   def create[T : ClassTag : TypeTag]: TypeReader[T] = {

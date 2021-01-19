@@ -9,7 +9,7 @@ class DoUpdate[M, S](model: M, coll: InsertCollector[S], conflictCol: ModelCol) 
     new RunInsertDoNothing(
       model,
       coll.extend(Array(
-        InsertBlankValuesSec(coll.shape.size),
+        InsertBlankValuesSec(coll.inShape.size),
         InsertOnConflictColumnSec(conflictCol),
         InsertDoNothingSec
       ))
@@ -43,9 +43,9 @@ class DoUpdate[M, S](model: M, coll: InsertCollector[S], conflictCol: ModelCol) 
     validate(updateCols)
     new RunUpsert(
       model,
-      Reuse.fromIndex(coll.shape.cols, updateCols),
+      Reuse.fromIndex(coll.inShape.cols, updateCols),
       coll.extend(Array(
-        InsertBlankValuesSec(coll.shape.size),
+        InsertBlankValuesSec(coll.inShape.size),
         InsertOnConflictColumnSec(conflictCol),
         InsertDoUpdateSec(
           updateCols.map(NoArgMatches(_))

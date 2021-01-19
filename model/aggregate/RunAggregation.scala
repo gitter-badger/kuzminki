@@ -5,21 +5,21 @@ import kuzminki.model._
 
 class RunAggregation[R](coll: SelectCollector[R]) {
 
-  coll.shape.cols.foreach {
+  coll.outShape.cols.foreach {
     case f: AggNumeric =>
-    case _ => throw KuzminkiModelException("all columns must be aggregate functions")
+    case _ => throw KuzminkiException("all columns must be aggregate functions")
   }
 
   def run() = {
     coll.db.selectHead(coll.statement) { row =>
-      coll.shape.fromRow(row)
+      coll.outShape.fromRow(row)
     }
   }
 
   def runAs[T](implicit custom: R => T) = {
     coll.db.selectHead(coll.statement) { row =>
       custom(
-        coll.shape.fromRow(row)
+        coll.outShape.fromRow(row)
       )
     }  
   }

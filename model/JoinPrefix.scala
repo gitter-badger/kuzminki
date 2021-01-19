@@ -2,24 +2,27 @@ package kuzminki.model
 
 
 trait Prefix {
-  def wrap[M <: Model](model: M): String
+  def wrap(table: String): String
 }
 
 object Prefix {
-  def fromJoin[A, B](join: Join[A, B]): Prefix = new JoinPrefix(join.a, join.b)
+  def fromJoin[A <: Model, B <: Model](join: Join[A, B]): Prefix = {
+    new JoinPrefix(join.a.__name, join.b.__name)
+  }
 }
 
 
-class JoinPrefix[A <: Model, B <: Model](a: A, b: B) extends Prefix {
+class JoinPrefix(aName: String, bName: String) extends Prefix {
 
-  def wrap[M <: Model](model: M) = {
-    model match {
-      case model if model == a => "\"a\""
-      case model if model == b => "\"b\""
-      case _ => 
-        throw KuzminkiException(
-          "column %s is not a member of table %s or $s".format(col.name, a.__name, b.__name)
-        )
+  def wrap(table: String) = {
+    if (table == aName) {
+      "\"a\""
+    } else if (table == bName) {
+      "\"b\""
+    } else {
+      throw KuzminkiException(
+        "column %s is not a member of table %s or $s".format(table, aName, bName)
+      )
     }
   }
 }

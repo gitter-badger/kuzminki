@@ -8,7 +8,7 @@ import kuzminki.model._
 
 class StoredInsertWhereNotExists[S](
       template: String,
-      shape: DataShape[S],
+      inShape: DataShape[S],
       reuse: Reuse,
       db: Conn
     ) extends Printing {
@@ -17,7 +17,7 @@ class StoredInsertWhereNotExists[S](
 
   private def transform(data: S) = {
     reuse.extend(
-      shape.transform(data)
+      inShape.transform(data)
     )
   }
 

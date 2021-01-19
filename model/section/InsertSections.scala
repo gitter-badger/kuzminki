@@ -11,7 +11,7 @@ case class InsertIntoSec(part: ModelTable) extends SinglePart {
 }
 
 
-case class InsertColumnsSec(parts: Seq[ModelCol]) extends MultiPart {
+case class InsertColumnsSec(parts: Seq[RenderableCol]) extends MultiPart {
   def expression = "(%s)"
   def glue = ", "
 }
@@ -38,7 +38,7 @@ case class InsertMultipleValuesSec(valuesList: Seq[Seq[Any]]) extends Values {
   def args = valuesList.flatten
 }
 
-case class InsertWhereNotExistsSec(values: Seq[Any], table: ModelTable, where: WhereAllSec) extends Values {
+case class InsertWhereNotExistsSec(values: Seq[Any], table: ModelTable, where: WhereSec) extends Values {
   def expression = "SELECT %s WHERE NOT EXISTS (SELECT 1 FROM %s %s)"
   def render = {
     expression.format(
@@ -50,7 +50,7 @@ case class InsertWhereNotExistsSec(values: Seq[Any], table: ModelTable, where: W
   def args = values ++ where.args
 }
 
-case class InsertBlankWhereNotExistsSec(size: Int, table: ModelTable, where: WhereAllSec) extends Values {
+case class InsertBlankWhereNotExistsSec(size: Int, table: ModelTable, where: WhereSec) extends Values {
   def expression = "SELECT %s WHERE NOT EXISTS (SELECT 1 FROM %s %s)"
   def render = {
     expression.format(
@@ -70,19 +70,15 @@ object InsertOnConflictSec extends TextOnly {
   def expression = "ON CONFLICT"
 }
 
-case class InsertOnConflictColumnSec(part: ModelCol) extends SinglePart {
+case class InsertOnConflictColumnSec(part: RenderableCol) extends SinglePart {
   def expression = "ON CONFLICT (%s)"
-}
-
-case class InsertOnConflictOnConstraintSec(part: Render) extends SinglePart {
-  def expression = "ON CONFLICT ON CONSTRAINT (%s)"
 }
 
 object InsertDoNothingSec extends TextOnly {
   def expression = "DO NOTHING"
 }
 
-case class InsertDoUpdateSec(parts: Seq[Render]) extends MultiPart {
+case class InsertDoUpdateSec(parts: Seq[Renderable]) extends MultiPart {
   def expression = "DO UPDATE SET %s"
   def glue = ", "
 }

@@ -1,14 +1,12 @@
 package kuzminki.model
 
 
-trait UpdateMethod[T] {
-  def real: RealCol
-  def ==>(value: T) = SetValue(real, value)
+trait UpdateMethod[T] extends ModelColRef {
+  def ==>(value: T) = SetValue(col, value)
 }
 
-trait NumericMethods[T] {
-  def real: RealCol
-  def ==>(value: T) = SetValue(real, value)
-  def +=(value: T) = Increment(real, value)
-  def -=(value: T) = Decrement(real, value)
+trait NumericMethods[T] extends ModelColRef {
+  def ==>(value: T) = SetValue(col, value)
+  def +=(value: T) = Increment(col, value)
+  def -=(value: T) = Decrement(col, value)
 }

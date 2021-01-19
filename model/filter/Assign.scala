@@ -3,7 +3,7 @@ package kuzminki.model
 
 
 trait Assign extends Renderable {
-  val col: RealCol
+  val col: ModelCol
   val value: Any
   def template: String
   def format(name: String): String
@@ -12,16 +12,16 @@ trait Assign extends Renderable {
   def args = Seq(value)
 }
 
-case class SetValue(col: RealCol, value: Any) extends Assign {
-  def format(name: String) = a"$name = ?"
+case class SetValue(col: ModelCol, value: Any) extends Assign {
+  def format(name: String) = s"$name = ?"
 }
 
-case class Increment(col: RealCol, value: Any) extends Assign {
-  def format(name: String) = "$name = $name + ?"
+case class Increment(col: ModelCol, value: Any) extends Assign {
+  def format(name: String) = s"$name = $name + ?"
 }
 
-case class Decrement(col: RealCol, value: Any) extends Assign {
-  def format(name: String) = "$name = $name - ?"
+case class Decrement(col: ModelCol, value: Any) extends Assign {
+  def format(name: String) = s"$name = $name - ?"
 }
 
 

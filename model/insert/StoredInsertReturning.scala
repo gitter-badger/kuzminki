@@ -6,8 +6,8 @@ import kuzminki.model._
 
 class StoredInsertReturning[S, R](
       protected val template: String,
-      protected val shape: DataShape[S],
-                    transformer: TypedTransformer[R],
+      protected val inShape: DataShape[S],
+                    outShape: RowShape[R],
                     db: Conn
     ) extends ListInsert[S]
          with Printing {
@@ -16,21 +16,21 @@ class StoredInsertReturning[S, R](
 
   def run(data: S) = {
     db.selectHead(statement(data)) { row =>
-      transformer.transform(row)
+      outShape.fromRow(row)
     }  
   }
 
   def runAs[T](data: S)(implicit custom: R => T) = {
     db.selectHead(statement(data)) { row =>
       custom(
-        transformer.transform(row)
+        outShape.fromRow(row)
       )
     }  
   }
 
   def list(list: List[S]) = {
     db.select(listStatement(list)) { row =>
-      transformer.transform(row)
+      outShape.fromRow(row)
     }  
   }
 
@@ -38,7 +38,7 @@ class StoredInsertReturning[S, R](
   def listAs[T](list: List[S])(implicit custom: R => T) = {
     db.select(listStatement(list)) { row =>
       custom(
-        transformer.transform(row)
+        outShape.fromRow(row)
       )
     }  
   }

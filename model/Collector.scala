@@ -25,36 +25,6 @@ case class SubCollector(sections: Array[Section]) extends ResultMethods {
 }
 
 
-case class Collector(db: Conn, sections: Array[Section]) extends ResultMethods {
-
-  def add(section: Section) = this.copy(sections = sections :+ section)
-
-  def extend(added: Array[Section]) = this.copy(sections = sections ++ added)
-
-  def returning[R](transformer: TypedTransformer[R]) = {
-    TypedCollector(db, transformer, sections :+ ReturningSec(transformer.toSeq))
-  }
-}
-
-
-case class TypedCollector[R](db: Conn,
-                             transformer: TypedTransformer[R],
-                             sections: Array[Section]) extends ResultMethods {
-
-  def add(section: Section) = this.copy(sections = sections :+ section)
-
-  def extend(added: Array[Section]) = this.copy(sections = sections ++ added)
-}
-
-
-case class SelectCollector[R](db: Conn,
-                              shape: RowShape[R],
-                              sections: Array[Section]) extends ResultMethods {
-
-  def add(section: Section) = this.copy(sections = sections :+ section)
-
-  def extend(added: Array[Section]) = this.copy(sections = sections ++ added)
-}
 
 
 

@@ -5,14 +5,14 @@ import kuzminki.model._
 
 class Select[M <: Model](model: M, db: Conn) {
 
-  private def next[R](shape: RowShape[R]) = {
+  private def next[R](outShape: RowShape[R]) = {
     new Where(
       model,
       StandardCollector(
         db,
-        shape,
+        outShape,
         Array(
-          SelectSec(shape.cols),
+          SelectSec(outShape.cols),
           FromSec(ModelTable(model))
         )
       )

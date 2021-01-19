@@ -1,23 +1,23 @@
 package kuzminki.model
 
 
-trait StringFilters extends RealColRef {
+trait StringFilters extends ModelColRef {
 
-  def like(value: String): Filter = FilterLike(ref, value)
-  def startsWith(value: String): Filter = FilterStartsWith(ref, value)
-  def endsWith(value: String): Filter = FilterEndsWith(ref, value)
-  def similarTo(value: String): Filter = FilterSimilarTo(ref, value)
+  def like(value: String): Filter = FilterLike(col, value)
+  def startsWith(value: String): Filter = FilterStartsWith(col, value)
+  def endsWith(value: String): Filter = FilterEndsWith(col, value)
+  def similarTo(value: String): Filter = FilterSimilarTo(col, value)
 
-  def reMatch(value: String): Filter = FilterReIMatch(ref, value)
+  def reMatch(value: String): Filter = FilterReIMatch(col, value)
   def ~(value: String): Filter = reMatch(value)
 
-  def reIMatch(value: String): Filter = FilterReIMatch(ref, value)
+  def reIMatch(value: String): Filter = FilterReIMatch(col, value)
   def ~*(value: String): Filter = reIMatch(value)
 
-  def reNotMatch(value: String): Filter = FilterReNotMatch(ref, value)
+  def reNotMatch(value: String): Filter = FilterReNotMatch(col, value)
   def !~(value: String): Filter = reNotMatch(value)
 
-  def reNotIMatch(value: String): Filter = FilterReNotImatch(ref, value)
+  def reNotIMatch(value: String): Filter = FilterReNotImatch(col, value)
   def !~*(value: String): Filter = reNotIMatch(value)
 
   // optional

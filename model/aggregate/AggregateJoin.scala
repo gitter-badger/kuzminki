@@ -10,7 +10,7 @@ class AggregateJoin[A <: Model, B <: Model](join: Join[A, B], db: Conn) {
       join,
       JoinCollector(
         db,
-        Prefix.fromJoin(join)
+        Prefix.fromJoin(join),
         shape,
         Array(
           SelectSec(shape.cols),
@@ -22,25 +22,25 @@ class AggregateJoin[A <: Model, B <: Model](join: Join[A, B], db: Conn) {
 
   def colsRead[R](pick: Join[A, B] => RowReader[R]) = {
     next(
-      pick(model)
+      pick(join)
     )
   }
 
   def colsAs[R](pick: Join[A, B] => Seq[TypeCol[_]])(implicit typeReader: TypeReader[R]) = {
     next(
-      new RowShapeType(pick(model), typeReader)
+      new RowShapeType(pick(join), typeReader)
     )
   }
 
   def colsAsSeq(pick: Join[A, B] => Seq[TypeCol[_]]) = {
     next(
-      new RowShapeSeq(pick(model))
+      new RowShapeSeq(pick(join))
     )
   }
   
   def colsAsMap(pick: Join[A, B] => Seq[TypeCol[_]]) = {
     next(
-      new RowShapeMap(pick(model))
+      new RowShapeMap(pick(join))
     )
   }
 

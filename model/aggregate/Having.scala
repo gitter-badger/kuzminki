@@ -19,7 +19,7 @@ class Having[M, R](model: M, coll: SelectCollector[R]) extends OrderBy(model, co
   def havingAll(pick: M => Seq[Filter]) = {
     pick(model) match {
       case Nil =>
-        throw KuzminkiModelException("WHERE cannot be empty")
+        throw KuzminkiException("WHERE cannot be empty")
       case conds =>
         new OrderBy(
           model,

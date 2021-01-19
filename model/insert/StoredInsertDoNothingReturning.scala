@@ -6,8 +6,8 @@ import kuzminki.model._
 
 class StoredInsertDoNothingReturning[S, R](
       template: String,
-      shape: DataShape[S],
-      transformer: TypedTransformer[R],
+      inShape: DataShape[S],
+      outShape: RowShape[R],
       db: Conn
     ) extends Printing {
 
@@ -16,20 +16,20 @@ class StoredInsertDoNothingReturning[S, R](
   private def statement(data: S) = {
     SqlWithParams(
       template,
-      shape.transform(data)
+      inShape.transform(data)
     )
   }
 
   def run(data: S) = {
     db.selectHeadOption(statement(data)) { row =>
-      transformer.transform(row)
+      outShape.fromRow(row)
     }  
   }
 
   def runAs[T](data: S)(implicit custom: R => T) = {
     db.selectHeadOption(statement(data)) { row =>
       custom(
-        transformer.transform(row)
+        outShape.fromRow(row)
       )
     }  
   }

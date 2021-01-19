@@ -1,8 +1,8 @@
 package kuzminki.model
 
 
-trait AggNumeric extends Renderable with SortingCol {
-  def col: RealCol
+trait AggNumeric extends RenderableCol with SortingCol {
+  def col: ModelCol
   def name: String
   def template: String
   def render = template.format(col.render)

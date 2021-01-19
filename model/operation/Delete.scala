@@ -8,7 +8,7 @@ object Delete {
   def from[M <: Model](model: M, conn: Conn) = {
     new Where(
       model,
-      OpCollector(
+      OperationCollector(
         conn,
         Array(
           DeleteFromSec(ModelTable(model))

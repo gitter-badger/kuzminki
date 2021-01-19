@@ -4,7 +4,7 @@ import io.rdbc.sapi.Row
 
 
 trait RowShape[R] {
-  def cols: Seq[ModelCol]
+  def cols: Seq[RenderableCol]
   def fromRow(row: Row): R
 }
 

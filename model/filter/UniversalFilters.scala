@@ -1,24 +1,24 @@
 package kuzminki.model
 
 
-trait UniversalFilters[T] extends RealColRef {
+trait UniversalFilters[T] extends ModelColRef {
   
-  def matches(value: T): Filter = FilterMatches(ref, value)
+  def matches(value: T): Filter = FilterMatches(col, value)
   def ===(value: T): Filter = matches(value)
 
-  def not(value: T): Filter = FilterNot(ref, value)
+  def not(value: T): Filter = FilterNot(col, value)
   def !==(value: T): Filter = not(value)
   
   // not optional
 
-  def isNull: Filter = FilterIsNull(ref)
-  def isNotNull: Filter = FilterIsNotNull(ref)
+  def isNull: Filter = FilterIsNull(col)
+  def isNotNull: Filter = FilterIsNotNull(col)
 
-  def in(values: Seq[T]): Filter = FilterIn(ref, values)
-  def notIn(value: Seq[T]): Filter = FilterNotIn(ref, value)
+  def in(values: Seq[T]): Filter = FilterIn(col, values)
+  def notIn(value: Seq[T]): Filter = FilterNotIn(col, value)
 
-  def in(sub: SubQuery[T]): Filter = FilterInSubquery(ref, sub.untyped)
-  def notIn(sub: SubQuery[T]): Filter = FilterNotInSubquery(ref, sub.untyped)
+  def in(sub: SubQuery[T]): Filter = FilterInSubquery(col, sub.untyped)
+  def notIn(sub: SubQuery[T]): Filter = FilterNotInSubquery(col, sub.untyped)
 
   // optional
 

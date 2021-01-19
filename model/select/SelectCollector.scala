@@ -3,18 +3,20 @@ package kuzminki.model
 import io.rdbc.sapi.SqlWithParams
 
 
-trait SelectCollector {
+trait SelectCollector[R] {
+  val db: Conn
+  val outShape: RowShape[R]
   val sections: Array[Section]
   def render: String
-  def add(section: Section): SelectCollector
-  def extend(added: Array[Section]): SelectCollector
+  def add(section: Section): SelectCollector[R]
+  def extend(added: Array[Section]): SelectCollector[R]
   def args = sections.toSeq.map(_.args).flatten.toVector
   def statement = SqlWithParams(render, args)
 }
 
 case class StandardCollector[R](db: Conn,
-                                shape: RowShape[R],
-                                sections: Array[Section]) extends SelectCollector {
+                                outShape: RowShape[R],
+                                sections: Array[Section]) extends SelectCollector[R] {
 
   def add(section: Section) = this.copy(sections = sections :+ section)
 
@@ -25,8 +27,8 @@ case class StandardCollector[R](db: Conn,
 
 case class JoinCollector[R](db: Conn,
                             picker: Prefix,
-                            shape: RowShape[R],
-                            sections: Array[Section]) extends SelectCollector {
+                            outShape: RowShape[R],
+                            sections: Array[Section]) extends SelectCollector[R] {
 
   def add(section: Section) = this.copy(sections = sections :+ section)
 

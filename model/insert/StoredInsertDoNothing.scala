@@ -6,15 +6,16 @@ import kuzminki.model._
 
 class StoredInsertDoNothing[S](
       template: String,
-      shape: DataShape[S],
-      db: Conn) extends Printing {
+      inShape: DataShape[S],
+      db: Conn
+    ) extends Printing {
 
   protected def render = template
 
   private def statement(data: S) = {
     SqlWithParams(
       template,
-      shape.transform(data)
+      inShape.transform(data)
     )
   }
 

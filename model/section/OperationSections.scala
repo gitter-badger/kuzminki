@@ -1,7 +1,7 @@
 package kuzminki.model
 
 
-case class ReturningSec(parts: Seq[ModelCol]) extends MultiPart {
+case class ReturningSec(parts: Seq[RenderableCol]) extends MultiPart {
   def expression = "RETURNING %s"
   def glue = ", "
 }
@@ -10,7 +10,7 @@ case class CountFromSec(part: ModelTable) extends SinglePart {
   def expression = "SELECT COUNT(*) FROM %s"
 }
 
-case class DeleteFromSec(part: Render) extends SinglePart {
+case class DeleteFromSec(part: ModelTable) extends SinglePart {
   def expression = "DELETE FROM %s"
 }
 

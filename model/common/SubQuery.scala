@@ -13,6 +13,10 @@ class SingleNumberSubquery(coll: SubCollector) {
   def untyped = UntypedSubQuery(coll.sections)
 }
 
-case class UntypedSubQuery(sections: Array[Section]) extends ResultMethods with Render
+case class UntypedSubQuery(coll: SubCollector) extends Renderable {
+  def render = coll.render
+  def prefix(picker: Prefix) = coll.render
+  def args = coll.args
+}
 
 

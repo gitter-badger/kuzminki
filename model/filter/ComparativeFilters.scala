@@ -1,18 +1,18 @@
 package kuzminki.model
 
 
-trait ComparativeFilters[T] extends RealColRef {
+trait ComparativeFilters[T] extends ModelColRef {
 
-  def gt(value: T): Filter = FilterGt(ref, value)
+  def gt(value: T): Filter = FilterGt(col, value)
   def >(value: T): Filter = gt(value)
 
-  def gte(value: T): Filter = FilterGte(ref, value)
+  def gte(value: T): Filter = FilterGte(col, value)
   def >=(value: T): Filter = gte(value)
 
-  def lt(value: T): Filter = FilterLt(ref, value)
+  def lt(value: T): Filter = FilterLt(col, value)
   def <(value: T): Filter = lt(value)
 
-  def lte(value: T): Filter = FilterLte(ref, value)
+  def lte(value: T): Filter = FilterLte(col, value)
   def <=(value: T): Filter = lte(value)
 
   // optional

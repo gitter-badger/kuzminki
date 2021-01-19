@@ -12,7 +12,7 @@ class RunInsert[M <: Model, S](
          with WhereNotExists[M, S]
          with OnConflict[M, S] {
 
-  def cache = coll.add(InsertBlankValuesSec(coll.shape.size)).cacheInsert
+  def cache = coll.add(InsertBlankValuesSec(coll.inShape.size)).cacheInsert
 
   def run(data: S) = cache.run(data)
 

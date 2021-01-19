@@ -12,7 +12,7 @@ import io.rdbc.sapi.Row
 
 object RowReader { 
 
-  private val colStringType: ModelCol => String = {
+  private val colStringType: TypeCol[_] => String = {
     case col: StringCol        => "String"
     case col: BooleanCol       => "Boolean"
     case col: ShortCol         => "Short"
@@ -22,7 +22,7 @@ object RowReader {
     case col: DoubleCol        => "Double"
     case col: DecimalNumberCol => "String"
     case col: BigDecimalCol    => "BigDecimal"
-    case col => throw KuzminkiModelException(s"Unsupported column type: [$col]")
+    case col => throw KuzminkiException(s"Unsupported column type: [$col]")
   }
 
   private val cleanString: String => String = {
@@ -54,7 +54,7 @@ object RowReader {
     val memberTypes = productMembers(tTag)
 
     if (colTypes != memberTypes) {
-      throw KuzminkiModelException(
+      throw KuzminkiException(
         Seq(
           "Read error",
           "Column types: (%s)".format(colTypes.mkString(", ")),
@@ -95,7 +95,7 @@ class RowReader[R](val cols: Seq[TypeCol[_]])
       case Failure(ex) =>
         val name = classTag[R].runtimeClass.getName
         val message = ex.getMessage
-        throw KuzminkiModelException(
+        throw KuzminkiException(
           s"Failed to read ($name) $message"
         )
     }

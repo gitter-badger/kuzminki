@@ -1,11 +1,11 @@
 package kuzminki.model
 
 
-trait MultiFilter extends Filter
-  val filters = Seq[Filter]
+trait MultiFilter extends Filter {
+  val filters: Seq[Filter]
   def glue: String
   def render = "(%s)".format(filters.map(_.render).mkString(glue))
-  def prefix(picker: Prefix) = "(%s)".format(filters.map(_.prefix(picker))).mkString(glue))
+  def prefix(picker: Prefix) = "(%s)".format(filters.map(_.prefix(picker)).mkString(glue))
   def args = filters.map(_.args).flatten
 }
 
@@ -25,7 +25,7 @@ case class Or(filters: Filter*) extends MultiFilter {
   def glue = " OR "
 
   filters.foreach {
-    case f: Or => throw KuzminkiModelException("Or cannot be within Or")
+    case f: Or => throw KuzminkiException("Or cannot be within Or")
     case _ =>
   }
 }
@@ -46,7 +46,7 @@ case class And(filters: Filter*) extends MultiFilter {
   def glue = " AND "
 
   filters.foreach {
-    case f: And => throw KuzminkiModelException("And cannot be within And")
+    case f: And => throw KuzminkiException("And cannot be within And")
     case _ =>
   }
 }

@@ -26,12 +26,12 @@ trait WhereNotExists[M <: Model, S] {
 
     new RunInsertWhereNotExists(
       model,
-      Reuse.fromIndex(coll.shape.cols, uniqueCols),
+      Reuse.fromIndex(coll.inShape.cols, uniqueCols),
       coll.add(
         InsertBlankWhereNotExistsSec(
-          coll.shape.size,
+          coll.inShape.size,
           ModelTable(model),
-          WhereAllSec(
+          WhereSec(
             uniqueCols.map(FilterMatchesNoArg(_))
           )
         )

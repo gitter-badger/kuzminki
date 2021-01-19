@@ -28,7 +28,7 @@ import kuzminki.model.insert.Insert
 import kuzminki.model.operation.{Update, Delete}
 import kuzminki.model.operation.{Where => OperationWhere}
 import kuzminki.model.aggregate.{Aggregate, AggregateJoin, SubqueryNumber, SubqueryNumberJoin}
-import kuzminki.model.aggregate.{Where => AggregateWhere}
+import kuzminki.model.aggregate.{Where => AggregateWhere, JoinOn => AggregateJoinOn}
 import kuzminki.model._
 import kuzminki.model.implicits._
 
@@ -42,7 +42,7 @@ class KuzminkiRdbc(conf: SystemConfig)(implicit system: ActorSystem) {
   val db = new Conn(conf)
 
   def select[M <: Model](implicit tag: ClassTag[M]): Select[M] = {
-    select(Model.from[M], db)
+    select(Model.from[M])
   }
 
   def select[M <: Model](model: M): Select[M] = {
@@ -53,7 +53,7 @@ class KuzminkiRdbc(conf: SystemConfig)(implicit system: ActorSystem) {
     select(Model.join[A, B])
   }
 
-  def select[A, B](join: Join[A, B]): SelectJoin[A, B] = {
+  def select[A <: Model, B <: Model](join: Join[A, B]): SelectJoin[A, B] = {
     new SelectJoin(join, db)
   }
 
@@ -78,7 +78,7 @@ class KuzminkiRdbc(conf: SystemConfig)(implicit system: ActorSystem) {
   }
 
   def delete[M <: Model](model: M): OperationWhere[M] = {
-    Delete.from(Model.from[M], db)
+    Delete.from(model, db)
   }
 
   def aggregate[M <: Model](implicit tag: ClassTag[M]): Aggregate[M] = {
@@ -86,7 +86,7 @@ class KuzminkiRdbc(conf: SystemConfig)(implicit system: ActorSystem) {
   }
 
   def aggregate[M <: Model](model: M): Aggregate[M] = {
-    new Aggregate(Model.from[M], db)
+    new Aggregate(model, db)
   }
 
   def aggregate[A <: Model, B <: Model](implicit tagA: ClassTag[A], tagB: ClassTag[B]): AggregateJoin[A, B] = {
@@ -97,19 +97,19 @@ class KuzminkiRdbc(conf: SystemConfig)(implicit system: ActorSystem) {
     new AggregateJoin(join, db)
   }
 
-  def count[M <: Model](implicit tag: ClassTag[M]): AggregateWhere[M] = {
-    aggregate(Model.from[M])
+  def count[M <: Model](implicit tag: ClassTag[M]): AggregateWhere[M, Long] = {
+    count(Model.from[M])
   }
 
-  def count[M <: Model](implicit tag: ClassTag[M]): AggregateWhere[M] = {
-    new Aggregate(Model.from[M], db).cols1(t => Count.all)
+  def count[M <: Model](model: M): AggregateWhere[M, Long] = {
+    new Aggregate(model, db).cols1(t => Count.all)
   }
 
-  def count[A <: Model, B <: Model](implicit tagA: ClassTag[A], tagB: ClassTag[B]): AggregateWhere[Join[A, B]] = {
+  def count[A <: Model, B <: Model](implicit tagA: ClassTag[A], tagB: ClassTag[B]): AggregateJoinOn[A, B, Long] = {
     count(Model.join[A, B])
   }
 
-  def count[A <: Model, B <: Model](join: Join[A, B]): AggregateWhere[Join[A, B]] = {
+  def count[A <: Model, B <: Model](join: Join[A, B]): AggregateJoinOn[A, B, Long] = {
     new AggregateJoin(join, db).cols1(t => Count.all)
   }
 
@@ -124,11 +124,11 @@ class KuzminkiRdbc(conf: SystemConfig)(implicit system: ActorSystem) {
   }
 
   def subqueryNumber[A <: Model, B <: Model](implicit tagA: ClassTag[A], tagB: ClassTag[B]): SubqueryNumberJoin[A, B] = {
-    subqueryNumber(Model.from[A], Model.from[B])
+    subqueryNumber(Model.join[A, B])
   }
 
-  def subqueryNumber[A <: Model, B <: Model](a: A, b: B): SubqueryNumberJoin[A, B] = {
-    new SubqueryNumberJoin(Join(a, b))
+  def subqueryNumber[A <: Model, B <: Model](join: Join[A, B]): SubqueryNumberJoin[A, B] = {
+    new SubqueryNumberJoin(join)
   }
 
   def shutdown(): Future[Unit] = db.shutdown()

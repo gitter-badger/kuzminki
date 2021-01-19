@@ -6,9 +6,9 @@ import kuzminki.model._
 class RunUpsertReturning[S, R](
       reuse: Reuse,
       coll: InsertCollector[S],
-      transformer: TypedTransformer[R]) {
+      outShape: RowShape[R]) {
 
-  def cache = coll.cacheUpsertReturning(transformer, reuse)
+  def cache = coll.cacheUpsertReturning(outShape, reuse)
 
   def run(data: S) = cache.run(data)
 

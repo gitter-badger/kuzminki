@@ -9,13 +9,13 @@ import kuzminki.model._
 class StoredOperation[S](
       template: String,
       args: Vector[Any],
-      shape: DataShape[S],
+      inShape: DataShape[S],
       db: Conn) {
 
   protected def render = template
 
   private def transform(data: S) = {
-    args ++ shape.transform(data)
+    args ++ inShape.transform(data)
   }
 
   private def statement(data: S) = {

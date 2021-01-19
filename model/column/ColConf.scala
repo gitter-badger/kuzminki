@@ -1,4 +1,4 @@
 package kuzminki.model
 
 
-case class ColConf(name: String, model: Model)
+case class ColConf(name: String, table: String)

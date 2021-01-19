@@ -10,7 +10,7 @@ class Where[M, R](model: M, coll: SelectCollector[R]) {
   def whereOne(pick: M => Filter) = {
     new RunAggregation(
       coll.add(
-        WhereAllSec(
+        WhereSec(
           Seq(pick(model))
         )
       )
@@ -20,10 +20,10 @@ class Where[M, R](model: M, coll: SelectCollector[R]) {
   def whereAll(pick: M => Seq[Filter]) = {
     pick(model) match {
       case Nil =>
-        throw KuzminkiModelException("WHERE cannot be empty")
+        throw KuzminkiException("WHERE cannot be empty")
       case conds =>
         new RunAggregation(
-          coll.add(WhereAllSec(conds))
+          coll.add(WhereSec(conds))
         )
     }
   }
@@ -34,7 +34,7 @@ class Where[M, R](model: M, coll: SelectCollector[R]) {
         new RunAggregation(coll)
       case conds =>
         new RunAggregation(
-          coll.add(WhereAllSec(conds))
+          coll.add(WhereSec(conds))
         )
     }
   }
@@ -53,7 +53,7 @@ class Where[M, R](model: M, coll: SelectCollector[R]) {
   def groupBy(pick: M => Seq[ModelCol]) = {
     pick(model) match {
       case Nil =>
-        throw KuzminkiModelException("HAVING cannot be empty")
+        throw KuzminkiException("GROUP BY cannot be empty")
       case cols =>
         new Having(
           model,

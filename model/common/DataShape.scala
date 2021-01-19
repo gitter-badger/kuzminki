@@ -3,7 +3,7 @@ package kuzminki.model
 
 trait DataShape[S] {
   def size: Int
-  def cols: Seq[ModelCol]
+  def cols: Seq[RenderableCol]
   def transform(data: S): Vector[Any]
 }
 

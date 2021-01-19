@@ -10,15 +10,13 @@ object Model {
     tag.runtimeClass.newInstance.asInstanceOf[M]
   }
 
-  def join[A <: Model, B <: Model] = new AnyJoin[A, B]
+  def join[A <: Model, B <: Model](implicit aTag: ClassTag[A], bTag: ClassTag[B]) = new AnyJoin(from[A], from[B])
 }
 
 abstract class Model(val __name: String) extends ModelRead {
 
-  var __prefix: Option[String] = None
-
   def column[T](name: String)(implicit creator: ColConf => TypeCol[T]) = {
-    creator(ColConf(name, this))
+    creator(ColConf(name, __name))
   }
 }
 

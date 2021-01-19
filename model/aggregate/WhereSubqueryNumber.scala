@@ -10,7 +10,7 @@ class WhereSubqueryNumber[M](model: M, coll: SubCollector) {
   def whereOne(pick: M => Filter) = {
     new SingleNumberSubquery(
       coll.add(
-        WhereAllSec(
+        WhereSec(
           Seq(pick(model))
         )
       )
@@ -20,10 +20,10 @@ class WhereSubqueryNumber[M](model: M, coll: SubCollector) {
   def whereAll(pick: M => Seq[Filter]) = {
     pick(model) match {
       case Nil =>
-        throw KuzminkiModelException("WHERE cannot be empty")
+        throw KuzminkiException("WHERE cannot be empty")
       case conds =>
         new SingleNumberSubquery(
-          coll.add(WhereAllSec(conds))
+          coll.add(WhereSec(conds))
         )
     }
   }
@@ -34,7 +34,7 @@ class WhereSubqueryNumber[M](model: M, coll: SubCollector) {
         new SingleNumberSubquery(coll)
       case conds =>
         new SingleNumberSubquery(
-          coll.add(WhereAllSec(conds))
+          coll.add(WhereSec(conds))
         )
     }
   }

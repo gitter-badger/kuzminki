@@ -5,7 +5,7 @@ import io.rdbc.sapi.DecimalNumber
 
 object Agg {
 
-  def count(col: RealCol) = Count(col)
+  def count(col: ModelCol) = Count(col)
 
   def avg(col: ShortCol) = AvgNumber(col)
   def avgShort(col: ShortCol) = AvgCastShort(col)

@@ -7,13 +7,13 @@ object Reuse {
 
   def noChange: Reuse = NoChange
 
-  def fromIndex(insertCols: Seq[ModelCol], reuseCols: Seq[ModelCol]): Reuse = {
+  def fromIndex(insertCols: Seq[RenderableCol], reuseCols: Seq[RenderableCol]): Reuse = {
 
     val indexes = reuseCols.map { col =>
       insertCols.indexOf(col) match {
         case -1 =>
           throw KuzminkiException(
-            "column [%s] is not among inserted columns".format(col.name)
+            "column [%s] is not among inserted columns".format(col.render)
           )
         case index: Int => index
       }

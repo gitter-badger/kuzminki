@@ -6,7 +6,7 @@ import kuzminki.model._
 
 class StoredUpsert[S](
       template: String,
-      shape: DataShape[S],
+      inShape: DataShape[S],
       reuse: Reuse,
       db: Conn
     ) extends Printing {
@@ -17,7 +17,7 @@ class StoredUpsert[S](
     SqlWithParams(
       template,
       reuse.extend(
-        shape.transform(data)
+        inShape.transform(data)
       )
     )
   }

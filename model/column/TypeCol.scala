@@ -5,7 +5,7 @@ import java.util.UUID
 import io.rdbc.sapi._
 
 
-trait TypeCol[T] extends ModelCol {
+trait TypeCol[T] extends RenderableCol {
   def get(row: Row, index: Int): T
 }
 

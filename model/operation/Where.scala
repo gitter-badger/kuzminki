@@ -3,7 +3,7 @@ package kuzminki.model.operation
 import kuzminki.model._
 
 
-class Where[M](model: M, coll: OpCollector) {
+class Where[M](model: M, coll: OperationCollector) {
 
   def all() = new RunOperation(model, coll)
 
@@ -11,7 +11,7 @@ class Where[M](model: M, coll: OpCollector) {
     new RunOperation(
       model,
       coll.add(
-        WhereAllSec(
+        WhereSec(
           Seq(pick(model))
         )
       )
@@ -21,11 +21,11 @@ class Where[M](model: M, coll: OpCollector) {
   def whereAll(pick: M => Seq[Filter]) = {
     pick(model) match {
       case Nil =>
-        throw KuzminkiModelException("WHERE conditions cannot be empty")
+        throw KuzminkiException("WHERE conditions cannot be empty")
       case conds =>
         new RunOperation(
           model,
-          coll.add(WhereAllSec(conds))
+          coll.add(WhereSec(conds))
         )
     }
   }
@@ -37,14 +37,14 @@ class Where[M](model: M, coll: OpCollector) {
       case conds =>
         new RunOperation(
           model,
-          coll.add(WhereAllSec(conds))
+          coll.add(WhereSec(conds))
         )
     }
   }
 
   private def cache[S](shape: DataShape[S]) = {
     coll.add(
-      WhereAllSec(
+      WhereSec(
         shape.cols.map(NoArgMatches(_))
       )
     ).cache(shape)
