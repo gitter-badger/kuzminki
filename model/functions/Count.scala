@@ -5,8 +5,9 @@ object Count {
   def all = Count(AllCols)
 }
 
-object AllCols extends Render {
+object AllCols extends Renderable {
   def render = "*"
+  def prefix(picker: Prefix) = render
   def args = Seq.empty[Any]
 }
 

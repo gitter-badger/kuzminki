@@ -1,6 +1,6 @@
 package kuzminki.model
 
 
-trait Ref {
-  def ref: Render
+trait RealColRef {
+  def ref: RealCol
 }

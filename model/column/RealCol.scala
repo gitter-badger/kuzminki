@@ -1,18 +1,18 @@
 package kuzminki.model
 
 
-trait RealCol extends ModelCol with SortingCol {
-  val name: String
+trait RealCol extends Renderable
+                 with ModelCol
+                 with SortingCol
+                 with Wrap {
+                  
   val model: Model
+  def name: String
 
   def real = this
 
-  def render = {
-    model.__prefix match {
-      case Some(prefix) => "%s.%s".format(wrap(prefix), wrap(name))
-      case None => wrap(name) 
-    }
-  }
+  def render = wrap(name)
+  def prefix(picker: PrefixPicker) = "%s.%s".format(picker.wrap(model), wrap(name))
 
   def args = Seq.empty[Any]
 }

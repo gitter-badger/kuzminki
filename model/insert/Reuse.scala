@@ -12,7 +12,7 @@ object Reuse {
     val indexes = reuseCols.map { col =>
       insertCols.indexOf(col) match {
         case -1 =>
-          throw KuzminkiModelException(
+          throw KuzminkiException(
             "column [%s] is not among inserted columns".format(col.name)
           )
         case index: Int => index

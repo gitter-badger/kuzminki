@@ -21,7 +21,7 @@ trait WhereNotExists[M <: Model, S] {
   private def whereNotExistsApply(uniqueCols: Seq[ModelCol]) = {
 
     if (uniqueCols.isEmpty) {
-      throw KuzminkiModelException("whereNotExists")
+      throw KuzminkiException("whereNotExists")
     }
 
     new RunInsertWhereNotExists(

@@ -1,7 +1,7 @@
 package kuzminki.model
 
 
-trait UniversalFilters[T] extends Ref {
+trait UniversalFilters[T] extends RealColRef {
   
   def matches(value: T): Filter = FilterMatches(ref, value)
   def ===(value: T): Filter = matches(value)

@@ -8,7 +8,7 @@ class Aggregate[M <: Model](model: M, db: Conn) {
   private def next[R](shape: RowShape[R]) = {
     new Where(
       model,
-      SelectCollector(
+      StandardCollector(
         db,
         shape,
         Array(
@@ -19,7 +19,19 @@ class Aggregate[M <: Model](model: M, db: Conn) {
     )
   }
 
-  def cols(pick: M => Seq[TypeCol[_]]) = {
+  def colsRead[R](pick: M => RowReader[R]) = {
+    next(
+      pick(model)
+    )
+  }
+
+  def colsAs[R](pick: M => Seq[TypeCol[_]])(implicit typeReader: TypeReader[R]) = {
+    next(
+      new RowShapeType(pick(model), typeReader)
+    )
+  }
+
+  def colsAsSeq(pick: M => Seq[TypeCol[_]]) = {
     next(
       new RowShapeSeq(pick(model))
     )

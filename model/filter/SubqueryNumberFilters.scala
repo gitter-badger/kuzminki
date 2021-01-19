@@ -1,7 +1,7 @@
 package kuzminki.model
 
 
-trait SubqueryNumberFilters extends Ref {
+trait SubqueryNumberFilters extends RealColRef {
 
   def matches(sub: SingleNumberSubquery): Filter = FilterAggMatches(ref, sub.untyped)
   def ===(sub: SingleNumberSubquery): Filter = matches(sub)

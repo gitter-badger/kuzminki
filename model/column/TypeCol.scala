@@ -5,11 +5,6 @@ import java.util.UUID
 import io.rdbc.sapi._
 
 
-trait ModelCol extends Render {
-  def name: String
-  def ref = this
-}
-
 trait TypeCol[T] extends ModelCol {
   def get(row: Row, index: Int): T
 }

@@ -19,11 +19,11 @@ class DoUpdate[M, S](model: M, coll: InsertCollector[S], conflictCol: ModelCol) 
   private def validate(cols: Seq[ModelCol]): Unit = {
 
     if (cols.isEmpty) {
-      throw KuzminkiModelException("no update columns selected")
+      throw KuzminkiException("no update columns selected")
     }
 
     if (cols.contains(conflictCol)) {
-      throw KuzminkiModelException("cannot update the conflicting column")
+      throw KuzminkiException("cannot update the conflicting column")
     }
   }
 

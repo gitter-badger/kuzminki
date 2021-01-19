@@ -11,7 +11,7 @@ class Where[M, R](model: M, coll: SelectCollector[R]) {
     new OrderBy(
       model,
       coll.add(
-        WhereAllSec(
+        WhereSec(
           Seq(pick(model))
         )
       )
@@ -21,11 +21,11 @@ class Where[M, R](model: M, coll: SelectCollector[R]) {
   def whereAll(pick: M => Seq[Filter]) = {
     pick(model) match {
       case Nil =>
-        throw KuzminkiModelException("WHERE conditions cannot be empty")
+        throw KuzminkiException("WHERE conditions cannot be empty")
       case conds =>
         new OrderBy(
           model,
-          coll.add(WhereAllSec(conds))
+          coll.add(WhereSec(conds))
         )
     }
   }
@@ -37,7 +37,7 @@ class Where[M, R](model: M, coll: SelectCollector[R]) {
       case conds =>
         new OrderBy(
           model,
-          coll.add(WhereAllSec(conds))
+          coll.add(WhereSec(conds))
         )
     }
   }

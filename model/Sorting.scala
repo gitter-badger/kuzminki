@@ -1,10 +1,11 @@
 package kuzminki.model
 
 
-sealed trait Sorting extends Render {
+sealed trait Sorting extends Renderable {
   def col: Render
   def template: String
   def render = template.format(col.render)
+  def prefix(picker: Prefix) = template.format(col.prefix(picker))
   def args = Seq.empty[Any]
 }
 

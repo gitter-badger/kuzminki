@@ -8,8 +8,9 @@ class SelectJoin[A <: Model, B <: Model](model: Join[A, B], db: Conn) {
   private def next[R](shape: RowShape[R]) = {
     new JoinOn(
       model,
-      SelectCollector(
+      JoinCollector(
         db,
+        Prefix.fromJoin(join),
         shape,
         Array(
           SelectSec(shape.cols),
@@ -30,16 +31,16 @@ class SelectJoin[A <: Model, B <: Model](model: Join[A, B], db: Conn) {
       new RowShapeType(pick(model), typeReader)
     )
   }
-  
-  def colsAsMap(pick: Join[A, B] => Seq[TypeCol[_]]) = {
-    next(
-      new RowShapeMap(pick(model))
-    )
-  }
 
   def colsAsSeq(pick: Join[A, B] => Seq[TypeCol[_]]) = {
     next(
       new RowShapeSeq(pick(model))
+    )
+  }
+  
+  def colsAsMap(pick: Join[A, B] => Seq[TypeCol[_]]) = {
+    next(
+      new RowShapeMap(pick(model))
     )
   }
 

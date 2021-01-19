@@ -31,8 +31,6 @@ import org.reactivestreams.Publisher
 //import transport.actions.{Action, Batch}
 
 
-case class KuzminkiException(message: String) extends Exception(message)
-
 
 object RdbcPool {
 

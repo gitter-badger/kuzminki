@@ -1,148 +1,146 @@
 package kuzminki.model
 
 
-trait Filter extends Render
-
-trait ColumnFilter extends Filter {
-  val col: Render
+trait Filter extends Renderable
+  val col: ModelCol
   def template: String
 }
 
-trait SingleArgFilter extends ColumnFilter {
-  val arg: Any
+trait SingleFilter extends Filter {
+  val col: ModelCol
+  def template: String
   def render = template.format(col.render)
+  def prefix(picker: Prefix) = template.format(col.prefix(picker))
+}
+
+trait SingleArgFilter extends SingleFilter {
+  val arg: Any
   def args = Seq(arg)
 }
 
-trait NoArgFilter extends ColumnFilter {
-  val col: Render
-  def template: String
-  def render = template.format(col.render)
-  def args = Seq.empty[Any]
-}
+trait NoArgFilter extends SingleFilter with NoArgs
 
-trait SubQueryFilter extends ColumnFilter {
+trait SubQueryFilter extends SingleFilter {
   val sub: UntypedSubQuery
-  def render = template.format(col.render, sub.render)
   def args = sub.args
 }
 
-case class FilterMatches(col: Render, arg: Any) extends SingleArgFilter {
+case class FilterMatches(col: ModelCol, arg: Any) extends SingleArgFilter {
   def template = "%s = ?"
 }
 
-case class FilterNot(col: Render, arg: Any) extends SingleArgFilter {
+case class FilterNot(col: ModelCol, arg: Any) extends SingleArgFilter {
   def template = "%s != ?"
 }
 
-case class FilterGt(col: Render, arg: Any) extends SingleArgFilter {
+case class FilterGt(col: ModelCol, arg: Any) extends SingleArgFilter {
   def template = "%s > ?"
 }
 
-case class FilterGte(col: Render, arg: Any) extends SingleArgFilter {
+case class FilterGte(col: ModelCol, arg: Any) extends SingleArgFilter {
   def template = "%s >= ?"
 }
 
-case class FilterLt(col: Render, arg: Any) extends SingleArgFilter {
+case class FilterLt(col: ModelCol, arg: Any) extends SingleArgFilter {
   def template = "%s < ?"
 }
 
-case class FilterLte(col: Render, arg: Any) extends SingleArgFilter {
+case class FilterLte(col: ModelCol, arg: Any) extends SingleArgFilter {
   def template = "%s <= ?"
 }
 
-case class FilterIn(col: Render, args: Seq[Any]) extends Filter {
+case class FilterIn(col: ModelCol, args: Seq[Any]) extends Filter {
   def template = "%s = ANY(ARRAY[%s])"
   def render = template.format(col.render, Vector.fill(args.size)("?").mkString(", "))
 }
 
-case class FilterNotIn(col: Render, args: Seq[Any]) extends Filter {
+case class FilterNotIn(col: ModelCol, args: Seq[Any]) extends Filter {
   def template = "%s != ANY(ARRAY[%s])"
   def render = template.format(col.render, Vector.fill(args.size)("?").mkString(", "))
 }
 
-case class FilterBetween(col: Render, args: Seq[Any]) extends Filter {
+case class FilterBetween(col: ModelCol, args: Seq[Any]) extends Filter {
   def template = "%s = BETWEEN ? AND ?"
   def render = template.format(col.render)
 }
 
-case class FilterIsNull(col: Render) extends NoArgFilter {
+case class FilterIsNull(col: ModelCol) extends NoArgFilter {
   def template = "%s IS NULL"
 }
 
-case class FilterIsNotNull(col: Render) extends NoArgFilter {
+case class FilterIsNotNull(col: ModelCol) extends NoArgFilter {
   def template = "%s IS NOT NULL"
 }
 
-case class FilterLike(col: Render, arg: String) extends SingleArgFilter {
+case class FilterLike(col: ModelCol, arg: String) extends SingleArgFilter {
   def template = "%s LIKE %?%"
 }
 
-case class FilterStartsWith(col: Render, arg: String) extends SingleArgFilter {
+case class FilterStartsWith(col: ModelCol, arg: String) extends SingleArgFilter {
   def template = "%s LIKE ?%"
 }
 
-case class FilterEndsWith(col: Render, arg: String) extends SingleArgFilter {
+case class FilterEndsWith(col: ModelCol, arg: String) extends SingleArgFilter {
   def template = "%s LIKE %?"
 }
 
-case class FilterSimilarTo(col: Render, arg: String) extends SingleArgFilter {
+case class FilterSimilarTo(col: ModelCol, arg: String) extends SingleArgFilter {
   def template = "%s SIMILAR TO ?"
 }
 
-case class FilterReMatch(col: Render, arg: String) extends SingleArgFilter {
+case class FilterReMatch(col: ModelCol, arg: String) extends SingleArgFilter {
   def template = "%s SIMILAR TO ?"
 }
 
-case class FilterReIMatch(col: Render, arg: String) extends SingleArgFilter {
+case class FilterReIMatch(col: ModelCol, arg: String) extends SingleArgFilter {
   def template = "%s SIMILAR TO ?"
 }
 
-case class FilterReNotMatch(col: Render, arg: String) extends SingleArgFilter {
+case class FilterReNotMatch(col: ModelCol, arg: String) extends SingleArgFilter {
   def template = "%s SIMILAR TO ?"
 }
 
-case class FilterReNotImatch(col: Render, arg: String) extends SingleArgFilter {
+case class FilterReNotImatch(col: ModelCol, arg: String) extends SingleArgFilter {
   def template = "%s SIMILAR TO ?"
 }
 
 // sub query
 
-case class FilterInSubquery(col: Render, sub: UntypedSubQuery) extends SubQueryFilter {
-  def template = "%s = ANY(%s)"
+case class FilterInSubquery(col: ModelCol, sub: UntypedSubQuery) extends SubQueryFilter {
+  def template = "%s = ANY(%s)".format(sub.render)
 }
 
-case class FilterNotInSubquery(col: Render, sub: UntypedSubQuery) extends SubQueryFilter {
-  def template = "%s != ANY(%s)"
+case class FilterNotInSubquery(col: ModelCol, sub: UntypedSubQuery) extends SubQueryFilter {
+  def template = "%s != ANY(%s)".format(sub.render)
 }
 
-case class FilterAggMatches(col: Render, sub: UntypedSubQuery) extends SubQueryFilter {
-  def template = "%s = (%s)"
+case class FilterAggMatches(col: ModelCol, sub: UntypedSubQuery) extends SubQueryFilter {
+  def template = "%s = (%s)".format(sub.render)
 }
 
-case class FilterAggNot(col: Render, sub: UntypedSubQuery) extends SubQueryFilter {
-  def template = "%s != (%s)"
+case class FilterAggNot(col: ModelCol, sub: UntypedSubQuery) extends SubQueryFilter {
+  def template = "%s != (%s)".format(sub.render)
 }
 
-case class FilterAggGt(col: Render, sub: UntypedSubQuery) extends SubQueryFilter {
-  def template = "%s > (%s)"
+case class FilterAggGt(col: ModelCol, sub: UntypedSubQuery) extends SubQueryFilter {
+  def template = "%s > (%s)".format(sub.render)
 }
 
-case class FilterAggGte(col: Render, sub: UntypedSubQuery) extends SubQueryFilter {
-  def template = "%s >= (%s)"
+case class FilterAggGte(col: ModelCol, sub: UntypedSubQuery) extends SubQueryFilter {
+  def template = "%s >= (%s)".format(sub.render)
 }
 
-case class FilterAggLt(col: Render, sub: UntypedSubQuery) extends SubQueryFilter {
-  def template = "%s < (%s)"
+case class FilterAggLt(col: ModelCol, sub: UntypedSubQuery) extends SubQueryFilter {
+  def template = "%s < (%s)".format(sub.render)
 }
 
-case class FilterAggLte(col: Render, sub: UntypedSubQuery) extends SubQueryFilter {
-  def template = "%s <= (%s)"
+case class FilterAggLte(col: ModelCol, sub: UntypedSubQuery) extends SubQueryFilter {
+  def template = "%s <= (%s)".format(sub.render)
 }
 
 // where not exists
 
-case class FilterMatchesNoArg(col: Render) extends NoArgFilter {
+case class FilterMatchesNoArg(col: ModelCol) extends NoArgFilter {
   def template = "%s = ?"
 }
 

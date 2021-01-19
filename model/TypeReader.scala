@@ -80,7 +80,7 @@ class CustomTypeReader[T : ClassTag](members: Seq[Tuple2[AnyMember, Int]]) exten
       case Failure(ex) =>
         val name = classTag[T].runtimeClass.getName
         val message = ex.getMessage
-        throw KuzminkiModelException(s"Failed to read ($name) $message")
+        throw KuzminkiException(s"Failed to read ($name) $message")
     }
   }
 }

@@ -1,7 +1,7 @@
 package kuzminki.model
 
 
-trait StringFilters extends Ref {
+trait StringFilters extends RealColRef {
 
   def like(value: String): Filter = FilterLike(ref, value)
   def startsWith(value: String): Filter = FilterStartsWith(ref, value)
