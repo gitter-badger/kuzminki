@@ -1,7 +1,7 @@
 package kuzminki.model
 
 
-trait StringFilters extends ModelColRef {
+trait StringFilters extends ColRef {
 
   def like(value: String): Filter = FilterLike(col, value)
   def startsWith(value: String): Filter = FilterStartsWith(col, value)

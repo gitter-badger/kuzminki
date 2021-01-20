@@ -1,7 +1,7 @@
 package kuzminki.model
 
 
-trait ShortAggregations extends ModelColRef {
+trait ShortAggregations extends ColRef {
   def avgShort = AvgCastShort(col)
   def avg = AvgNumber(col)
   def sum = SumShort(col)
@@ -9,7 +9,7 @@ trait ShortAggregations extends ModelColRef {
   def min = MinShort(col)
 }
 
-trait IntAggregations extends ModelColRef {
+trait IntAggregations extends ColRef {
   def avgInt = AvgCastInt(col)
   def avg = AvgNumber(col)
   def sum = SumInt(col)
@@ -17,7 +17,7 @@ trait IntAggregations extends ModelColRef {
   def min = MinInt(col)
 }
 
-trait LongAggregations extends ModelColRef {
+trait LongAggregations extends ColRef {
   def avgLong = AvgCastLong(col)
   def avg = AvgNumber(col)
   def sum = SumLong(col)
@@ -25,7 +25,7 @@ trait LongAggregations extends ModelColRef {
   def min = MinLong(col)
 }
 
-trait FloatAggregations extends ModelColRef {
+trait FloatAggregations extends ColRef {
   def avgFloat = AvgCastFloat(col)
   def avg = AvgFloating(col)
   def sum = SumFloat(col)
@@ -33,7 +33,7 @@ trait FloatAggregations extends ModelColRef {
   def min = MinFloat(col)
 }
 
-trait DoubleAggregations extends ModelColRef {
+trait DoubleAggregations extends ColRef {
   def avg = AvgFloating(col)
   def sum = SumDouble(col)
   def max = MaxDouble(col)

@@ -1,7 +1,7 @@
 package kuzminki.model
 
 
-trait UniversalFilters[T] extends ModelColRef {
+trait UniversalFilters[T] extends ColRef {
   
   def matches(value: T): Filter = FilterMatches(col, value)
   def ===(value: T): Filter = matches(value)
@@ -17,8 +17,8 @@ trait UniversalFilters[T] extends ModelColRef {
   def in(values: Seq[T]): Filter = FilterIn(col, values)
   def notIn(value: Seq[T]): Filter = FilterNotIn(col, value)
 
-  def in(sub: SubQuery[T]): Filter = FilterInSubquery(col, sub.untyped)
-  def notIn(sub: SubQuery[T]): Filter = FilterNotInSubquery(col, sub.untyped)
+  def in(sub: SelectSubquery[T]): Filter = FilterInSubquery(col, sub)
+  def notIn(sub: SelectSubquery[T]): Filter = FilterNotInSubquery(col, sub)
 
   // optional
 

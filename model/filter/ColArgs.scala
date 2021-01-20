@@ -1,6 +1,7 @@
 package kuzminki.model
 
 
-trait RenderableCol extends Renderable {
+trait ColArgs {
   val col: RenderableCol
+  def args = col.args
 }

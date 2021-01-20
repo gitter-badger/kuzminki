@@ -1,6 +1,6 @@
 package kuzminki.model
 
 
-trait RenderableCol extends Renderable {
+trait ColRef {
   val col: RenderableCol
 }

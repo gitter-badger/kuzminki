@@ -6,12 +6,12 @@ object Count {
 }
 
 object AllCols extends RenderableCol with NoArgs {
+  val col = this
   def render = "*"
   def prefix(picker: Prefix) = render
 }
 
 trait AggCount extends AggNumeric {
-  def name = "count"
   def template = "COUNT(%s)"
 }
 

@@ -31,5 +31,5 @@ class RunAggregation[R](coll: SelectCollector[R]) {
     this
   }
 
-  def asSub = new AggSubQuery(coll)
+  //def asSub = new AggSubQuery(coll)
 }

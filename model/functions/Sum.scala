@@ -4,7 +4,6 @@ import io.rdbc.sapi.DecimalNumber
 
 
 trait AggSum extends AggNumeric {
-  def name = "sum"
   def template = "SUM(%s)"
 }
 

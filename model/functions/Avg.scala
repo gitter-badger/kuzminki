@@ -8,7 +8,6 @@ case class AvgNumber(col: RenderableCol) extends AggNumeric
                                      with UniversalFilters[Long]
                                      with ComparativeFilters[Long] {
 
-  def name = "avg"
   def template = "AVG(%s)"
 }
 
@@ -18,7 +17,6 @@ case class AvgFloating(col: RenderableCol) extends AggNumeric
                                        with UniversalFilters[Double]
                                        with ComparativeFilters[Double] {
 
-  def name = "avg"
   def template = "AVG(%s)"
 }
 
@@ -28,7 +26,6 @@ case class AvgCastShort(col: RenderableCol) extends AggNumeric
                                         with UniversalFilters[Long]
                                         with ComparativeFilters[Long] {
 
-  def name = "avg"
   def template = "AVG(%s)::smallint"
 }
 
@@ -38,7 +35,6 @@ case class AvgCastInt(col: RenderableCol) extends AggNumeric
                                       with UniversalFilters[Long]
                                       with ComparativeFilters[Long] {
 
-  def name = "avg"
   def template = "AVG(%s)::int"
 }
 
@@ -48,7 +44,6 @@ case class AvgCastLong(col: RenderableCol) extends AggNumeric
                                        with UniversalFilters[Long]
                                        with ComparativeFilters[Long] {
 
-  def name = "avg"
   def template = "AVG(%s)::bigint"
 }
 
@@ -58,7 +53,6 @@ case class AvgCastFloat(col: RenderableCol) extends AggNumeric
                                         with UniversalFilters[Double]
                                         with ComparativeFilters[Double] {
 
-  def name = "avg"
   def template = "AVG(%s)::real"
 }
 

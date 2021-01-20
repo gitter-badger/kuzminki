@@ -11,7 +11,6 @@ object Prefix {
   }
 }
 
-
 class JoinPrefix(aName: String, bName: String) extends Prefix {
 
   def wrap(table: String) = {

@@ -1,7 +1,7 @@
 package kuzminki.model
 
 
-trait ComparativeFilters[T] extends ModelColRef {
+trait ComparativeFilters[T] extends ColRef {
 
   def gt(value: T): Filter = FilterGt(col, value)
   def >(value: T): Filter = gt(value)

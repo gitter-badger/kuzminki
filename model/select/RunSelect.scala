@@ -6,7 +6,7 @@ import akka.stream.scaladsl._
 import akka.Done
 
 
-class RunSelect[R](coll: SelectCollector[R]) {
+class RunSelect[R](coll: SelectCollector[R]) extends SelectSubquery[R] {
   
   def run() = {
     coll.db.select(coll.statement) { row =>
@@ -51,13 +51,15 @@ class RunSelect[R](coll: SelectCollector[R]) {
   }
 
   def render = coll.render
+  def prefix(picker: Prefix) = coll.render
+  def args = coll.args
 
   def renderTo(printer: String => Unit) = {
     printer(render)
     this
   }
   
-  def asSub = new SubQuery(coll)
+  def cache = new StoredSelect(coll.db, coll.statement, coll.outShape)
 }
 
 
