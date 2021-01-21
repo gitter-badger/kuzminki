@@ -8,8 +8,9 @@ class Select[M <: Model](model: M, db: Conn) {
   private def next[R](outShape: RowShape[R]) = {
     new Where(
       model,
-      StandardCollector(
+      SelectCollector(
         db,
+        Prefix.forModel,
         outShape,
         Array(
           SelectSec(outShape.cols),
@@ -34,12 +35,6 @@ class Select[M <: Model](model: M, db: Conn) {
   def colsAsSeq(pick: M => Seq[TypeCol[_]]) = {
     next(
       new RowShapeSeq(pick(model))
-    )
-  }
-  
-  def colsAsMap(pick: M => Seq[TypeCol[_]]) = {
-    next(
-      new RowShapeMap(pick(model))
     )
   }
 

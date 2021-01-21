@@ -5,8 +5,7 @@ trait Assign extends Renderable {
   val col: ModelCol
   val value: Any
   def format(name: String): String
-  def render = format(col.render)
-  def prefix(picker: Prefix) = format(col.prefix(picker))
+  def render(prefix: Prefix) = format(col.render(prefix))
   def args = Seq(value)
 }
 

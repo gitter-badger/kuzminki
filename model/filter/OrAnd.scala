@@ -4,8 +4,7 @@ package kuzminki.model
 trait MultiFilter extends Filter {
   val filters: Seq[Filter]
   def glue: String
-  def render = template.format(filters.map(_.render).mkString(glue))
-  def prefix(picker: Prefix) = template.format(filters.map(_.prefix(picker)).mkString(glue))
+  def render(prefix: Prefix) = template.format(filters.map(_.render(prefix)).mkString(glue))
   def args = filters.map(_.args).flatten
 }
 

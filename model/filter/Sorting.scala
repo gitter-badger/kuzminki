@@ -4,8 +4,7 @@ package kuzminki.model
 sealed trait Sorting extends Renderable {
   def col: RenderableCol
   def template: String
-  def render = template.format(col.render)
-  def prefix(picker: Prefix) = template.format(col.prefix(picker))
+  def render(prefix: Prefix) = template.format(col.render(prefix))
   def args = Seq.empty[Any]
 }
 

@@ -50,12 +50,11 @@ class RunSelect[R](coll: SelectCollector[R]) extends SelectSubquery[R] {
     }
   }
 
-  def render = coll.render
-  def prefix(picker: Prefix) = coll.render
+  def render(prefix: Prefix) = coll.render
   def args = coll.args
 
   def renderTo(printer: String => Unit) = {
-    printer(render)
+    printer(coll.render)
     this
   }
   

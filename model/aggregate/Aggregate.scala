@@ -8,8 +8,9 @@ class Aggregate[M <: Model](model: M, db: Conn) {
   private def next[R](shape: RowShape[R]) = {
     new Where(
       model,
-      StandardCollector(
+      SelectCollector(
         db,
+        Prefix.forModel,
         shape,
         Array(
           SelectSec(shape.cols),

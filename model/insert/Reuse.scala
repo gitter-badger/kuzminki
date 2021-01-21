@@ -13,7 +13,7 @@ object Reuse {
       insertCols.indexOf(col) match {
         case -1 =>
           throw KuzminkiException(
-            "column [%s] is not among inserted columns".format(col.render)
+            "column [%s] is not among inserted columns".format("col")
           )
         case index: Int => index
       }

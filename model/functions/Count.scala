@@ -7,8 +7,7 @@ object Count {
 
 object AllCols extends RenderableCol with NoArgs {
   val col = this
-  def render = "*"
-  def prefix(picker: Prefix) = render
+  def render(prefix: Prefix) = "*"
 }
 
 trait AggCount extends AggNumeric {

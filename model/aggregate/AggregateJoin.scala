@@ -8,9 +8,9 @@ class AggregateJoin[A <: Model, B <: Model](join: Join[A, B], db: Conn) {
   private def next[R](shape: RowShape[R]) = {
     new JoinOn(
       join,
-      JoinCollector(
+      SelectCollector(
         db,
-        Prefix.fromJoin(join),
+        Prefix.forJoin(join),
         shape,
         Array(
           SelectSec(shape.cols),
@@ -35,12 +35,6 @@ class AggregateJoin[A <: Model, B <: Model](join: Join[A, B], db: Conn) {
   def colsAsSeq(pick: Join[A, B] => Seq[TypeCol[_]]) = {
     next(
       new RowShapeSeq(pick(join))
-    )
-  }
-  
-  def colsAsMap(pick: Join[A, B] => Seq[TypeCol[_]]) = {
-    next(
-      new RowShapeMap(pick(join))
     )
   }
 

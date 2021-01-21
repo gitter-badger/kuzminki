@@ -5,72 +5,72 @@ import java.util.UUID
 import io.rdbc.sapi._
 
 
-case class StringCol(name: String, table: String) extends ModelCol
-                                                    with StringColValue
-                                                    with UpdateMethod[String]
-                                                    with UniversalFilters[String]
-                                                    with StringFilters
+case class StringCol(info: ColInfo) extends ModelCol
+                                      with StringColValue
+                                      with UpdateMethod[String]
+                                      with UniversalFilters[String]
+                                      with StringFilters
 
 
-case class BooleanCol(name: String, table: String) extends ModelCol
-                                                     with BooleanColValue
-                                                     with UpdateMethod[Boolean]
-                                                     with UniversalFilters[Boolean]
+case class BooleanCol(info: ColInfo) extends ModelCol
+                                       with BooleanColValue
+                                       with UpdateMethod[Boolean]
+                                       with UniversalFilters[Boolean]
 
 
-case class ShortCol(name: String, table: String) extends ModelCol
-                                                   with ShortColValue
-                                                   with ShortAggregations
-                                                   with NumericUpdateMethods[Short]
-                                                   with UniversalFilters[Int]
-                                                   with ComparativeFilters[Short]
+case class ShortCol(info: ColInfo) extends ModelCol
+                                     with ShortColValue
+                                     with ShortAggregations
+                                     with NumericUpdateMethods[Short]
+                                     with UniversalFilters[Int]
+                                     with ComparativeFilters[Short]
 
 
-case class IntCol(name: String, table: String) extends ModelCol
-                                                 with IntColValue
-                                                 with IntAggregations
-                                                 with SubqueryNumberFilters
-                                                 with NumericUpdateMethods[Int]
-                                                 with UniversalFilters[Int]
-                                                 with ComparativeFilters[Int]
+case class IntCol(info: ColInfo) extends ModelCol
+                                   with IntColValue
+                                   with IntAggregations
+                                   with SubqueryNumberFilters
+                                   with NumericUpdateMethods[Int]
+                                   with UniversalFilters[Int]
+                                   with ComparativeFilters[Int]
 
 
-case class LongCol(name: String, table: String) extends ModelCol
-                                                  with LongColValue
-                                                  with LongAggregations
-                                                  with NumericUpdateMethods[Long]
-                                                  with UniversalFilters[Long]
-                                                  with ComparativeFilters[Long]
+case class LongCol(info: ColInfo) extends ModelCol
+                                    with LongColValue
+                                    with LongAggregations
+                                    with NumericUpdateMethods[Long]
+                                    with UniversalFilters[Long]
+                                    with ComparativeFilters[Long]
 
 
-case class FloatCol(name: String, table: String) extends ModelCol
-                                                   with FloatColValue
-                                                   with FloatAggregations
-                                                   with NumericUpdateMethods[Float]
-                                                   with UniversalFilters[Float]
-                                                   with ComparativeFilters[Float]
+case class FloatCol(info: ColInfo) extends ModelCol
+                                     with FloatColValue
+                                     with FloatAggregations
+                                     with NumericUpdateMethods[Float]
+                                     with UniversalFilters[Float]
+                                     with ComparativeFilters[Float]
 
 
-case class DoubleCol(name: String, table: String) extends ModelCol
-                                                    with DoubleColValue
-                                                    with DoubleAggregations
-                                                    with NumericUpdateMethods[Double]
-                                                    with UniversalFilters[Double]
-                                                    with ComparativeFilters[Double]
+case class DoubleCol(info: ColInfo) extends ModelCol
+                                      with DoubleColValue
+                                      with DoubleAggregations
+                                      with NumericUpdateMethods[Double]
+                                      with UniversalFilters[Double]
+                                      with ComparativeFilters[Double]
 
 
-case class DecimalNumberCol(name: String, table: String) extends ModelCol
-                                                           with DecimalNumberColValue
-                                                           with NumericUpdateMethods[DecimalNumber]
-                                                           with UniversalFilters[DecimalNumber]
-                                                           with ComparativeFilters[DecimalNumber]
+case class DecimalNumberCol(info: ColInfo) extends ModelCol
+                                             with DecimalNumberColValue
+                                             with NumericUpdateMethods[DecimalNumber]
+                                             with UniversalFilters[DecimalNumber]
+                                             with ComparativeFilters[DecimalNumber]
 
 
-case class BigDecimalCol(name: String, table: String) extends ModelCol
-                                                        with BigDecimalColValue
-                                                        with NumericUpdateMethods[BigDecimal]
-                                                        with UniversalFilters[BigDecimal]
-                                                        with ComparativeFilters[BigDecimal]
+case class BigDecimalCol(info: ColInfo) extends ModelCol
+                                          with BigDecimalColValue
+                                          with NumericUpdateMethods[BigDecimal]
+                                          with UniversalFilters[BigDecimal]
+                                          with ComparativeFilters[BigDecimal]
 
 /*
 case class CharCol(name: String, model: String) extends ModelCol

@@ -3,9 +3,11 @@ package kuzminki.model.insert
 import kuzminki.model._
 
 
-case class InsertCollector[S](db: Conn,
-                              inShape: DataShape[S],
-                              sections: Array[Section]) extends CollectorRender {
+case class InsertCollector[S](
+      db: Conn,
+      inShape: DataShape[S],
+      sections: Array[Section]
+    ) extends CollectOperation {
 
   def add(section: Section) = this.copy(sections = sections :+ section)
 

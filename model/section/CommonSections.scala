@@ -1,31 +1,31 @@
 package kuzminki.model
 
 
-case class SelectSec(parts: Seq[RenderableCol]) extends MultiPart {
+case class SelectSec(parts: Seq[RenderableCol]) extends MultiRender {
   def expression = "SELECT %s"
   def glue = ", "
 }
 
-case class FromSec(part: ModelTable) extends SinglePart {
+case class FromSec(part: ModelTable) extends SingleRender {
   def expression = "FROM %s"
 }
 
-case class WhereSec(parts: Seq[Renderable]) extends MultiPart {
+case class WhereSec(parts: Seq[Renderable]) extends MultiRender {
   def expression = "WHERE %s"
   def glue = " AND "
 }
 
-case class GroupBySec(parts: Seq[RenderableCol]) extends MultiPart {
+case class GroupBySec(parts: Seq[RenderableCol]) extends MultiRender {
   def expression = "GROUP BY %s"
   def glue = ", "
 }
 
-case class HavingSec(parts: Seq[Renderable]) extends MultiPart {
+case class HavingSec(parts: Seq[Renderable]) extends MultiRender {
   def expression = "HAVING %s"
   def glue = " AND "
 }
 
-case class OrderBySec(parts: Seq[Sorting]) extends MultiPart {
+case class OrderBySec(parts: Seq[Sorting]) extends MultiRender {
   def expression = "ORDER BY %s"
   def glue = ", "
 }

@@ -33,12 +33,6 @@ abstract class PickUpsertReturning[M, S](
       new RowShapeSeq(pick(model))
     )
   }
-  
-  def returningAsMap(pick: M => Seq[TypeCol[_]]) = {
-    next(
-      new RowShapeMap(pick(model))
-    )
-  }
 
   def returning1[R](pick: M => TypeCol[R]) = {
     next(

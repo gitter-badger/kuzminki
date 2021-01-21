@@ -5,11 +5,8 @@ trait Filter extends Renderable {
   def template: String
 }
 
-trait SingleFilter extends Filter {
-  val col: RenderableCol
-  def template: String
-  def render = template.format(col.render)
-  def prefix(picker: Prefix) = template.format(col.prefix(picker))
+trait SingleFilter extends Filter with ColRef {
+  def render(prefix: Prefix) = template.format(col.render(prefix))
 }
 
 trait SingleArgFilter extends SingleFilter {
@@ -19,19 +16,15 @@ trait SingleArgFilter extends SingleFilter {
 
 trait NoArgFilter extends SingleFilter with ColArgs
 
-trait SubQueryFilter extends Filter {
-  val col: RenderableCol
+trait SubQueryFilter extends Filter with ColRef {
   val sub: Renderable
-  def render = template.format(col.render, sub.render)
-  def prefix(picker: Prefix) = template.format(col.prefix(picker), sub.render)
+  def render(prefix: Prefix) = template.format(col.render(prefix), sub.render(prefix))
   def args = col.args ++ sub.args
 }
 
-trait ArrayFilter extends Filter {
-  val col: RenderableCol
+trait ArrayFilter extends Filter with ColRef {
   val argSeq: Seq[Any]
-  def render = template.format(col.render, Vector.fill(args.size)("?").mkString(", "))
-  def prefix(picker: Prefix) = template.format(col.prefix(picker), Vector.fill(args.size)("?").mkString(", "))
+  def render(prefix: Prefix) = template.format(col.render(prefix), Vector.fill(args.size)("?").mkString(", "))
   def args = col.args ++ argSeq
 }
 

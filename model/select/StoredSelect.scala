@@ -55,8 +55,7 @@ class StoredSelect[R](
     }
   }
 
-  def render = statement.sql
-  def prefix(picker: Prefix) = statement.sql
+  def render(prefix: Prefix) = statement.sql
   def args = statement.params.toSeq
 
   def renderTo(printer: String => Unit) = {

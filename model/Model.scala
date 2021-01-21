@@ -15,8 +15,8 @@ object Model {
 
 abstract class Model(val __name: String) extends ModelRead {
 
-  def column[T](name: String)(implicit creator: ColConf => TypeCol[T]) = {
-    creator(ColConf(name, __name))
+  def column[T](name: String)(implicit creator: ColInfo => TypeCol[T]) = {
+    creator(ColInfo(name, __name))
   }
 }
 

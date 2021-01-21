@@ -7,13 +7,13 @@ import kuzminki.model.insert._
 object implicits {
 
   // column
-  implicit val implColString: ColConf => TypeCol[String] = c => StringCol(c.name, c.table)
-  implicit val implColBoolean: ColConf => TypeCol[Boolean] = c => BooleanCol(c.name, c.table)
-  implicit val implColShort: ColConf => TypeCol[Short] = c => ShortCol(c.name, c.table)
-  implicit val implColInt: ColConf => TypeCol[Int] = c => IntCol(c.name, c.table)
-  implicit val implColLong: ColConf => TypeCol[Long] = c => LongCol(c.name, c.table)
-  implicit val implColFloat: ColConf => TypeCol[Float] = c => FloatCol(c.name, c.table)
-  implicit val implColDouble: ColConf => TypeCol[Double] = c => DoubleCol(c.name, c.table)
+  implicit val implColString: ColInfo => TypeCol[String] = info => StringCol(info)
+  implicit val implColBoolean: ColInfo => TypeCol[Boolean] = info => BooleanCol(info)
+  implicit val implColShort: ColInfo => TypeCol[Short] = info => ShortCol(info)
+  implicit val implColInt: ColInfo => TypeCol[Int] = info => IntCol(info)
+  implicit val implColLong: ColInfo => TypeCol[Long] = info => LongCol(info)
+  implicit val implColFloat: ColInfo => TypeCol[Float] = info => FloatCol(info)
+  implicit val implColDouble: ColInfo => TypeCol[Double] = info => DoubleCol(info)
 
   // filters
   
