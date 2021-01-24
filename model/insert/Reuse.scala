@@ -7,7 +7,7 @@ object Reuse {
 
   def noChange: Reuse = NoChange
 
-  def fromIndex(insertCols: Seq[RenderableCol], reuseCols: Seq[RenderableCol]): Reuse = {
+  def fromIndex(insertCols: Seq[ModelCol], reuseCols: Seq[ModelCol]): Reuse = {
 
     val indexes = reuseCols.map { col =>
       insertCols.indexOf(col) match {

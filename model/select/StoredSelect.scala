@@ -10,25 +10,25 @@ import io.rdbc.sapi.SqlWithParams
 class StoredSelect[R](
       db: Conn,
       statement: SqlWithParams,
-      outShape: RowShape[R]
+      conv: RowConv[R]
     ) extends SelectSubquery[R] {
   
   def run() = {
     db.select(statement) { row =>
-      outShape.fromRow(row)
+      conv.fromRow(row)
     }  
   }
 
   def first() = {
     db.selectHeadOption(statement) { row =>
-      outShape.fromRow(row)
+      conv.fromRow(row)
     }
   }
 
   def runAs[T](implicit custom: R => T) = {
     db.select(statement) { row =>
       custom(
-        outShape.fromRow(row)
+        conv.fromRow(row)
       )
     }  
   }
@@ -36,21 +36,21 @@ class StoredSelect[R](
   def firstAs[T](implicit custom: R => T) = {
     db.selectHeadOption(statement) { row =>
       custom(
-        outShape.fromRow(row)
+        conv.fromRow(row)
       )
     }  
   }
 
   def stream(sink: Sink[R, Future[Done]]) = {
     db.stream(statement, sink) { row =>
-      outShape.fromRow(row)
+      conv.fromRow(row)
     }
   }
 
   def streamAs[T](sink: Sink[T, Future[Done]])(implicit custom: R => T) = {
     db.stream(statement, sink) { row =>
       custom(
-        outShape.fromRow(row)
+        conv.fromRow(row)
       )
     }
   }

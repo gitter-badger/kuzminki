@@ -8,19 +8,21 @@ import kuzminki.model._
 
 class StoredInsert[S](
       protected val template: String,
-      protected val inShape: DataShape[S],
+      protected val inShape: ParamShape[S],
                     db: Conn
     ) extends ListInsert[S]
          with Printing {
 
   protected def render = template
+  protected def transform(params: S) = inShape.fromShape(params)
+  protected def statement(params: S) = SqlWithParams(template, transform(params))
 
-  def run(data: S) = {
-    db.exec(statement(data))
+  def run(params: S) = {
+    db.exec(statement(params))
   }
 
-  def runNum(data: S) = {
-    db.execNum(statement(data))
+  def runNum(params: S) = {
+    db.execNum(statement(params))
   }
 
   def list(list: List[S]) = {

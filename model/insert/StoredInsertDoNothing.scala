@@ -6,24 +6,24 @@ import kuzminki.model._
 
 class StoredInsertDoNothing[S](
       template: String,
-      inShape: DataShape[S],
+      inShape: ParamShape[S],
       db: Conn
     ) extends Printing {
 
   protected def render = template
 
-  private def statement(data: S) = {
+  private def statement(params: S) = {
     SqlWithParams(
       template,
-      inShape.transform(data)
+      inShape.fromShape(params)
     )
   }
 
-  def run(data: S) = {
-    db.exec(statement(data))
+  def run(params: S) = {
+    db.exec(statement(params))
   }
 
   def runNum(data: S) = {
-    db.execNum(statement(data))
+    db.execNum(statement(params))
   }
 }

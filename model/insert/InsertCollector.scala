@@ -14,19 +14,19 @@ case class InsertCollector[S](
   def extend(added: Array[Section]) = this.copy(sections = sections ++ added)
 
   def cacheInsert = {
-    new StoredInsert(render, inShape, db)
+    new StoredInsert(render, inShape.conv, db)
   }
 
   def cacheInsertReturning[R](transformer: RowShape[R]) = {
-    new StoredInsertReturning(render, inShape, transformer, db)
+    new StoredInsertReturning(render, inShape.conv, transformer, db)
   }
 
   def cacheInsertDoNothing = {
-    new StoredInsertDoNothing(render, inShape, db)
+    new StoredInsertDoNothing(render, inShape.conv, db)
   }
 
   def cacheInsertDoNothingReturning[R](transformer: RowShape[R]) = {
-    new StoredInsertDoNothingReturning(render, inShape, transformer, db)
+    new StoredInsertDoNothingReturning(render, inShape.conv, transformer, db)
   }
 
   def cacheUpsert(reuse: Reuse) = {

@@ -1,11 +1,7 @@
 package kuzminki.model
 
 
-trait ModelCol extends RenderableCol with NoArgs with SortingCol {
-           
-  val info: ColInfo
-  val col: RenderableCol = this
-  val modelCol: ModelCol = this
-
-  def render(prefix: Prefix) = prefix.pick(info)
+trait ModelCol[T] extends Renderable with ColRef with NoArgs with SortingCol {          
+  val col: RealCol
+  def render(prefix: Prefix) = prefix.pick(col.info)
 }

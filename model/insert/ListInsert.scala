@@ -9,9 +9,6 @@ trait ListInsert[S] {
   protected val template: String
   protected val inShape: DataShape[S]
 
-  protected def transform(data: S) = inShape.transform(data)
-  protected def statement(data: S) = SqlWithParams(template, transform(data))
-
   private lazy val argsTempl = "(%s)".format(Vector.fill(inShape.size)("?").mkString(", "))
 
   private def extend(template: String, num: Int) = {

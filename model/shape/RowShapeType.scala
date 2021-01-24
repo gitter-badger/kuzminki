@@ -8,5 +8,5 @@ class RowShapeType[R](
           typeReader: TypeReader[R]
     ) extends RowShape[R] {
 
-  def fromRow(row: Row): R = typeReader.read(row)
+  def conv = new RowConvTypeReader(typeReader)
 }

@@ -6,7 +6,7 @@ import kuzminki.model._
 
 class StoredInsertDoNothingReturning[S, R](
       template: String,
-      inShape: DataShape[S],
+      inConv: ParamShape[S],
       outShape: RowShape[R],
       db: Conn
     ) extends Printing {

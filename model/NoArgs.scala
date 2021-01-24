@@ -2,5 +2,5 @@ package kuzminki.model
 
 
 trait NoArgs {
-  def args = Seq.empty[Any]
+  val args = Seq.empty[Any]
 }

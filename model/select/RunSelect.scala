@@ -8,57 +8,28 @@ import akka.Done
 
 class RunSelect[R](coll: SelectCollector[R]) extends SelectSubquery[R] {
   
-  def run() = {
-    coll.db.select(coll.statement) { row =>
-      coll.outShape.fromRow(row)
-    }  
-  }
+  def cache = new StoredSelect(coll.db, coll.statement, coll.outShape.conv)
 
-  def first() = {
-    coll.db.selectHeadOption(coll.statement) { row =>
-      coll.outShape.fromRow(row)
-    }
-  }
+  def run() = cache.run()
 
-  def runAs[T](implicit custom: R => T) = {
-    coll.db.select(coll.statement) { row =>
-      custom(
-        coll.outShape.fromRow(row)
-      )
-    }  
-  }
+  def first() = cache.first()
 
-  def firstAs[T](implicit custom: R => T) = {
-    coll.db.selectHeadOption(coll.statement) { row =>
-      custom(
-        coll.outShape.fromRow(row)
-      )
-    }  
-  }
+  def runAs[T](implicit custom: R => T) = cache.runAs(custom)
 
-  def stream(sink: Sink[R, Future[Done]]) = {
-    coll.db.stream(coll.statement, sink) { row =>
-      coll.outShape.fromRow(row)
-    }
-  }
+  def firstAs[T](implicit custom: R => T) = cache.firstAs(custom)
 
-  def streamAs[T](sink: Sink[T, Future[Done]])(implicit custom: R => T) = {
-    coll.db.stream(coll.statement, sink) { row =>
-      custom(
-        coll.outShape.fromRow(row)
-      )
-    }
-  }
+  def stream(sink: Sink[R, Future[Done]]) = cache.stream()
+
+  def streamAs[T](sink: Sink[T, Future[Done]])(implicit custom: R => T) = cache.streamAs(custom)
 
   def render(prefix: Prefix) = coll.render
+  
   def args = coll.args
 
   def renderTo(printer: String => Unit) = {
     printer(coll.render)
     this
   }
-  
-  def cache = new StoredSelect(coll.db, coll.statement, coll.outShape)
 }
 
 

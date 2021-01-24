@@ -6,7 +6,6 @@ object Count {
 }
 
 object AllCols extends RenderableCol with NoArgs {
-  val col = this
   def render(prefix: Prefix) = "*"
 }
 

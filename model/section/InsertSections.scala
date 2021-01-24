@@ -6,7 +6,7 @@ case class InsertIntoSec(part: ModelTable) extends SingleRender {
 }
 
 
-case class InsertColumnsSec(parts: Seq[RenderableCol]) extends MultiRender {
+case class InsertColumnsSec(parts: Seq[ModelCol]) extends MultiRender {
   def expression = "(%s)"
   def glue = ", "
 }
@@ -65,7 +65,7 @@ object InsertOnConflictSec extends TextOnly {
   def expression = "ON CONFLICT"
 }
 
-case class InsertOnConflictColumnSec(part: RenderableCol) extends SingleRender {
+case class InsertOnConflictColumnSec(part: ModelCol) extends SingleRender {
   def expression = "ON CONFLICT (%s)"
 }
 
@@ -73,7 +73,7 @@ object InsertDoNothingSec extends TextOnly {
   def expression = "DO NOTHING"
 }
 
-case class InsertDoUpdateSec(parts: Seq[Renderable]) extends MultiRender {
+case class InsertDoUpdateSec(parts: Seq[ModelCol]) extends MultiRender {
   def expression = "DO UPDATE SET %s"
   def glue = ", "
 }
