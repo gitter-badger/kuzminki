@@ -2,5 +2,5 @@ package kuzminki.model
 
 
 trait ColRef {
-  val col: RenderableCol
+  val col: AnyCol
 }

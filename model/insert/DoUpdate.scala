@@ -1,22 +1,20 @@
-package kuzminki.model.insert
-
-import kuzminki.model._
+package kuzminki.model
 
 
-class DoUpdate[M, S](model: M, coll: InsertCollector[S], conflictCol: ModelCol) {
+class DoUpdate[M, P](model: M, coll: InsertCollector[P], conflictCol: AnyCol) {
 
   def doNothing = {
     new RunInsertDoNothing(
       model,
       coll.extend(Array(
-        InsertBlankValuesSec(coll.inShape.size),
+        InsertBlankValuesSec(coll.paramShape.size),
         InsertOnConflictColumnSec(conflictCol),
         InsertDoNothingSec
       ))
     )
   }
 
-  private def validate(cols: Seq[ModelCol]): Unit = {
+  private def validate(cols: Seq[AnyCol]): Unit = {
 
     if (cols.isEmpty) {
       throw KuzminkiException("no update columns selected")
@@ -27,25 +25,25 @@ class DoUpdate[M, S](model: M, coll: InsertCollector[S], conflictCol: ModelCol) 
     }
   }
 
-  def doUpdate(pick: M => Seq[ModelCol]) = {
+  def doUpdate(pick: M => Seq[AnyCol]) = {
     doUpdateApply(
       pick(model)
     )
   }
 
-  def doUpdateOne(pick: M => ModelCol) = {
+  def doUpdateOne(pick: M => AnyCol) = {
     doUpdateApply(
       Seq(pick(model))
     )
   }
 
-  private def doUpdateApply(updateCols: Seq[ModelCol]) = {
+  private def doUpdateApply(updateCols: Seq[AnyCol]) = {
     validate(updateCols)
     new RunUpsert(
       model,
-      Reuse.fromIndex(coll.inShape.cols, updateCols),
+      Reuse.fromIndex(coll.paramShape.cols, updateCols),
       coll.extend(Array(
-        InsertBlankValuesSec(coll.inShape.size),
+        InsertBlankValuesSec(coll.paramShape.size),
         InsertOnConflictColumnSec(conflictCol),
         InsertDoUpdateSec(
           updateCols.map(NoArgMatches(_))

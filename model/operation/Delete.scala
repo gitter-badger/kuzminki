@@ -1,12 +1,10 @@
-package kuzminki.model.operation
-
-import kuzminki.model._
+package kuzminki.model
 
 
 object Delete {
 
   def from[M <: Model](model: M, conn: Conn) = {
-    new Where(
+    new OperationWhere(
       model,
       OperationCollector(
         conn,

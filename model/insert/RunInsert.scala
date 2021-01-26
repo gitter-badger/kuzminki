@@ -1,30 +1,29 @@
-package kuzminki.model.insert
+package kuzminki.model
 
 import akka.stream.scaladsl._
 import akka.{NotUsed, Done}
-import kuzminki.model._
 
 
-class RunInsert[M <: Model, S](
+class RunInsert[M <: Model, P](
       protected val model: M,
-      protected val coll: InsertCollector[S]
-    ) extends PickInsertReturning[M, S]
-         with WhereNotExists[M, S]
-         with OnConflict[M, S] {
+      protected val coll: InsertCollector[P]
+    ) extends PickInsertReturning[M, P]
+         with WhereNotExists[M, P]
+         with OnConflict[M, P] {
 
-  def cache = coll.add(InsertBlankValuesSec(coll.inShape.size)).cacheInsert
+  def cache = coll.add(InsertBlankValuesSec(coll.paramShape.size)).cacheInsert
 
-  def run(data: S) = cache.run(data)
+  def run(params: P) = cache.run(params)
 
-  def runNum(data: S) = cache.runNum(data)
+  def runNum(params: P) = cache.runNum(params)
 
-  def list(list: List[S]) = cache.list(list)
+  def list(paramsList: List[P]) = cache.list(paramsList)
 
-  def listNum(list: List[S]) = cache.listNum(list)
+  def listNum(paramsList: List[P]) = cache.listNum(paramsList)
 
-  def stream(source: Source[S, NotUsed]) = cache.stream(source)
+  def stream(source: Source[P, NotUsed]) = cache.stream(source)
 
-  def streamList(data: List[S]) = stream(Source(data))
+  def streamList(paramsList: List[P]) = stream(Source(paramsList))
 }
 
 

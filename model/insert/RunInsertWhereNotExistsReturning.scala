@@ -1,16 +1,14 @@
-package kuzminki.model.insert
-
-import kuzminki.model._
+package kuzminki.model
 
 
-class RunInsertWhereNotExistsReturning[S, R](
+class RunInsertWhereNotExistsReturning[P, R](
       reuse: Reuse,
-      coll: InsertCollector[S],
+      coll: InsertCollector[P],
       outShape: RowShape[R]) {
 
   def cache = coll.cacheInsertWhereNotExistsReturning(outShape, reuse)
 
-  def run(data: S) = cache.run(data)
+  def run(params: P) = cache.run(params)
 
-  def runAs[T](data: S)(implicit custom: R => T) = cache.runAs(data)(custom)
+  def runAs[T](params: P)(implicit custom: R => T) = cache.runAs(params)(custom)
 }

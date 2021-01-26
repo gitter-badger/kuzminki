@@ -1,6 +1,4 @@
-package kuzminki.model.select
-
-import kuzminki.model._
+package kuzminki.model
 
 
 class SelectJoin[A <: Model, B <: Model](join: Join[A, B], db: Conn) {
@@ -40,7 +38,7 @@ class SelectJoin[A <: Model, B <: Model](join: Join[A, B], db: Conn) {
 
   def cols1[R](pick: Join[A, B] => TypeCol[R]) = {
     next(
-      new RowShape1(pick(join))
+      new RowShapeSingle(pick(join))
     )
   }
   

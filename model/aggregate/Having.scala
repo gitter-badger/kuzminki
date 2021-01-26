@@ -1,6 +1,4 @@
-package kuzminki.model.aggregate
-
-import kuzminki.model._
+package kuzminki.model
 
 
 class Having[M, R](model: M, coll: SelectCollector[R]) extends OrderBy(model, coll) {

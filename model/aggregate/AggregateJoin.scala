@@ -1,12 +1,10 @@
-package kuzminki.model.aggregate
-
-import kuzminki.model._
+package kuzminki.model
 
 
 class AggregateJoin[A <: Model, B <: Model](join: Join[A, B], db: Conn) {
 
   private def next[R](shape: RowShape[R]) = {
-    new JoinOn(
+    new AggregateJoinOn(
       join,
       SelectCollector(
         db,
@@ -40,7 +38,7 @@ class AggregateJoin[A <: Model, B <: Model](join: Join[A, B], db: Conn) {
 
   def cols1[R](pick: Join[A, B] => TypeCol[R]) = {
     next(
-      new RowShape1(pick(join))
+      new RowShapeSingle(pick(join))
     )
   }
   

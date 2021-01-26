@@ -1,46 +1,43 @@
-package kuzminki.model.insert
+package kuzminki.model
 
 import akka.stream.scaladsl._
 import akka.{NotUsed, Done}
 import io.rdbc.sapi.SqlWithParams
-import kuzminki.model._
 
 
-class StoredInsert[S](
+class StoredInsert[P](
       protected val template: String,
-      protected val inShape: ParamShape[S],
+      protected val paramConv: ParamConv[P],
                     db: Conn
-    ) extends ListInsert[S]
-         with Printing {
+    ) extends InsertStatement[P]
+         with InsertParams[P]
+         with InsertList[P]
+         with InsertPrinting {
 
-  protected def render = template
-  protected def transform(params: S) = inShape.fromShape(params)
-  protected def statement(params: S) = SqlWithParams(template, transform(params))
-
-  def run(params: S) = {
+  def run(params: P) = {
     db.exec(statement(params))
   }
 
-  def runNum(params: S) = {
+  def runNum(params: P) = {
     db.execNum(statement(params))
   }
 
-  def list(list: List[S]) = {
-    db.exec(listStatement(list))
+  def list(paramsList: List[P]) = {
+    db.exec(listStatement(paramsList))
   }
 
-  def listNum(list: List[S]) = {
-    db.execNum(listStatement(list))
+  def listNum(paramsList: List[P]) = {
+    db.execNum(listStatement(paramsList))
   }
 
-  def stream(source: Source[S, NotUsed]) = {
+  def stream(source: Source[P, NotUsed]) = {
     db.insertStream(
       template,
-      source.map(transform)
+      source.map(tansformParams)
     )
   }
 
-  def streamList(data: List[S]) = stream(Source(data))
+  def streamList(paramsList: List[P]) = stream(Source(paramsList))
 }
 
 

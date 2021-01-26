@@ -1,38 +1,28 @@
-package kuzminki.model.insert
+package kuzminki.model
 
 import io.rdbc.sapi.SqlWithParams
-import kuzminki.model._
 
 
-class StoredUpsertReturning[S, R](
-      template: String,
-      inShape: DataShape[S],
-      outShape: RowShape[R],
-      reuse: Reuse,
-      db: Conn
-    ) extends Printing {
+class StoredUpsertReturning[P, R](
+      protected val template: String,
+      protected val paramConv: ParamConv[P],
+      protected val reuse: Reuse,
+                    rowConv: RowConv[R],
+                    db: Conn
+    ) extends InsertParamsReuse[P]
+         with InsertStatement[P]
+         with InsertPrinting {
 
-  protected def render = template
-
-  private def statement(data: S) = {
-    SqlWithParams(
-      template,
-      reuse.extend(
-        inShape.transform(data)
-      )
-    )
-  }
-
-  def run(data: S) = {
-    db.selectHead(statement(data)) { row =>
-      outShape.fromRow(row)
+  def run(params: P) = {
+    db.selectHead(statement(params)) { row =>
+      rowConv.fromRow(row)
     }  
   }
 
-  def runAs[T](data: S)(implicit custom: R => T) = {
-    db.selectHead(statement(data)) { row =>
+  def runAs[T](params: P)(implicit custom: R => T) = {
+    db.selectHead(statement(params)) { row =>
       custom(
-        outShape.fromRow(row)
+        rowConv.fromRow(row)
       )
     }  
   }

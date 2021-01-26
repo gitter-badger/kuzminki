@@ -1,13 +1,11 @@
-package kuzminki.model.insert
-
-import kuzminki.model._
+package kuzminki.model
 
 
 object Reuse {
 
   def noChange: Reuse = NoChange
 
-  def fromIndex(insertCols: Seq[ModelCol], reuseCols: Seq[ModelCol]): Reuse = {
+  def fromIndex(insertCols: Seq[AnyCol], reuseCols: Seq[AnyCol]): Reuse = {
 
     val indexes = reuseCols.map { col =>
       insertCols.indexOf(col) match {

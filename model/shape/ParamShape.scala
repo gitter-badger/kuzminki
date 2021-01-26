@@ -1,8 +1,8 @@
 package kuzminki.model
 
 
-trait ParamShape[S] {
+trait ParamShape[P] {
   def size: Int
-  def cols: Vector[ModelCol]
-  def transformer: ParamShape[S]
+  def cols: Seq[AnyCol]
+  def conv: ParamConv[P]
 }

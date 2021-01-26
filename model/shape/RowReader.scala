@@ -63,13 +63,16 @@ object RowReader {
       )
     }
 
-    new RowReader(cols)(cTag)
+    new RowReader(cols, cTag)
   }
 }
 
+class RowReader[R](val cols: Seq[TypeCol[_]], tag: ClassTag[R]) extends RowShape[R] {
+  def conv = new RowConvReader(cols.map(_.conv))(tag)
+}
 
-class RowReader[R](val cols: Seq[ValConv[_]])
-                  (implicit tag: ClassTag[R]) extends RowShape[R] {
+
+class RowConvReader[R](val cols: Seq[ValConv[_]])(implicit tag: ClassTag[R]) extends RowConv[R] {
 
   private val indexedCols = cols.zipWithIndex
 

@@ -1,9 +1,7 @@
-package kuzminki.model.aggregate
-
-import kuzminki.model._
+package kuzminki.model
 
 
-class Where[M, R](model: M, coll: SelectCollector[R]) {
+class AggregateWhere[M, R](model: M, coll: SelectCollector[R]) {
 
   def all() = new RunAggregation(coll)
 

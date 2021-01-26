@@ -1,35 +1,27 @@
-package kuzminki.model.insert
+package kuzminki.model
 
 import io.rdbc.sapi.SqlWithParams
-import kuzminki.model._
 
 
-class StoredInsertDoNothingReturning[S, R](
-      template: String,
-      inConv: ParamShape[S],
-      outShape: RowShape[R],
-      db: Conn
-    ) extends Printing {
+class StoredInsertDoNothingReturning[P, R](
+      protected val template: String,
+      protected val paramConv: ParamConv[P],
+                    rowConv: RowConv[R],
+                    db: Conn
+    ) extends InsertStatement[P]
+         with InsertParams[P]
+         with InsertPrinting {
 
-  protected def render = template
-
-  private def statement(data: S) = {
-    SqlWithParams(
-      template,
-      inShape.transform(data)
-    )
-  }
-
-  def run(data: S) = {
-    db.selectHeadOption(statement(data)) { row =>
-      outShape.fromRow(row)
+  def run(params: P) = {
+    db.selectHeadOption(statement(params)) { row =>
+      rowConv.fromRow(row)
     }  
   }
 
-  def runAs[T](data: S)(implicit custom: R => T) = {
-    db.selectHeadOption(statement(data)) { row =>
+  def runAs[T](params: P)(implicit custom: R => T) = {
+    db.selectHeadOption(statement(params)) { row =>
       custom(
-        outShape.fromRow(row)
+        rowConv.fromRow(row)
       )
     }  
   }

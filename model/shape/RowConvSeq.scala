@@ -3,7 +3,7 @@ package kuzminki.model
 import io.rdbc.sapi.Row
 
 
-class RowShapeSeq(val cols: Seq[ValConv[_]]) extends RowConv[Seq[Any]] {
+class RowConvSeq(val cols: Seq[ValConv[_]]) extends RowConv[Seq[Any]] {
 
   private val indexedCols = cols.zipWithIndex
 

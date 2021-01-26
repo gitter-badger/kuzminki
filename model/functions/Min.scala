@@ -8,31 +8,31 @@ trait AggMin extends AggNumeric {
 }
 
 
-case class MinShort(col: RenderableCol) extends AggMin
+case class MinShort(col: AnyCol) extends AggMin
                                     with ShortColValue
                                     with UniversalFilters[Long]
                                     with ComparativeFilters[Long]
 
 
-case class MinInt(col: RenderableCol) extends AggMin
+case class MinInt(col: AnyCol) extends AggMin
                                   with LongColValue
                                   with UniversalFilters[Long]
                                   with ComparativeFilters[Long]
 
 
-case class MinLong(col: RenderableCol) extends AggMin
+case class MinLong(col: AnyCol) extends AggMin
                                    with LongColValue
                                    with UniversalFilters[Long]
                                    with ComparativeFilters[Long]
 
 
-case class MinFloat(col: RenderableCol) extends AggMin
+case class MinFloat(col: AnyCol) extends AggMin
                                     with FloatColValue
                                     with UniversalFilters[Double]
                                     with ComparativeFilters[Double]
 
 
-case class MinDouble(col: RenderableCol) extends AggMin
+case class MinDouble(col: AnyCol) extends AggMin
                                      with DoubleColValue
                                      with UniversalFilters[Double]
                                      with ComparativeFilters[Double]

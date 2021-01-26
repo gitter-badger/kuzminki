@@ -1,12 +1,13 @@
-package kuzminki.model.operation
-
-import kuzminki.model._
+package kuzminki.model
 
 
 abstract class PickOperationReturning[M](model: M, coll: OperationCollector) { 
 
-  private def next[R](outShape: RowShape[R]) = {
-    new RunOperationReturning(coll.returning(outShape))
+  private def next[R](rowShape: RowShape[R]) = {
+    new RunOperationReturning(
+      coll.add(ReturningSec(rowShape.cols)),
+      rowShape.conv
+    )
   }
 
   def returningRead[R](pick: M => RowReader[R]) = {
@@ -29,7 +30,7 @@ abstract class PickOperationReturning[M](model: M, coll: OperationCollector) {
 
   def returning1[R](pick: M => TypeCol[R]) = {
     next(
-      new RowShape1(pick(model))
+      new RowShapeSingle(pick(model))
     )
   }
   

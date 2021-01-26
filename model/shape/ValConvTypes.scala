@@ -1,5 +1,8 @@
 package kuzminki.model
 
+import java.time._
+import io.rdbc.sapi.{Row, DecimalNumber}
+
 
 object StringConv extends ValConv[String] {
   def get(row: Row, index: Int) = row.col[String](index)

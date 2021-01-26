@@ -1,7 +1,7 @@
 package kuzminki.model
 
 
-case class SelectSec(parts: Seq[RenderableCol]) extends MultiRender {
+case class SelectSec(parts: Seq[AnyCol]) extends MultiRender {
   def expression = "SELECT %s"
   def glue = ", "
 }
@@ -15,7 +15,7 @@ case class WhereSec(parts: Seq[Renderable]) extends MultiRender {
   def glue = " AND "
 }
 
-case class GroupBySec(parts: Seq[RenderableCol]) extends MultiRender {
+case class GroupBySec(parts: Seq[AnyCol]) extends MultiRender {
   def expression = "GROUP BY %s"
   def glue = ", "
 }

@@ -2,45 +2,45 @@ package kuzminki.model
 
 import java.time._
 import java.util.UUID
-import io.rdbc.sapi._
+import io.rdbc.sapi.DecimalNumber
 
 
-trait TypeCol[T] extends RenderableCol {
-  def get(row: Row, index: Int): T
+trait TypeCol[T] extends AnyCol {
+  def conv: ValConv[T]
 }
 
 trait StringColValue extends TypeCol[String] {
-  def get(row: Row, index: Int) = row.str(index)
+  def conv = StringConv
 }
 
 trait BooleanColValue extends TypeCol[Boolean] {
-  def get(row: Row, index: Int) = row.bool(index)
+  def conv = BooleanConv
 }
 
 trait ShortColValue extends TypeCol[Short] {
-  def get(row: Row, index: Int) = row.short(index)
+  def conv = ShortConv
 }
 
 trait IntColValue extends TypeCol[Int] {
-  def get(row: Row, index: Int) = row.int(index)
+  def conv = IntConv
 }
 
 trait LongColValue extends TypeCol[Long] {
-  def get(row: Row, index: Int) = row.long(index)
+  def conv = LongConv
 }
 
 trait FloatColValue extends TypeCol[Float] {
-  def get(row: Row, index: Int) = row.float(index)
+  def conv = FloatConv
 }
 
 trait DoubleColValue extends TypeCol[Double] {
-  def get(row: Row, index: Int) = row.double(index)
+  def conv = DoubleConv
 }
 
 trait DecimalNumberColValue extends TypeCol[DecimalNumber] {
-  def get(row: Row, index: Int) = row.decimal(index)
+  def conv = DecimalNumberConv
 }
 
 trait BigDecimalColValue extends TypeCol[BigDecimal] {
-  def get(row: Row, index: Int) = row.bigDecimal(index)
+  def conv = BigDecimalConv
 }

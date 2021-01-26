@@ -1,7 +1,7 @@
 package kuzminki.model
 
 
-case class ReturningSec(parts: Seq[RenderableCol]) extends MultiRender {
+case class ReturningSec(parts: Seq[AnyCol]) extends MultiRender {
   def expression = "RETURNING %s"
   def glue = ", "
 }

@@ -1,6 +1,4 @@
-package kuzminki.model.select
-
-import kuzminki.model._
+package kuzminki.model
 
 
 class Where[M, R](model: M, coll: SelectCollector[R]) {

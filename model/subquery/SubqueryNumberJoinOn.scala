@@ -1,6 +1,4 @@
-package kuzminki.model.aggregate
-
-import kuzminki.model._
+package kuzminki.model
 
 
 class SubqueryNumberJoinOn[A <: Model, B <: Model](join: Join[A, B], coll: SubCollector) {

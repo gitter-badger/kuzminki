@@ -1,6 +1,4 @@
-package kuzminki.model.aggregate
-
-import kuzminki.model._
+package kuzminki.model
 
 
 class WhereSubqueryNumber[M](model: M, coll: SubCollector) {

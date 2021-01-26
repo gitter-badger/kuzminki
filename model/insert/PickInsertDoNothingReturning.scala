@@ -1,16 +1,14 @@
-package kuzminki.model.insert
-
-import kuzminki.model._
+package kuzminki.model
 
 
-abstract class PickInsertDoNothingReturning[M, S](
+abstract class PickInsertDoNothingReturning[M, P](
       model: M,
-      coll: InsertCollector[S]) {
+      coll: InsertCollector[P]) {
 
-  private def next[R](outShape: RowShape[R]) = {
+  private def next[R](rowShape: RowShape[R]) = {
     new RunInsertDoNothingReturning(
-      coll.add(ReturningSec(outShape.cols)),
-      outShape
+      coll.add(ReturningSec(rowShape.cols)),
+      rowShape
     )
   }
 
@@ -34,7 +32,7 @@ abstract class PickInsertDoNothingReturning[M, S](
 
   def returning1[R](pick: M => TypeCol[R]) = {
     next(
-      new RowShape1(pick(model))
+      new RowShapeSingle(pick(model))
     )
   }
   

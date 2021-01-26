@@ -1,6 +1,4 @@
-package kuzminki.model.insert
-
-import kuzminki.model._
+package kuzminki.model
 
 
 trait WhereNotExists[M <: Model, S] {
@@ -26,10 +24,10 @@ trait WhereNotExists[M <: Model, S] {
 
     new RunInsertWhereNotExists(
       model,
-      Reuse.fromIndex(coll.inShape.cols, uniqueCols),
+      Reuse.fromIndex(coll.paramShape.cols, uniqueCols),
       coll.add(
         InsertBlankWhereNotExistsSec(
-          coll.inShape.size,
+          coll.paramShape.size,
           ModelTable(model),
           WhereSec(
             uniqueCols.map(FilterMatchesNoArg(_))

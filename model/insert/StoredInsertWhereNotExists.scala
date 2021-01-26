@@ -1,47 +1,33 @@
-package kuzminki.model.insert
+package kuzminki.model
 
 import akka.stream.scaladsl._
 import akka.{NotUsed, Done}
 import io.rdbc.sapi.SqlWithParams
-import kuzminki.model._
 
 
-class StoredInsertWhereNotExists[S](
-      template: String,
-      inShape: DataShape[S],
-      reuse: Reuse,
-      db: Conn
-    ) extends Printing {
+class StoredInsertWhereNotExists[P](
+      protected val template: String,
+      protected val paramConv: ParamConv[P],
+      protected val reuse: Reuse,
+                    db: Conn
+    ) extends InsertStatement[P]
+         with InsertParamsReuse[P]
+         with InsertPrinting {
 
-  protected def render = template
-
-  private def transform(data: S) = {
-    reuse.extend(
-      inShape.transform(data)
-    )
+  def run(params: P) = {
+    db.exec(statement(params))
   }
 
-  private def statement(data: S) = {
-    SqlWithParams(
-      template,
-      transform(data)
-    )
+  def runNum(params: P) = {
+    db.execNum(statement(params))
   }
 
-  def run(data: S) = {
-    db.exec(statement(data))
-  }
-
-  def runNum(data: S) = {
-    db.execNum(statement(data))
-  }
-
-  def stream(source: Source[S, NotUsed]) = {
+  def stream(source: Source[P, NotUsed]) = {
     db.insertStream(
       template,
-      source.map(transform)
+      source.map(tansformParams)
     )
   }
 
-  def streamList(data: List[S]) = stream(Source(data))
+  def streamList(paramsList: List[P]) = stream(Source(paramsList))
 }

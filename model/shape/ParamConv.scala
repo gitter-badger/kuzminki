@@ -1,6 +1,6 @@
 package kuzminki.model
 
 
-trait ParamConv[S] {
-  def fromShape(params: S): Vector[S]
+trait ParamConv[P] {
+  def fromShape(params: P): Vector[Any]
 }

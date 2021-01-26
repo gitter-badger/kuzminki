@@ -1,12 +1,10 @@
-package kuzminki.model.aggregate
-
-import kuzminki.model._
+package kuzminki.model
 
 
 class Aggregate[M <: Model](model: M, db: Conn) {
 
   private def next[R](shape: RowShape[R]) = {
-    new Where(
+    new AggregateWhere(
       model,
       SelectCollector(
         db,
@@ -40,7 +38,7 @@ class Aggregate[M <: Model](model: M, db: Conn) {
 
   def cols1[R](pick: M => TypeCol[R]) = {
     next(
-      new RowShape1(pick(model))
+      new RowShapeSingle(pick(model))
     )
   }
   

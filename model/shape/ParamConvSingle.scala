@@ -1,7 +1,7 @@
 package kuzminki.model
 
 
-class ParamConvSingle[S](col: ValConv[S]) extends ParamConv[S] {
+class ParamConvSingle[P](col: ValConv[P]) extends ParamConv[P] {
 
-  def fromShape(param: S) = Vector(param) 
+  def fromShape(param: P) = Vector(param) 
 }

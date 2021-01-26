@@ -1,21 +1,20 @@
-package kuzminki.model.operation
+package kuzminki.model
 
 import akka.stream.scaladsl._
 import akka.{NotUsed, Done}
 import io.rdbc.sapi.SqlWithParams
-import kuzminki.model._
 
 
 class StoredOperation[S](
       template: String,
       args: Vector[Any],
-      params: ParamShape[S],
+      conv: ParamConv[S],
       db: Conn) {
 
   protected def render = template
 
   private def transform(data: S) = {
-    args ++ params.fromShape(data)
+    args ++ conv.fromShape(data)
   }
 
   private def statement(data: S) = {

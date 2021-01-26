@@ -3,9 +3,9 @@ package kuzminki.model
 import io.rdbc.sapi.Row
 
 
-class RowShape1[R](col: TypeCol[R]) extends RowShape[R] {
+class RowShapeSingle[R](col: TypeCol[R]) extends RowShape[R] {
   
   def cols = Seq(col)
   
-  def conv = RowConvSingle(col.conv)
+  def conv = new RowConvSingle(col.conv)
 }

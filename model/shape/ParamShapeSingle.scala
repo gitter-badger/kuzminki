@@ -1,8 +1,8 @@
 package kuzminki.model
 
 
-class ParamShapeSingle[S](col: TypeCol[S]) extends ParamShape[S] {
+class ParamShapeSingle[P](col: TypeCol[P]) extends ParamShape[P] {
   def size = 1
   def cols = Vector(col)
-  def transformer = new ParamShapeSingle(col.conv) 
+  def conv = new ParamConvSingle(col.conv) 
 }

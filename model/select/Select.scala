@@ -1,6 +1,4 @@
-package kuzminki.model.select
-
-import kuzminki.model._
+package kuzminki.model
 
 
 class Select[M <: Model](model: M, db: Conn) {
@@ -40,7 +38,7 @@ class Select[M <: Model](model: M, db: Conn) {
 
   def cols1[R](pick: M => TypeCol[R]) = {
     next(
-      new RowShape1(pick(model))
+      new RowShapeSingle(pick(model))
     )
   }
   

@@ -1,25 +1,23 @@
-package kuzminki.model.aggregate
-
-import kuzminki.model._
+package kuzminki.model
 
 
 class RunAggregation[R](coll: SelectCollector[R]) {
 
-  coll.outShape.cols.foreach {
+  coll.rowShape.cols.foreach {
     case f: AggNumeric =>
     case _ => throw KuzminkiException("all columns must be aggregate functions")
   }
 
   def run() = {
     coll.db.selectHead(coll.statement) { row =>
-      coll.outShape.fromRow(row)
+      coll.rowShape.conv.fromRow(row)
     }
   }
 
   def runAs[T](implicit custom: R => T) = {
     coll.db.selectHead(coll.statement) { row =>
       custom(
-        coll.outShape.fromRow(row)
+        coll.rowShape.conv.fromRow(row)
       )
     }  
   }

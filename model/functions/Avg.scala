@@ -3,7 +3,7 @@ package kuzminki.model
 import io.rdbc.sapi.DecimalNumber
 
 
-case class AvgNumber(col: RenderableCol) extends AggNumeric
+case class AvgNumber(col: AnyCol) extends AggNumeric
                                      with DecimalNumberColValue
                                      with UniversalFilters[Long]
                                      with ComparativeFilters[Long] {
@@ -12,7 +12,7 @@ case class AvgNumber(col: RenderableCol) extends AggNumeric
 }
 
 
-case class AvgFloating(col: RenderableCol) extends AggNumeric
+case class AvgFloating(col: AnyCol) extends AggNumeric
                                        with DoubleColValue
                                        with UniversalFilters[Double]
                                        with ComparativeFilters[Double] {
@@ -21,7 +21,7 @@ case class AvgFloating(col: RenderableCol) extends AggNumeric
 }
 
 
-case class AvgCastShort(col: RenderableCol) extends AggNumeric
+case class AvgCastShort(col: AnyCol) extends AggNumeric
                                         with ShortColValue
                                         with UniversalFilters[Long]
                                         with ComparativeFilters[Long] {
@@ -30,7 +30,7 @@ case class AvgCastShort(col: RenderableCol) extends AggNumeric
 }
 
 
-case class AvgCastInt(col: RenderableCol) extends AggNumeric
+case class AvgCastInt(col: AnyCol) extends AggNumeric
                                       with IntColValue
                                       with UniversalFilters[Long]
                                       with ComparativeFilters[Long] {
@@ -39,7 +39,7 @@ case class AvgCastInt(col: RenderableCol) extends AggNumeric
 }
 
 
-case class AvgCastLong(col: RenderableCol) extends AggNumeric
+case class AvgCastLong(col: AnyCol) extends AggNumeric
                                        with DecimalNumberColValue
                                        with UniversalFilters[Long]
                                        with ComparativeFilters[Long] {
@@ -48,7 +48,7 @@ case class AvgCastLong(col: RenderableCol) extends AggNumeric
 }
 
 
-case class AvgCastFloat(col: RenderableCol) extends AggNumeric
+case class AvgCastFloat(col: AnyCol) extends AggNumeric
                                         with DoubleColValue
                                         with UniversalFilters[Double]
                                         with ComparativeFilters[Double] {

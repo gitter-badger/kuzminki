@@ -1,18 +1,17 @@
-package kuzminki.model.insert
+package kuzminki.model
 
 import akka.stream.scaladsl._
 import akka.{NotUsed, Done}
-import kuzminki.model._
 
 
-class RunInsertDoNothing[M, S](
+class RunInsertDoNothing[M, P](
       model: M,
-      coll: InsertCollector[S]
+      coll: InsertCollector[P]
     ) extends PickInsertDoNothingReturning(model, coll) {
 
   def cache = coll.cacheInsertDoNothing
 
-  def run(data: S) = cache.run(data)
+  def run(params: P) = cache.run(params)
 
-  def runNum(data: S) = cache.runNum(data)
+  def runNum(params: P) = cache.runNum(params)
 }

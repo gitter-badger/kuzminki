@@ -1,7 +1,7 @@
 package kuzminki.model
 
 
-case class OnSec(leftCol: ModelCol, rightCol: ModelCol) extends Section with NoArgs {
+case class OnSec(leftCol: AnyCol, rightCol: AnyCol) extends Section with NoArgs {
   def expression = "ON %s = %s"
   def render(prefix: Prefix) = expression.format(leftCol.render(prefix), rightCol.render(prefix))
 }

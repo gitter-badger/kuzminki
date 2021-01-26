@@ -1,6 +1,4 @@
-package kuzminki.model.operation
-
-import kuzminki.model._
+package kuzminki.model
 
 
 case class OperationCollector(db: Conn, sections: Array[Section]) extends CollectOperation {
@@ -9,11 +7,7 @@ case class OperationCollector(db: Conn, sections: Array[Section]) extends Collec
 
   def extend(added: Array[Section]) = this.copy(sections = sections ++ added)
 
-  def returning[R](outShape: RowShape[R]) = {
-    SelectCollector(db, prefix, outShape, sections :+ ReturningSec(outShape.cols))
-  }
-
-  def cache[S](inShape: DataShape[S]) = {
-    new StoredOperation(render, args, inShape, db)
+  def cache[P](paramShape: ParamShape[P]) = {
+    new StoredOperation(render, args, paramShape.conv, db)
   }
 }

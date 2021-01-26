@@ -23,12 +23,6 @@ import io.rdbc.pgsql.transport.netty.sapi.NettyPgConnectionFactory.Config
 import io.rdbc.pool.sapi.ConnectionPool
 import io.rdbc.pool.sapi.ConnectionPoolConfig
 
-import kuzminki.model.select.{Select, SelectJoin}
-import kuzminki.model.insert.Insert
-import kuzminki.model.operation.{Update, Delete}
-import kuzminki.model.operation.{Where => OperationWhere}
-import kuzminki.model.aggregate.{Aggregate, AggregateJoin, SubqueryNumber, SubqueryNumberJoin}
-import kuzminki.model.aggregate.{Where => AggregateWhere, JoinOn => AggregateJoinOn}
 import kuzminki.model._
 import kuzminki.model.implicits._
 

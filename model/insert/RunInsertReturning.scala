@@ -1,21 +1,19 @@
-package kuzminki.model.insert
-
-import kuzminki.model._
+package kuzminki.model
 
 
-class RunInsertReturning[S, R](
-      coll: InsertCollector[S],
-      outShape: RowShape[R]) {
+class RunInsertReturning[P, R](
+      coll: InsertCollector[P],
+      rowShape: RowShape[R]) {
 
-  def cache = coll.cacheInsertReturning(outShape)
+  def cache = coll.cacheInsertReturning(rowShape)
 
-  def run(data: S) = cache.run(data)
+  def run(params: P) = cache.run(params)
 
-  def runAs[T](data: S)(implicit custom: R => T) = cache.runAs(data)(custom)
+  def runAs[T](params: P)(implicit custom: R => T) = cache.runAs(params)(custom)
 
-  def list(list: List[S]) = cache.list(list)
+  def list(paramsList: List[P]) = cache.list(paramsList)
 
-  def listAs[T](list: List[S])(implicit custom: R => T) = cache.listAs(list)(custom)
+  def listAs[T](paramsList: List[P])(implicit custom: R => T) = cache.listAs(paramsList)(custom)
 }
 
 

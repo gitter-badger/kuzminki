@@ -1,20 +1,18 @@
-package kuzminki.model.insert
-
-import kuzminki.model._
+package kuzminki.model
 
 
-trait PickInsertReturning[M, S] {
+trait PickInsertReturning[M, P] {
 
   protected val model: M
-  protected val coll: InsertCollector[S]
+  protected val coll: InsertCollector[P]
 
-  private def next[R](outShape: RowShape[R]) = {
+  private def next[R](rowShape: RowShape[R]) = {
     new RunInsertReturning(
       coll.extend(Array(
-        InsertBlankValuesSec(coll.inShape.size),
-        ReturningSec(outShape.cols)
+        InsertBlankValuesSec(coll.paramShape.size),
+        ReturningSec(rowShape.cols)
       )),
-      outShape
+      rowShape
     )
   }
 
@@ -38,7 +36,7 @@ trait PickInsertReturning[M, S] {
 
   def returning1[R](pick: M => TypeCol[R]) = {
     next(
-      new RowShape1(pick(model))
+      new RowShapeSingle(pick(model))
     )
   }
   

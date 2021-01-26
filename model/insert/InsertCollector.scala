@@ -1,11 +1,9 @@
-package kuzminki.model.insert
-
-import kuzminki.model._
+package kuzminki.model
 
 
-case class InsertCollector[S](
+case class InsertCollector[P](
       db: Conn,
-      inShape: DataShape[S],
+      paramShape: ParamShape[P],
       sections: Array[Section]
     ) extends CollectOperation {
 
@@ -14,34 +12,34 @@ case class InsertCollector[S](
   def extend(added: Array[Section]) = this.copy(sections = sections ++ added)
 
   def cacheInsert = {
-    new StoredInsert(render, inShape.conv, db)
+    new StoredInsert(render, paramShape.conv, db)
   }
 
-  def cacheInsertReturning[R](transformer: RowShape[R]) = {
-    new StoredInsertReturning(render, inShape.conv, transformer, db)
+  def cacheInsertReturning[R](rowShape: RowShape[R]) = {
+    new StoredInsertReturning(render, paramShape.conv, rowShape.conv, db)
   }
 
   def cacheInsertDoNothing = {
-    new StoredInsertDoNothing(render, inShape.conv, db)
+    new StoredInsertDoNothing(render, paramShape.conv, db)
   }
 
-  def cacheInsertDoNothingReturning[R](transformer: RowShape[R]) = {
-    new StoredInsertDoNothingReturning(render, inShape.conv, transformer, db)
+  def cacheInsertDoNothingReturning[R](rowShape: RowShape[R]) = {
+    new StoredInsertDoNothingReturning(render, paramShape.conv, rowShape.conv, db)
   }
 
   def cacheUpsert(reuse: Reuse) = {
-    new StoredUpsert(render, inShape, reuse, db)
+    new StoredUpsert(render, paramShape.conv, reuse, db)
   }
 
-  def cacheUpsertReturning[R](transformer: RowShape[R], reuse: Reuse) = {
-    new StoredUpsertReturning(render, inShape, transformer, reuse, db)
+  def cacheUpsertReturning[R](rowShape: RowShape[R], reuse: Reuse) = {
+    new StoredUpsertReturning(render, paramShape.conv, reuse, rowShape.conv, db)
   }
 
   def cacheInsertWhereNotExists(reuse: Reuse) = {
-    new StoredInsertWhereNotExists(render, inShape, reuse, db)
+    new StoredInsertWhereNotExists(render, paramShape.conv, reuse, db)
   }
 
-  def cacheInsertWhereNotExistsReturning[R](transformer: RowShape[R], reuse: Reuse) = {
-    new StoredInsertWhereNotExistsReturning(render, inShape, transformer, reuse, db)
+  def cacheInsertWhereNotExistsReturning[R](rowShape: RowShape[R], reuse: Reuse) = {
+    new StoredInsertWhereNotExistsReturning(render, paramShape.conv, reuse, rowShape.conv, db)
   }
 }

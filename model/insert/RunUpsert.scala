@@ -1,19 +1,18 @@
-package kuzminki.model.insert
+package kuzminki.model
 
 import akka.stream.scaladsl._
 import akka.{NotUsed, Done}
-import kuzminki.model._
 
 
-class RunUpsert[M, S](
+class RunUpsert[M, P](
       model: M,
       reuse: Reuse,
-      coll: InsertCollector[S]
+      coll: InsertCollector[P]
     ) extends PickUpsertReturning(model, reuse, coll) {
 
   def cache = coll.cacheUpsert(reuse)
 
-  def run(data: S) = cache.run(data)
+  def run(params: P) = cache.run(params)
 
-  def runNum(data: S) = cache.runNum(data)
+  def runNum(params: P) = cache.runNum(params)
 }

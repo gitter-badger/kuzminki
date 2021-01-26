@@ -2,6 +2,6 @@ package kuzminki.model
 
 
 trait ColArgs {
-  val col: RenderableCol
+  val col: AnyCol
   def args = col.args
 }

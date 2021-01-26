@@ -1,18 +1,16 @@
-package kuzminki.model.insert
-
-import kuzminki.model._
+package kuzminki.model
 
 
-abstract class PickInsertWhereNotExistsReturning[M, S](
+abstract class PickInsertWhereNotExistsReturning[M, P](
       model: M,
       reuse: Reuse,
-      coll: InsertCollector[S]) {
+      coll: InsertCollector[P]) {
 
-  private def next[R](outShape: RowShape[R]) = {
+  private def next[R](rowShape: RowShape[R]) = {
     new RunInsertWhereNotExistsReturning(
       reuse,
-      coll.add(ReturningSec(outShape.cols)),
-      outShape
+      coll.add(ReturningSec(rowShape.cols)),
+      rowShape
     )
   }
 
@@ -36,7 +34,7 @@ abstract class PickInsertWhereNotExistsReturning[M, S](
 
   def returning1[R](pick: M => TypeCol[R]) = {
     next(
-      new RowShape1(pick(model))
+      new RowShapeSingle(pick(model))
     )
   }
   

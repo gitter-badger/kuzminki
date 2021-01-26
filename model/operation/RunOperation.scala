@@ -1,6 +1,4 @@
-package kuzminki.model.operation
-
-import kuzminki.model._
+package kuzminki.model
 
 
 class RunOperation[M](

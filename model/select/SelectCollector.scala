@@ -15,7 +15,7 @@ trait RenderCollector {
 case class SelectCollector[R](
       db: Conn,
       prefix: Prefix,
-      outShape: RowShape[R],
+      rowShape: RowShape[R],
       sections: Array[Section]
     ) extends RenderCollector {
 

@@ -1,12 +1,10 @@
-package kuzminki.model.operation
-
-import kuzminki.model._
+package kuzminki.model
 
 
 class Update[M <: Model](model: M, db: Conn) {
 
   def set(pick: M => Seq[Assign]) = {
-    new Where(
+    new OperationWhere(
       model,
       OperationCollector(
         db,
@@ -19,7 +17,7 @@ class Update[M <: Model](model: M, db: Conn) {
   }
 
   def setOne(pick: M => Assign) = {
-    new Where(
+    new OperationWhere(
       model,
       OperationCollector(
         db,

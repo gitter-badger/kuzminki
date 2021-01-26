@@ -123,7 +123,7 @@ class Conn(conf: SystemConfig)(implicit system: ActorSystem) extends LazyLogging
   def shutdown(): Future[Unit] = pool.shutdown()
 }
 
-
+/*
 class RdbcOldConn(conf: SystemConfig)(implicit system: ActorSystem) extends LazyLogging {
 
   logger.info("Start")
@@ -231,7 +231,7 @@ class RdbcOldConn(conf: SystemConfig)(implicit system: ActorSystem) extends Lazy
 
   def shutdown(): Future[Unit] = pool.shutdown()
 }
-
+*/
 
 
 

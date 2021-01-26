@@ -1,7 +1,7 @@
 package kuzminki.model
 
 
-trait SortingCol extends ColRef {
+trait SortingDirection extends ColRef {
   def asc = Asc(col)
   def desc = Desc(col)
 }

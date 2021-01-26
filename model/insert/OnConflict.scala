@@ -1,18 +1,16 @@
-package kuzminki.model.insert
-
-import kuzminki.model._
+package kuzminki.model
 
 
-trait OnConflict[M, S] {
+trait OnConflict[M, P] {
 
   protected val model: M
-  protected val coll: InsertCollector[S]
+  protected val coll: InsertCollector[P]
 
   def onConflictDoNothing = {
     new RunInsertDoNothing(
       model,
       coll.extend(Array(
-        InsertBlankValuesSec(coll.inShape.size),
+        InsertBlankValuesSec(coll.paramShape.size),
         InsertOnConflictSec,
         InsertDoNothingSec
       ))

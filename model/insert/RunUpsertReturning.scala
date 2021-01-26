@@ -1,18 +1,16 @@
-package kuzminki.model.insert
-
-import kuzminki.model._
+package kuzminki.model
 
 
-class RunUpsertReturning[S, R](
+class RunUpsertReturning[P, R](
       reuse: Reuse,
-      coll: InsertCollector[S],
-      outShape: RowShape[R]) {
+      coll: InsertCollector[P],
+      rowShape: RowShape[R]) {
 
-  def cache = coll.cacheUpsertReturning(outShape, reuse)
+  def cache = coll.cacheUpsertReturning(rowShape, reuse)
 
-  def run(data: S) = cache.run(data)
+  def run(params: P) = cache.run(params)
 
-  def runAs[T](data: S)(implicit custom: R => T) = cache.runAs(data)(custom)
+  def runAs[T](params: P)(implicit custom: R => T) = cache.runAs(params)(custom)
 }
 
 

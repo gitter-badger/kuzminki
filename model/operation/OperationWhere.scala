@@ -1,9 +1,7 @@
-package kuzminki.model.operation
-
-import kuzminki.model._
+package kuzminki.model
 
 
-class Where[M](model: M, coll: OperationCollector) {
+class OperationWhere[M](model: M, coll: OperationCollector) {
 
   def all() = new RunOperation(model, coll)
 
@@ -42,32 +40,32 @@ class Where[M](model: M, coll: OperationCollector) {
     }
   }
 
-  private def cache[S](shape: DataShape[S]) = {
+  private def cache[P](paramShape: ParamShape[P]) = {
     coll.add(
       WhereSec(
-        shape.cols.map(NoArgMatches(_))
+        paramShape.cols.map(NoArgMatches(_))
       )
-    ).cache(shape)
+    ).cache(paramShape)
   }
 
   def cacheWhere1[R](pick: M => TypeCol[R]) = {
-    cache(new DataShape1(pick(model)))
+    cache(new ParamShapeSingle(pick(model)))
   }
   
   def cacheWhere2[R1, R2](pick: M => Tuple2[TypeCol[R1], TypeCol[R2]]) = {
-    cache(new DataShape2(pick(model)))
+    cache(new ParamShape2(pick(model)))
   }
 
   def cacheWhere3[R1, R2, R3](pick: M => Tuple3[TypeCol[R1], TypeCol[R2], TypeCol[R3]]) = {
-    cache(new DataShape3(pick(model)))
+    cache(new ParamShape3(pick(model)))
   }
 
   def cacheWhere4[R1, R2, R3, R4](pick: M => Tuple4[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4]]) = {
-    cache(new DataShape4(pick(model)))
+    cache(new ParamShape4(pick(model)))
   }
 
   def cacheWhere5[R1, R2, R3, R4, R5](pick: M => Tuple5[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5]]) = {
-    cache(new DataShape5(pick(model)))
+    cache(new ParamShape5(pick(model)))
   }
 }
 

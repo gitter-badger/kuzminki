@@ -1,44 +1,43 @@
-package kuzminki.model.insert
+package kuzminki.model
 
 import io.rdbc.sapi.SqlWithParams
-import kuzminki.model._
 
 
-class StoredInsertReturning[S, R](
+class StoredInsertReturning[P, R](
       protected val template: String,
-      protected val inShape: DataShape[S],
-                    outShape: RowShape[R],
+      protected val paramConv: ParamConv[P],
+                    rowConv: RowConv[R],
                     db: Conn
-    ) extends ListInsert[S]
-         with Printing {
+    ) extends InsertStatement[P]
+         with InsertParams[P]
+         with InsertList[P]
+         with InsertPrinting {
 
-  protected def render = template
-
-  def run(data: S) = {
-    db.selectHead(statement(data)) { row =>
-      outShape.fromRow(row)
+  def run(params: P) = {
+    db.selectHead(statement(params)) { row =>
+      rowConv.fromRow(row)
     }  
   }
 
-  def runAs[T](data: S)(implicit custom: R => T) = {
-    db.selectHead(statement(data)) { row =>
+  def runAs[T](params: P)(implicit custom: R => T) = {
+    db.selectHead(statement(params)) { row =>
       custom(
-        outShape.fromRow(row)
+        rowConv.fromRow(row)
       )
     }  
   }
 
-  def list(list: List[S]) = {
-    db.select(listStatement(list)) { row =>
-      outShape.fromRow(row)
+  def list(paramsList: List[P]) = {
+    db.select(listStatement(paramsList)) { row =>
+      rowConv.fromRow(row)
     }  
   }
 
 
-  def listAs[T](list: List[S])(implicit custom: R => T) = {
-    db.select(listStatement(list)) { row =>
+  def listAs[T](paramsList: List[P])(implicit custom: R => T) = {
+    db.select(listStatement(paramsList)) { row =>
       custom(
-        outShape.fromRow(row)
+        rowConv.fromRow(row)
       )
     }  
   }

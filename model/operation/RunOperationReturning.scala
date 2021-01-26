@@ -6,24 +6,24 @@ import akka.stream.scaladsl._
 import akka.Done
 
 
-class RunOperationReturning[R](coll: SelectCollector[R]) {
+class RunOperationReturning[R](coll: OperationCollector, rowConv: RowConv[R]) {
   
   def run() = {
     coll.db.select(coll.statement) { row =>
-      coll.outShape.fromRow(row)
+      rowConv.fromRow(row)
     }  
   }
 
   def first() = {
     coll.db.selectHeadOption(coll.statement) { row =>
-      coll.outShape.fromRow(row)
+      rowConv.fromRow(row)
     }
   }
 
   def runAs[T](implicit custom: R => T) = {
     coll.db.select(coll.statement) { row =>
       custom(
-        coll.outShape.fromRow(row)
+        rowConv.fromRow(row)
       )
     }  
   }
@@ -31,7 +31,7 @@ class RunOperationReturning[R](coll: SelectCollector[R]) {
   def firstAs[T](implicit custom: R => T) = {
     coll.db.selectHeadOption(coll.statement) { row =>
       custom(
-        coll.outShape.fromRow(row)
+        rowConv.fromRow(row)
       )
     }  
   }

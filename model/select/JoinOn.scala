@@ -1,6 +1,4 @@
-package kuzminki.model.select
-
-import kuzminki.model._
+package kuzminki.model
 
 
 class JoinOn[A <: Model, B <: Model, R](join: Join[A, B], coll: SelectCollector[R]) {

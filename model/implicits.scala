@@ -1,8 +1,6 @@
 package kuzminki.model
 
 import io.rdbc.sapi.DecimalNumber
-import kuzminki.model.aggregate.RunAggregation
-import kuzminki.model.insert._
 
 object implicits {
 

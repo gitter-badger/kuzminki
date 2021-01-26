@@ -1,38 +1,28 @@
-package kuzminki.model.insert
+package kuzminki.model
 
 import io.rdbc.sapi.SqlWithParams
-import kuzminki.model._
 
 
-class StoredInsertWhereNotExistsReturning[S, R](
-      template: String,
-      inShape: DataShape[S],
-      outShape: RowShape[R],
-      reuse: Reuse,
-      db: Conn
-    ) extends Printing {
+class StoredInsertWhereNotExistsReturning[P, R](
+      protected val template: String,
+      protected val paramConv: ParamConv[P],
+      protected val reuse: Reuse,
+                    rowConv: RowConv[R],
+                    db: Conn
+    ) extends InsertStatement[P]
+         with InsertParamsReuse[P]
+         with InsertPrinting {
 
-  protected def render = template
-
-  private def statement(data: S) = {
-    SqlWithParams(
-      template,
-      reuse.extend(
-        inShape.transform(data)
-      )
-    )
-  }
-
-  def run(data: S) = {
-    db.selectHeadOption(statement(data)) { row =>
-      outShape.fromRow(row)
+  def run(params: P) = {
+    db.selectHeadOption(statement(params)) { row =>
+      rowConv.fromRow(row)
     }  
   }
 
-  def runAs[T](data: S)(implicit custom: R => T) = {
-    db.selectHeadOption(statement(data)) { row =>
+  def runAs[T](params: P)(implicit custom: R => T) = {
+    db.selectHeadOption(statement(params)) { row =>
       custom(
-        outShape.fromRow(row)
+        rowConv.fromRow(row)
       )
     }  
   }
