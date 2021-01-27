@@ -42,4 +42,8 @@ case class InsertCollector[P](
   def cacheInsertWhereNotExistsReturning[R](rowShape: RowShape[R], reuse: Reuse) = {
     new StoredInsertWhereNotExistsReturning(render, paramShape.conv, reuse, rowShape.conv, db)
   }
+
+  def cacheInsertSubquery = {
+    new StoredInsertSubquery(statement, db)
+  }
 }

@@ -75,11 +75,10 @@ case class InsertDoUpdateNoArgsSec(parts: Seq[ModelCol]) extends Section with No
   )
 }
 
-/*
-case class InsertSubQuerySec(part: UntypedSubQuery) extends SinglePart {
-  def expression = "(%s)"
+case class InsertSubquerySec(part: Renderable) extends SingleRender {
+  def expression = "%s"
 }
-*/
+
 
 
 
