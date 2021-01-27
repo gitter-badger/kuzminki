@@ -5,6 +5,14 @@ case class InsertIntoSec(part: ModelTable) extends SingleRender {
   def expression = "INSERT INTO %s"
 }
 
+case class InsertDataSec(parts: Seq[SetValue]) extends Section with FillValues {
+  def expression = "(%s) VALUES (%s)"
+  def render(prefix: Prefix) = expression.format(
+    parts.map(_.col.render(prefix)).mkString(", "),
+    fillNoBrackets(parts.size)
+  )
+  def args = parts.map(_.value)
+}
 
 case class InsertColumnsSec(parts: Seq[AnyCol]) extends MultiRender {
   def expression = "(%s)"
@@ -43,24 +51,6 @@ case class InsertBlankWhereNotExistsSec(size: Int, table: ModelTable, where: Whe
   }
 }
 
-/*
-case class InsertWhereNotExistsSec(values: Seq[Any], table: ModelTable, where: WhereSec) extends Section with Values with NoJoin {
-  def expression = "SELECT %s WHERE NOT EXISTS (SELECT 1 FROM %s %s)"
-  def render = {
-    expression.format(
-      blank(values.size),
-      table.render,
-      where.render
-    )
-  }
-  def args = values ++ where.args
-}
-
-case class InsertSubQuerySec(part: UntypedSubQuery) extends SinglePart {
-  def expression = "(%s)"
-}
-*/
-
 object InsertOnConflictSec extends TextOnly {
   def expression = "ON CONFLICT"
 }
@@ -73,11 +63,23 @@ object InsertDoNothingSec extends TextOnly {
   def expression = "DO NOTHING"
 }
 
-case class InsertDoUpdateSec(parts: Seq[AnyCol]) extends MultiRender {
+case class InsertDoUpdateSec(parts: Seq[SetValue]) extends MultiRender {
   def expression = "DO UPDATE SET %s"
   def glue = ", "
 }
 
+case class InsertDoUpdateNoArgsSec(parts: Seq[ModelCol]) extends Section with NoArgs {
+  def expression = "DO UPDATE SET %s"
+  def render(prefix: Prefix) = expression.format(
+    parts.map(_.name).mkString(", ")
+  )
+}
+
+/*
+case class InsertSubQuerySec(part: UntypedSubQuery) extends SinglePart {
+  def expression = "(%s)"
+}
+*/
 
 
 

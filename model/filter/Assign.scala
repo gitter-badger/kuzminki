@@ -5,7 +5,7 @@ trait Assign extends Renderable {
   val col: ModelCol
   val value: Any
   def format(name: String): String
-  def render(prefix: Prefix) = format(col.render(prefix))
+  def render(prefix: Prefix) = format(col.name)
   def args = Seq(value)
 }
 

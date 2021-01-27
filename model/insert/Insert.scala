@@ -3,6 +3,19 @@ package kuzminki.model
 
 class Insert[M <: Model](model: M, db: Conn) {
 
+  def data(pick: M => Seq[SetValue]) = {
+    new RunInsertDataOptions(
+      model,
+      InsertDataCollector(
+        db,
+        Array(
+          InsertIntoSec(ModelTable(model)),
+          InsertDataSec(pick(model))
+        )
+      )
+    )
+  }
+
   private def next[P](paramShape: ParamShape[P]) = {
     new RunInsert(
       model,
