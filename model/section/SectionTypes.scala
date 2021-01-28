@@ -31,3 +31,15 @@ trait FillValues {
   def fillNoBrackets(size: Int) = Vector.fill(size)("?").mkString(", ")
   def fillBrackets(size: Int) = "(%s)".format(fillNoBrackets(size))
 }
+
+/*
+trait OnlyModelCols {
+
+  def testCols(cols: Seq[AnyCol]): Unit = {
+    cols.foreach {
+      case col: ModelCol =>
+      case _ => throw KuzminkiException("only model columns")
+    }
+  }
+}
+*/

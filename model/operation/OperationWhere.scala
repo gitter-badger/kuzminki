@@ -43,28 +43,28 @@ class OperationWhere[M](model: M, coll: OperationCollector) {
   private def cache[P](paramShape: ParamShape[P]) = {
     coll.add(
       WhereSec(
-        paramShape.cols.map(NoArgMatches(_))
+        paramShape.cols.map(CacheCond(_))
       )
     ).cache(paramShape)
   }
 
-  def cacheWhere1[R](pick: M => TypeCol[R]) = {
+  def cacheWhere1[P](pick: M => TypeCol[P]) = {
     cache(new ParamShapeSingle(pick(model)))
   }
   
-  def cacheWhere2[R1, R2](pick: M => Tuple2[TypeCol[R1], TypeCol[R2]]) = {
+  def cacheWhere2[P1, P2](pick: M => Tuple2[TypeCol[P1], TypeCol[P2]]) = {
     cache(new ParamShape2(pick(model)))
   }
 
-  def cacheWhere3[R1, R2, R3](pick: M => Tuple3[TypeCol[R1], TypeCol[R2], TypeCol[R3]]) = {
+  def cacheWhere3[P1, P2, P3](pick: M => Tuple3[TypeCol[P1], TypeCol[P2], TypeCol[P3]]) = {
     cache(new ParamShape3(pick(model)))
   }
 
-  def cacheWhere4[R1, R2, R3, R4](pick: M => Tuple4[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4]]) = {
+  def cacheWhere4[P1, P2, P3, P4](pick: M => Tuple4[TypeCol[P1], TypeCol[P2], TypeCol[P3], TypeCol[P4]]) = {
     cache(new ParamShape4(pick(model)))
   }
 
-  def cacheWhere5[R1, R2, R3, R4, R5](pick: M => Tuple5[TypeCol[R1], TypeCol[R2], TypeCol[R3], TypeCol[R4], TypeCol[R5]]) = {
+  def cacheWhere5[P1, P2, P3, P4, P5](pick: M => Tuple5[TypeCol[P1], TypeCol[P2], TypeCol[P3], TypeCol[P4], TypeCol[P5]]) = {
     cache(new ParamShape5(pick(model)))
   }
 }

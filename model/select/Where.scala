@@ -3,7 +3,14 @@ package kuzminki.model
 
 class Where[M, R](model: M, coll: SelectCollector[R]) {
 
-  def all() = new OrderBy(model, coll)
+  def all() = {
+    new OrderBy(
+      model,
+      coll.add(
+        WhereBlankSec
+      )
+    )
+  }
 
   def whereOne(pick: M => Filter) = {
     new OrderBy(

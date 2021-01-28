@@ -1,11 +1,6 @@
 package kuzminki.model
 
 
-case class SelectSec(parts: Seq[AnyCol]) extends MultiRender {
-  def expression = "SELECT %s"
-  def glue = ", "
-}
-
 case class FromSec(part: ModelTable) extends SingleRender {
   def expression = "FROM %s"
 }
