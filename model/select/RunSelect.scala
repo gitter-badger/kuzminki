@@ -45,6 +45,28 @@ class RunSelect[M, R](
     coll.cacheWhere(new ParamShape5(pick(model)))
   }
 
+  // cache having
+
+  def cacheHaving1[P](pick: M => TypeCol[P]) = {
+    coll.cacheHaving(new ParamShapeSingle(pick(model)))
+  }
+  
+  def cacheHaving2[P1, P2](pick: M => Tuple2[TypeCol[P1], TypeCol[P2]]) = {
+    coll.cacheHaving(new ParamShape2(pick(model)))
+  }
+
+  def cacheHaving3[P1, P2, P3](pick: M => Tuple3[TypeCol[P1], TypeCol[P2], TypeCol[P3]]) = {
+    coll.cacheHaving(new ParamShape3(pick(model)))
+  }
+
+  def cacheHaving4[P1, P2, P3, P4](pick: M => Tuple4[TypeCol[P1], TypeCol[P2], TypeCol[P3], TypeCol[P4]]) = {
+    coll.cacheHaving(new ParamShape4(pick(model)))
+  }
+
+  def cacheHaving5[P1, P2, P3, P4, P5](pick: M => Tuple5[TypeCol[P1], TypeCol[P2], TypeCol[P3], TypeCol[P4], TypeCol[P5]]) = {
+    coll.cacheHaving(new ParamShape5(pick(model)))
+  }
+
   // renderable
 
   def render(prefix: Prefix) = coll.render

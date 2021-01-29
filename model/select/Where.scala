@@ -1,50 +1,66 @@
 package kuzminki.model
 
 
-class Where[M, R](model: M, coll: SelectCollector[R]) {
+class Where[M, R](
+      model: M,
+      coll: SelectCollector[R]
+  ) {
 
-  def all() = {
+  private def toOrderBy(section: Section) = {
+    coll.canUseWhere()
     new OrderBy(
       model,
-      coll.add(
-        WhereBlankSec
-      )
+      coll.add(section)
     )
+  }
+
+  def where(pick: M => Seq[Filter]) = {
+    toOrderBy(
+      WhereSec(pick(model))
+    )
+  }
+
+  def all() = {
+    toOrderBy(WhereBlankSec)
   }
 
   def whereOne(pick: M => Filter) = {
-    new OrderBy(
-      model,
-      coll.add(
-        WhereSec(
-          Seq(pick(model))
-        )
+    toOrderBy(
+      WhereSec(
+        Seq(pick(model))
       )
     )
   }
 
-  def whereAll(pick: M => Seq[Filter]) = {
-    pick(model) match {
-      case Nil =>
-        throw KuzminkiException("WHERE conditions cannot be empty")
-      case conds =>
-        new OrderBy(
-          model,
-          coll.add(WhereSec(conds))
-        )
-    }
+  def whereOpt(pick: M => Seq[Option[Filter]]) = {
+    toOrderBy(
+      pick(model).flatten match {
+        case Nil =>
+          WhereBlankSec
+        case filters =>
+          WhereSec(pick(model).flatten)
+      }
+    )
   }
 
-  def whereOpt(pick: M => Seq[Option[Filter]]) = {
-    pick(model).flatten match {
-      case Nil =>
-        new OrderBy(model, coll)
-      case conds =>
-        new OrderBy(
-          model,
-          coll.add(WhereSec(conds))
-        )
-    }
+  // group by
+
+  private def toHaving(cols: Seq[ModelCol]) = {
+    coll.canUseHaving()
+    new Having(
+      model,
+      coll.add(GroupBySec(cols))
+    )
+  }
+
+  def groupByOne(pick: M => ModelCol) = {
+    toHaving(
+      Seq(pick(model))
+    )
+  }
+
+  def groupBy(pick: M => Seq[ModelCol]) = {
+    toHaving(pick(model))
   }
 }
 

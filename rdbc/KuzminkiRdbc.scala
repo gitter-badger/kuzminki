@@ -75,36 +75,20 @@ class KuzminkiRdbc(conf: SystemConfig)(implicit system: ActorSystem) {
     Delete.from(model, db)
   }
 
-  def aggregate[M <: Model](implicit tag: ClassTag[M]): Aggregate[M] = {
-    aggregate(Model.from[M])
-  }
-
-  def aggregate[M <: Model](model: M): Aggregate[M] = {
-    new Aggregate(model, db)
-  }
-
-  def aggregate[A <: Model, B <: Model](implicit tagA: ClassTag[A], tagB: ClassTag[B]): AggregateJoin[A, B] = {
-    aggregate(Model.join[A, B])
-  }
-
-  def aggregate[A <: Model, B <: Model](join: Join[A, B]): AggregateJoin[A, B] = {
-    new AggregateJoin(join, db)
-  }
-
-  def count[M <: Model](implicit tag: ClassTag[M]): AggregateWhere[M, Long] = {
+  def count[M <: Model](implicit tag: ClassTag[M]): Where[M, Long] = {
     count(Model.from[M])
   }
 
-  def count[M <: Model](model: M): AggregateWhere[M, Long] = {
-    new Aggregate(model, db).cols1(t => Count.all)
+  def count[M <: Model](model: M): Where[M, Long] = {
+    new Select(model, db).cols1(t => Count.all)
   }
 
-  def count[A <: Model, B <: Model](implicit tagA: ClassTag[A], tagB: ClassTag[B]): AggregateJoinOn[A, B, Long] = {
+  def count[A <: Model, B <: Model](implicit tagA: ClassTag[A], tagB: ClassTag[B]): JoinOn[A, B, Long] = {
     count(Model.join[A, B])
   }
 
-  def count[A <: Model, B <: Model](join: Join[A, B]): AggregateJoinOn[A, B, Long] = {
-    new AggregateJoin(join, db).cols1(t => Count.all)
+  def count[A <: Model, B <: Model](join: Join[A, B]): JoinOn[A, B, Long] = {
+    new SelectJoin(join, db).cols1(t => Count.all)
   }
 
   // sub query

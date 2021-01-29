@@ -18,6 +18,8 @@ case class SelectCollector[R](
   def cache = new StoredSelect(db, statement, rowShape.conv)
 
   def cacheWhere[P](paramShape: ParamShape[P]) = {
+
+    canUseWhere()
     
     val modifiedSections = sections.map {
       
@@ -31,6 +33,30 @@ case class SelectCollector[R](
         section
     }
 
+    storedConditional(modifiedSections, paramShape)
+  }
+
+  def cacheHaving[P](paramShape: ParamShape[P]) = {
+
+    canUseHaving()
+    
+    val modifiedSections = sections.map {
+      
+      case HavingBlankSec =>
+        HavingCacheSec(paramShape.cols)
+      
+      case WhereSec(conds) =>
+        HavingMixedSec(conds, paramShape.cols)
+      
+      case section: Section =>
+        section
+    }
+
+    storedConditional(modifiedSections, paramShape)
+  }
+
+  def storedConditional[P](modifiedSections: Array[Section], paramShape: ParamShape[P]) = {
+
     val template = modifiedSections.map(_.render(prefix)).mkString(" ")
     val cacheArgs = modifiedSections.map(_.args).flatten.toVector
 
@@ -42,8 +68,39 @@ case class SelectCollector[R](
     new StoredSelectWhere(db, template, firstArgs, lastArgs, paramShape.conv, rowShape.conv)
   }
 
+  // check
+
+  val isAggrigation: AnyCol => Boolean = {
+    case col: AggNumeric => true
+    case col: AnyCol => false
+  }
+
+  def canUseWhere() {
+    rowShape.cols.count(isAggrigation) match {
+      case 0 =>
+      case num: Int if num == rowShape.cols.size =>
+      case _ =>
+        throw KuzminkiException(
+          "WHERE cannot be used here, use HAVING"
+        )
+    }
+  }
+
+  def canUseHaving() {
+    rowShape.cols.count(isAggrigation) match {
+      case num: Int if num > 0 && num < rowShape.cols.size  =>
+      case _ =>
+        throw KuzminkiException(
+          "HAVING cannot be used here, use WHERE"
+        )
+    }
+  }
+
+  // render
+
   val notBlank: Section => Boolean = {
     case WhereBlankSec => false
+    case HavingBlankSec => false
     case _ => true
   }
 

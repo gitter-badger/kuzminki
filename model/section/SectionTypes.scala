@@ -1,5 +1,7 @@
 package kuzminki.model
 
+import akka.Done
+
 
 trait NoRender extends Section {
   def render(picker: Prefix) = expression
@@ -30,6 +32,40 @@ trait MultiRender extends Section {
 trait FillValues {
   def fillNoBrackets(size: Int) = Vector.fill(size)("?").mkString(", ")
   def fillBrackets(size: Int) = "(%s)".format(fillNoBrackets(size))
+}
+
+// validation
+
+abstract class NotEmpty(parts: Seq[Any]) {
+  def error: String
+  if (parts.isEmpty) {
+    throw KuzminkiException(error)
+  }
+
+}
+
+// cache
+
+trait CacheCondition extends Section {
+  val cols: Seq[AnyCol]
+  def render(prefix: Prefix) = {
+    expression.format(
+      cols.map(CacheCond(_)).map(_.render(prefix)).mkString(" AND ")
+    )
+  }
+  def args = Seq(Done)
+}
+
+trait MixedCondition extends Section {
+  val conds: Seq[Renderable]
+  val cols: Seq[AnyCol]
+  def render(prefix: Prefix) = {
+    val both = conds ++ cols.map(CacheCond(_))
+    expression.format(
+      both.map(_.render(prefix)).mkString(" AND ")
+    )
+  }
+  def args = conds.map(_.args).flatten ++ Seq(Done)
 }
 
 /*

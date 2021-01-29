@@ -56,8 +56,9 @@ class StoredSelect[R](
   }
 
   def render(prefix: Prefix) = statement.sql
+  
   def args = statement.params.toSeq
-
+  
   def renderTo(printer: String => Unit): Unit = {
     printer(statement.sql)
   }
