@@ -5,7 +5,8 @@ trait Filter extends Renderable {
   def template: String
 }
 
-trait SingleFilter extends Filter with ColRef {
+trait SingleFilter extends Filter {
+  val col: AnyCol
   def render(prefix: Prefix) = template.format(col.render(prefix))
 }
 
@@ -16,13 +17,15 @@ trait SingleArgFilter extends SingleFilter {
 
 trait NoArgFilter extends SingleFilter with ColArgs
 
-trait SubQueryFilter extends Filter with ColRef {
+trait SubqueryFilter extends Filter {
+  val col: AnyCol
   val sub: Renderable
   def render(prefix: Prefix) = template.format(col.render(prefix), sub.render(prefix))
   def args = col.args ++ sub.args
 }
 
-trait ArrayFilter extends Filter with ColRef {
+trait ArrayFilter extends Filter {
+  val col: AnyCol
   val argSeq: Seq[Any]
   def render(prefix: Prefix) = template.format(col.render(prefix), Vector.fill(args.size)("?").mkString(", "))
   def args = col.args ++ argSeq
@@ -107,35 +110,35 @@ case class FilterReNotImatch(col: AnyCol, arg: String) extends SingleArgFilter {
 
 // sub query
 
-case class FilterInSubquery(col: AnyCol, sub: Renderable) extends SubQueryFilter {
+case class FilterInSubquery(col: AnyCol, sub: Renderable) extends SubqueryFilter {
   def template = "%s = ANY(%s)"
 }
 
-case class FilterNotInSubquery(col: AnyCol, sub: Renderable) extends SubQueryFilter {
+case class FilterNotInSubquery(col: AnyCol, sub: Renderable) extends SubqueryFilter {
   def template = "%s != ANY(%s)"
 }
 
-case class FilterAggMatches(col: AnyCol, sub: Renderable) extends SubQueryFilter {
+case class FilterAggMatches(col: AnyCol, sub: Renderable) extends SubqueryFilter {
   def template = "%s = (%s)"
 }
 
-case class FilterAggNot(col: AnyCol, sub: Renderable) extends SubQueryFilter {
+case class FilterAggNot(col: AnyCol, sub: Renderable) extends SubqueryFilter {
   def template = "%s != (%s)"
 }
 
-case class FilterAggGt(col: AnyCol, sub: Renderable) extends SubQueryFilter {
+case class FilterAggGt(col: AnyCol, sub: Renderable) extends SubqueryFilter {
   def template = "%s > (%s)"
 }
 
-case class FilterAggGte(col: AnyCol, sub: Renderable) extends SubQueryFilter {
+case class FilterAggGte(col: AnyCol, sub: Renderable) extends SubqueryFilter {
   def template = "%s >= (%s)"
 }
 
-case class FilterAggLt(col: AnyCol, sub: Renderable) extends SubQueryFilter {
+case class FilterAggLt(col: AnyCol, sub: Renderable) extends SubqueryFilter {
   def template = "%s < (%s)"
 }
 
-case class FilterAggLte(col: AnyCol, sub: Renderable) extends SubQueryFilter {
+case class FilterAggLte(col: AnyCol, sub: Renderable) extends SubqueryFilter {
   def template = "%s <= (%s)"
 }
 

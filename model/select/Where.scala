@@ -14,14 +14,14 @@ class Where[M, R](
     )
   }
 
+  def all() = {
+    toOrderBy(WhereBlankSec)
+  }
+
   def where(pick: M => Seq[Filter]) = {
     toOrderBy(
       WhereSec(pick(model))
     )
-  }
-
-  def all() = {
-    toOrderBy(WhereBlankSec)
   }
 
   def whereOne(pick: M => Filter) = {

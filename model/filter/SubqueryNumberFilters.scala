@@ -1,24 +1,24 @@
 package kuzminki.model
 
 
-trait SubqueryNumberFilters extends ColRef {
+trait SubqueryNumberFilters extends SelfRef {
 
-  def matches(sub: SingleNumberSubquery): Filter = FilterAggMatches(col, sub)
+  def matches(sub: SingleNumberSubquery): Filter = FilterAggMatches(self, sub)
   def ===(sub: SingleNumberSubquery): Filter = matches(sub)
 
-  def not(sub: SingleNumberSubquery): Filter = FilterAggNot(col, sub)
+  def not(sub: SingleNumberSubquery): Filter = FilterAggNot(self, sub)
   def !==(sub: SingleNumberSubquery): Filter = not(sub)
 
-  def gt(sub: SingleNumberSubquery): Filter = FilterAggGt(col, sub)
+  def gt(sub: SingleNumberSubquery): Filter = FilterAggGt(self, sub)
   def >(sub: SingleNumberSubquery): Filter = gt(sub)
 
-  def gte(sub: SingleNumberSubquery): Filter = FilterAggGte(col, sub)
+  def gte(sub: SingleNumberSubquery): Filter = FilterAggGte(self, sub)
   def >=(sub: SingleNumberSubquery): Filter = gte(sub)
 
-  def lt(sub: SingleNumberSubquery): Filter = FilterAggLt(col, sub)
+  def lt(sub: SingleNumberSubquery): Filter = FilterAggLt(self, sub)
   def <(sub: SingleNumberSubquery): Filter = lt(sub)
 
-  def lte(sub: SingleNumberSubquery): Filter = FilterAggLte(col, sub)
+  def lte(sub: SingleNumberSubquery): Filter = FilterAggLte(self, sub)
   def <=(sub: SingleNumberSubquery): Filter = lte(sub)
 
   // optional

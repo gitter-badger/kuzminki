@@ -1,18 +1,18 @@
 package kuzminki.model
 
 
-trait ComparativeFilters[T] extends ColRef {
+trait ComparativeFilters[T] extends SelfRef {
 
-  def gt(value: T): Filter = FilterGt(col, value)
+  def gt(value: T): Filter = FilterGt(self, value)
   def >(value: T): Filter = gt(value)
 
-  def gte(value: T): Filter = FilterGte(col, value)
+  def gte(value: T): Filter = FilterGte(self, value)
   def >=(value: T): Filter = gte(value)
 
-  def lt(value: T): Filter = FilterLt(col, value)
+  def lt(value: T): Filter = FilterLt(self, value)
   def <(value: T): Filter = lt(value)
 
-  def lte(value: T): Filter = FilterLte(col, value)
+  def lte(value: T): Filter = FilterLte(self, value)
   def <=(value: T): Filter = lte(value)
 
   // optional

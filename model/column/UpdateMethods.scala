@@ -2,13 +2,13 @@ package kuzminki.model
 
 
 trait UpdateMethod[T] {
-  val modelCol: ModelCol
-  def ==>(value: T) = SetValue(modelCol, value)
+  val col: ModelCol
+  def ==>(value: T) = SetValue(col, value)
 }
 
 trait NumericUpdateMethods[T] {
-  val modelCol: ModelCol
-  def ==>(value: T) = SetValue(modelCol, value)
-  def +=(value: T) = Increment(modelCol, value)
-  def -=(value: T) = Decrement(modelCol, value)
+  val col: ModelCol
+  def ==>(value: T) = SetValue(col, value)
+  def +=(value: T) = Increment(col, value)
+  def -=(value: T) = Decrement(col, value)
 }

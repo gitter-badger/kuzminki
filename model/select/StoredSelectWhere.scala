@@ -14,7 +14,7 @@ class StoredSelectWhere[P, R](
       lastArgs: Vector[Any],
       paramConv: ParamConv[P],
       rowConv: RowConv[R]
-    ) extends SelectSubquery[R] {
+    ) {
 
   def transformParams(params: P) = {
     firstArgs ++ paramConv.fromShape(params) ++ lastArgs

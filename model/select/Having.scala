@@ -10,14 +10,14 @@ class Having[M, R](model: M, coll: SelectCollector[R]) extends OrderBy(model, co
     )
   }
 
+  def all() = {
+    toOrderBy(HavingBlankSec)
+  }
+
   def having(pick: M => Seq[Filter]) = {
     toOrderBy(
       HavingSec(pick(model)) 
     )
-  }
-
-  def all() = {
-    toOrderBy(HavingBlankSec)
   }
 
   def havingOne(pick: M => Filter) = {
