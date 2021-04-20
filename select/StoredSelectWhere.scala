@@ -73,8 +73,9 @@ class StoredSelectWhere[P, R](
   
   def args = firstArgs ++ lastArgs
 
-  def renderTo(printer: String => Unit): Unit = {
-    printer(template)
+  def sql(handler: String => Unit): StoredSelectWhere[P, R] = {
+    handler(template)
+    this
   }
 }
 
