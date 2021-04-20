@@ -3,8 +3,16 @@ package kuzminki.model
 
 trait MultiFilter extends Filter {
   val filters: Seq[Filter]
+  def template = "(%s)"
   def glue: String
-  def render(prefix: Prefix) = template.format(filters.map(_.render(prefix)).mkString(glue))
+  def render(prefix: Prefix) = {
+    filters match {
+      case Seq(first) =>
+        first.render(prefix)
+      case _ =>
+        template.format(filters.map(_.render(prefix)).mkString(glue))
+    }
+  }
   def args = filters.map(_.args).flatten
 }
 
@@ -21,7 +29,6 @@ object Or {
 
 case class Or(filters: Filter*) extends MultiFilter {
 
-  def template = "(%s)"
   def glue = " OR "
 
   filters.foreach {
@@ -43,7 +50,6 @@ object And {
 
 case class And(filters: Filter*) extends MultiFilter {
   
-  def template = "(%s)"
   def glue = " AND "
 
   filters.foreach {

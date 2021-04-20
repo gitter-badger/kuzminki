@@ -32,13 +32,24 @@ class Where[M, R](
     )
   }
 
-  def whereOpt(pick: M => Seq[Option[Filter]]) = {
+  def whereOpts(pick: M => Seq[Option[Filter]]) = {
     toOrderBy(
       pick(model).flatten match {
         case Nil =>
           WhereBlankSec
         case filters =>
           WhereSec(pick(model).flatten)
+      }
+    )
+  }
+
+  def whereOpt(pick: M => Option[Filter]) = {
+    toOrderBy(
+      pick(model) match {
+        case Some(cond) =>
+          WhereSec(Seq(cond))
+        case None =>
+          WhereBlankSec
       }
     )
   }

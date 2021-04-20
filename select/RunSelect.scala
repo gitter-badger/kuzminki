@@ -69,12 +69,17 @@ class RunSelect[M, R](
 
   // renderable
 
-  def render(prefix: Prefix) = coll.render
+  def render(prefix: Prefix): String = coll.render
   
   def args = coll.args
 
   def renderTo(printer: String => Unit): Unit = {
     printer(coll.render)
+  }
+
+  def sql(handler: String => Unit): RunSelect[M, R] = {
+    handler(render(coll.prefix))
+    this
   }
 }
 

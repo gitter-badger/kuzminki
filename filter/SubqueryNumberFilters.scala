@@ -23,6 +23,10 @@ trait SubqueryNumberFilters extends SelfRef {
 
   // optional
 
+  /*
+
+  conflicts with regular optional filter
+
   def matches(opt: Option[SingleNumberSubquery]): Option[Filter] = opt.map(matches)
   def ===(opt: Option[SingleNumberSubquery]): Option[Filter] = opt.map(matches)
 
@@ -40,5 +44,5 @@ trait SubqueryNumberFilters extends SelfRef {
 
   def lte(opt: Option[SingleNumberSubquery]): Option[Filter] = opt.map(lte)
   def <=(opt: Option[SingleNumberSubquery]): Option[Filter] = opt.map(lte)
-
+  */
 }
