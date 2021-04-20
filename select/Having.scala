@@ -1,7 +1,10 @@
 package kuzminki.model
 
 
-class Having[M, R](model: M, coll: SelectCollector[R]) extends OrderBy(model, coll) {
+class Having[M, R](
+      model: M,
+      coll: SelectCollector[R]
+    ) extends OrderBy(model, coll) {
 
   private def toOrderBy(section: Section) = {
     new OrderBy(
@@ -28,13 +31,24 @@ class Having[M, R](model: M, coll: SelectCollector[R]) extends OrderBy(model, co
     )
   }
 
-  def havingOpt(pick: M => Seq[Option[Filter]]) = {
+  def havingOpts(pick: M => Seq[Option[Filter]]) = {
     toOrderBy(
       pick(model).flatten match {
         case Nil =>
           HavingBlankSec
         case filters =>
           HavingSec(pick(model).flatten)
+      }
+    )
+  }
+
+  def havingOpt(pick: M => Option[Filter]) = {
+    toOrderBy(
+      pick(model) match {
+        case Some(cond) =>
+          HavingSec(Seq(cond))
+        case None =>
+          HavingBlankSec
       }
     )
   }

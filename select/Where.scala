@@ -4,7 +4,7 @@ package kuzminki.model
 class Where[M, R](
       model: M,
       coll: SelectCollector[R]
-  ) {
+    ) {
 
   private def toOrderBy(section: Section) = {
     coll.canUseWhere()
