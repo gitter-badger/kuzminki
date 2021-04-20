@@ -1,4 +1,4 @@
-package kuzminki.rdbc
+package kuzminki
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
@@ -27,7 +27,7 @@ import kuzminki.model._
 import kuzminki.model.implicits._
 
 
-class KuzminkiRdbc(conf: SystemConfig)(implicit system: ActorSystem) {
+class Kuzminki(conf: SystemConfig)(implicit system: ActorSystem) {
 
   implicit val ec = system.dispatcher
   implicit val materializer = ActorMaterializer()(system)
