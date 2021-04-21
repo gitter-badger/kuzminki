@@ -10,7 +10,9 @@ object Model {
     tag.runtimeClass.newInstance.asInstanceOf[M]
   }
 
-  def join[A <: Model, B <: Model](implicit aTag: ClassTag[A], bTag: ClassTag[B]) = new AnyJoin(from[A], from[B])
+  def join[A <: Model, B <: Model](implicit aTag: ClassTag[A], bTag: ClassTag[B]) = {
+    new Join(from[A], from[B])
+  }
 }
 
 abstract class Model(val __name: String) extends ModelRead {
