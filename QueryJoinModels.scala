@@ -29,11 +29,22 @@ object QueryJoinModels {
 
   val igUser = Model.from[IgUser]
   val vision = Model.from[Vision]
-  val userVisionJoin = Join(igUser, vision)
 
   case class UserVision(id: Int, username: String, priority: Short, isDone: Boolean)
 
-  implicit class UserVisionJoin(join: Join[IgUser, Vision]) extends JoinRead(join) {
+  class UserVisionJoin extends ExtendedJoin[IgUser, Vision] {
+    val a = igUser
+    val b = vision
     val simple = read[UserVision](a.id, a.username, b.priority, b.isDone)
   }
+
+  val userVisionJoin = new UserVisionJoin
+  implicit val toUserVisionJoin: Join[IgUser, Vision] => UserVisionJoin = _ => userVisionJoin
+
+  /*
+  implicit class UserVisionJoin(join: Join[IgUser, Vision]) extends JoinRead(join) {
+    println("### UserVisionJoin ###")
+    val simple = read[UserVision](a.id, a.username, b.priority, b.isDone)
+  }
+  */
 }

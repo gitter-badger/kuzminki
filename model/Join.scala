@@ -4,13 +4,15 @@ import scala.reflect.{classTag, ClassTag}
 import scala.reflect.runtime.universe._
 
 
-object Join {
-  def apply[A <: Model, B <: Model](a: A, b: B) = new Join(a, b)
+trait Join[A <: Model, B <: Model] {
+  val a: A
+  val b: B
 }
 
-class Join[A <: Model, B <: Model](val a: A, val b: B)
+//object BasicJoin {
+//  def apply[A <: Model, B <: Model](a: A, b: B) = new Join(a, b)
+//}
 
-abstract class JoinRead[A <: Model, B <: Model](join: Join[A, B]) extends ModelRead {
-  val a = join.a
-  val b = join.b
-}
+case class DefaultJoin[A <: Model, B <: Model](a: A, b: B) extends Join[A, B]
+
+trait ExtendedJoin[A <: Model, B <: Model] extends Join[A, B] with ModelRead

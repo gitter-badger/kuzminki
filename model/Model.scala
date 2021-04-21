@@ -11,7 +11,7 @@ object Model {
   }
 
   def join[A <: Model, B <: Model](implicit aTag: ClassTag[A], bTag: ClassTag[B]) = {
-    new Join(from[A], from[B])
+    new DefaultJoin(from[A], from[B])
   }
 }
 
