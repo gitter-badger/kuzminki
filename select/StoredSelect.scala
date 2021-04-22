@@ -41,6 +41,10 @@ class StoredSelect[R](
     }  
   }
 
+  def runCount() = {
+    db.count(statement)
+  }
+
   def stream(sink: Sink[R, Future[Done]]) = {
     db.stream(statement, sink) { row =>
       rowConv.fromRow(row)

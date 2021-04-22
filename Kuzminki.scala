@@ -44,7 +44,11 @@ class Kuzminki(conf: SystemConfig)(implicit system: ActorSystem) {
   }
 
   def select[A <: Model, B <: Model](implicit tagA: ClassTag[A], tagB: ClassTag[B]): SelectJoin[A, B] = {
-    select(Model.join[A, B])
+    select(Join.default[A, B])
+  }
+
+  def select[A <: Model, B <: Model](a: A, b: B): SelectJoin[A, B] = {
+    select(DefaultJoin(a, b))
   }
 
   def select[A <: Model, B <: Model](join: Join[A, B]): SelectJoin[A, B] = {
@@ -84,7 +88,11 @@ class Kuzminki(conf: SystemConfig)(implicit system: ActorSystem) {
   }
 
   def count[A <: Model, B <: Model](implicit tagA: ClassTag[A], tagB: ClassTag[B]): JoinOn[A, B, Long] = {
-    count(Model.join[A, B])
+    count(Join.default[A, B])
+  }
+
+  def count[A <: Model, B <: Model](a: A, b: B): JoinOn[A, B, Long] = {
+    count(DefaultJoin(a, b))
   }
 
   def count[A <: Model, B <: Model](join: Join[A, B]): JoinOn[A, B, Long] = {
@@ -102,7 +110,7 @@ class Kuzminki(conf: SystemConfig)(implicit system: ActorSystem) {
   }
 
   def subqueryNumber[A <: Model, B <: Model](implicit tagA: ClassTag[A], tagB: ClassTag[B]): SubqueryNumberJoin[A, B] = {
-    subqueryNumber(Model.join[A, B])
+    subqueryNumber(Join.default[A, B])
   }
 
   def subqueryNumber[A <: Model, B <: Model](join: Join[A, B]): SubqueryNumberJoin[A, B] = {

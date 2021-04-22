@@ -50,10 +50,6 @@ object Model {
   def noCache[M <: Model](implicit tag: ClassTag[M]): M = {
     tag.runtimeClass.newInstance.asInstanceOf[M]
   }
-
-  def join[A <: Model, B <: Model](implicit aTag: ClassTag[A], bTag: ClassTag[B]) = {
-    new DefaultJoin(get[A], get[B])
-  }
 }
 
 abstract class Model(val __name: String) extends ModelRead {

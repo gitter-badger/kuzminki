@@ -23,6 +23,8 @@ class RunSelect[M, R](
 
   def streamAs[T](sink: Sink[T, Future[Done]])(implicit custom: R => T) = coll.cache.streamAs(sink)(custom)
 
+  def runCount() = coll.cache.runCount()
+
   // cache where
 
   def cacheWhere1[P](pick: M => TypeCol[P]) = {
