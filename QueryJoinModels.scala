@@ -27,19 +27,17 @@ object QueryJoinModels {
     def issue = column[String]("issue")
   }
 
-  val igUser = Model.from[IgUser]
-  val vision = Model.from[Vision]
+  val igUser = Model.get[IgUser]
+  val vision = Model.get[Vision]
 
   case class UserVision(id: Int, username: String, priority: Short, isDone: Boolean)
 
   class UserVisionJoin extends ExtendedJoin[IgUser, Vision] {
-    val a = igUser
-    val b = vision
     val simple = read[UserVision](a.id, a.username, b.priority, b.isDone)
   }
 
-  val userVisionJoin = new UserVisionJoin
-  implicit val toUserVisionJoin: Join[IgUser, Vision] => UserVisionJoin = _ => userVisionJoin
+  val userVisionJoin = Join.get[UserVisionJoin]
+  implicit val toUserVisionJoin = Join.register[UserVisionJoin, IgUser, Vision]
 
   /*
   implicit class UserVisionJoin(join: Join[IgUser, Vision]) extends JoinRead(join) {

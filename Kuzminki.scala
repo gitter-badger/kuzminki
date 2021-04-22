@@ -36,7 +36,7 @@ class Kuzminki(conf: SystemConfig)(implicit system: ActorSystem) {
   val db = new Conn(conf)
 
   def select[M <: Model](implicit tag: ClassTag[M]): Select[M] = {
-    select(Model.from[M])
+    select(Model.get[M])
   }
 
   def select[M <: Model](model: M): Select[M] = {
@@ -52,7 +52,7 @@ class Kuzminki(conf: SystemConfig)(implicit system: ActorSystem) {
   }
 
   def insert[M <: Model](implicit tag: ClassTag[M]): Insert[M] = {
-    insert(Model.from[M])
+    insert(Model.get[M])
   }
 
   def insert[M <: Model](model: M): Insert[M] = {
@@ -60,7 +60,7 @@ class Kuzminki(conf: SystemConfig)(implicit system: ActorSystem) {
   }
 
   def update[M <: Model](implicit tag: ClassTag[M]): Update[M] = {
-    update(Model.from[M])
+    update(Model.get[M])
   }
 
   def update[M <: Model](model: M): Update[M] = {
@@ -68,7 +68,7 @@ class Kuzminki(conf: SystemConfig)(implicit system: ActorSystem) {
   }
 
   def delete[M <: Model](implicit tag: ClassTag[M]): OperationWhere[M] = {
-    delete(Model.from[M])
+    delete(Model.get[M])
   }
 
   def delete[M <: Model](model: M): OperationWhere[M] = {
@@ -76,7 +76,7 @@ class Kuzminki(conf: SystemConfig)(implicit system: ActorSystem) {
   }
 
   def count[M <: Model](implicit tag: ClassTag[M]): Where[M, Long] = {
-    count(Model.from[M])
+    count(Model.get[M])
   }
 
   def count[M <: Model](model: M): Where[M, Long] = {
@@ -94,7 +94,7 @@ class Kuzminki(conf: SystemConfig)(implicit system: ActorSystem) {
   // sub query
 
   def subqueryNumber[M <: Model](implicit tag: ClassTag[M]): SubqueryNumber[M] = {
-    subqueryNumber(Model.from[M])
+    subqueryNumber(Model.get[M])
   }
 
   def subqueryNumber[M <: Model](model: M): SubqueryNumber[M] = {

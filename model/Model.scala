@@ -2,16 +2,57 @@ package kuzminki.model
 
 import scala.reflect.{classTag, ClassTag}
 import scala.reflect.runtime.universe._
+import scala.annotation.tailrec
 
 
 object Model {
+
+  import scala.collection.mutable.Map
+
+  private var stored = Set.empty[Model]
+
+  private def find[M <: Model](implicit tag: ClassTag[M]): Option[M] = {
+    
+    @tailrec
+    def loop(instances: List[Model]): Option[M] = {
+      instances match {
+        case Nil => None
+        case head :: tail => 
+          head match {
+            case model: M => Some(model)
+            case _ => loop(tail)
+          }
+      }
+    }
+
+    loop(stored.toList)
+  }
+
+  def get[M <: Model](implicit tag: ClassTag[M]): M = {
+    find[M] match {
+      case Some(model) =>
+        model
+      case None =>
+        val model = noCache[M]
+        stored = stored + model
+        model 
+    }
+  }
+
+  def register[M <: Model](implicit tag: ClassTag[M]): Unit = {
+    find[M] match {
+      case Some(model) =>
+      case None =>
+        stored = stored + noCache[M]
+    }
+  }
   
-  def from[M <: Model](implicit tag: ClassTag[M]): M = {
+  def noCache[M <: Model](implicit tag: ClassTag[M]): M = {
     tag.runtimeClass.newInstance.asInstanceOf[M]
   }
 
   def join[A <: Model, B <: Model](implicit aTag: ClassTag[A], bTag: ClassTag[B]) = {
-    new DefaultJoin(from[A], from[B])
+    new DefaultJoin(get[A], get[B])
   }
 }
 
