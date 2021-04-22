@@ -35,16 +35,8 @@ class Kuzminki(conf: SystemConfig)(implicit system: ActorSystem) {
 
   val db = new Conn(conf)
 
-  def select[M <: Model](implicit tag: ClassTag[M]): Select[M] = {
-    select(Model.get[M])
-  }
-
   def select[M <: Model](model: M): Select[M] = {
     new Select(model, db)
-  }
-
-  def select[A <: Model, B <: Model](implicit tagA: ClassTag[A], tagB: ClassTag[B]): SelectJoin[A, B] = {
-    select(Join.default[A, B])
   }
 
   def select[A <: Model, B <: Model](a: A, b: B): SelectJoin[A, B] = {
@@ -55,40 +47,20 @@ class Kuzminki(conf: SystemConfig)(implicit system: ActorSystem) {
     new SelectJoin(join, db)
   }
 
-  def insert[M <: Model](implicit tag: ClassTag[M]): Insert[M] = {
-    insert(Model.get[M])
-  }
-
   def insert[M <: Model](model: M): Insert[M] = {
     new Insert(model, db)
-  }
-
-  def update[M <: Model](implicit tag: ClassTag[M]): Update[M] = {
-    update(Model.get[M])
   }
 
   def update[M <: Model](model: M): Update[M] = {
     new Update(model, db)
   }
 
-  def delete[M <: Model](implicit tag: ClassTag[M]): OperationWhere[M] = {
-    delete(Model.get[M])
-  }
-
   def delete[M <: Model](model: M): OperationWhere[M] = {
     Delete.from(model, db)
   }
 
-  def count[M <: Model](implicit tag: ClassTag[M]): Where[M, Long] = {
-    count(Model.get[M])
-  }
-
   def count[M <: Model](model: M): Where[M, Long] = {
     new Select(model, db).cols1(t => Count.all)
-  }
-
-  def count[A <: Model, B <: Model](implicit tagA: ClassTag[A], tagB: ClassTag[B]): JoinOn[A, B, Long] = {
-    count(Join.default[A, B])
   }
 
   def count[A <: Model, B <: Model](a: A, b: B): JoinOn[A, B, Long] = {
@@ -101,16 +73,8 @@ class Kuzminki(conf: SystemConfig)(implicit system: ActorSystem) {
 
   // sub query
 
-  def subqueryNumber[M <: Model](implicit tag: ClassTag[M]): SubqueryNumber[M] = {
-    subqueryNumber(Model.get[M])
-  }
-
   def subqueryNumber[M <: Model](model: M): SubqueryNumber[M] = {
     new SubqueryNumber(model)
-  }
-
-  def subqueryNumber[A <: Model, B <: Model](implicit tagA: ClassTag[A], tagB: ClassTag[B]): SubqueryNumberJoin[A, B] = {
-    subqueryNumber(Join.default[A, B])
   }
 
   def subqueryNumber[A <: Model, B <: Model](join: Join[A, B]): SubqueryNumberJoin[A, B] = {

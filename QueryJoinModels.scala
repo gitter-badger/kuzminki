@@ -35,6 +35,7 @@ object QueryJoinModels {
 
   class UserVisionJoin extends ExtendedJoin[IgUser, Vision] {
     val simple = read[UserVision](a.id, a.username, b.priority, b.isDone)
+    val fields = (a.id, a.username, a.age, b.priority, b.isDone)
   }
 
   implicit val toUserVisionJoin = Join.register[UserVisionJoin, IgUser, Vision]
