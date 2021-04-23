@@ -19,4 +19,9 @@ class StoredUpsert[P](
   def runNum(params: P) = {
     db.execNum(statement(params))
   }
+
+  def sql(handler: String => Unit) = {
+    handler(template)
+    this
+  }
 }

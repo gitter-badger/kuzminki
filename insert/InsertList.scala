@@ -9,29 +9,22 @@ trait InsertList[P] {
   protected val paramConv: ParamConv[P]
   protected def tansformParams(params: P): Vector[Any]
 
-  private lazy val argsTempl = {
-    val parts = template.split(" ")
-    val index = parts.indexOf("VALUES") + 1
-    parts(index)
-  }
-
-  private def extend(template: String, num: Int) = {
-    template.replace(
-      argsTempl,
-      Seq.fill(num)(argsTempl).mkString(", ")
-    )
+  private def extend(template: String, rowNum: Int, argNum: Int) = {
+    val single = "(%s)".format(Seq.fill(argNum)("?").mkString(", "))
+    val multiple = Seq.fill(rowNum)(single).mkString(", ")
+    template.replace(single, multiple)
   }
 
   protected def listStatement(list: List[P]) = {
-    list.size match {
-      case 0 =>
+    list.map(tansformParams) match {
+      case Nil =>
         throw KuzminkiException("insert list cannot be empty")
-      case 1 =>
-        SqlWithParams(template, tansformParams(list.head))
-      case _ =>
+      case head :: Nil =>
+        SqlWithParams(template, head)
+      case arguments =>
         SqlWithParams(
-          extend(template, list.size),
-          list.map(tansformParams).flatten.toVector
+          extend(template, arguments.size, arguments.head.size),
+          arguments.flatten.toVector
         )
     }
   }

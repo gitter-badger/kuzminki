@@ -38,6 +38,11 @@ class StoredInsert[P](
   }
 
   def streamList(paramsList: List[P]) = stream(Source(paramsList))
+
+  def sql(handler: String => Unit) = {
+    handler(template)
+    this
+  }
 }
 
 

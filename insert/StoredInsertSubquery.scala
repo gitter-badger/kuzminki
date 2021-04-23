@@ -12,4 +12,9 @@ class StoredInsertSubquery(statement: SqlWithParams, db: Conn) {
   def runNum() = {
     db.execNum(statement)
   }
+
+  def sql(handler: String => Unit) = {
+    handler(statement.sql)
+    this
+  }
 }

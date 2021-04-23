@@ -26,4 +26,9 @@ class StoredInsertWhereNotExistsReturning[P, R](
       )
     }  
   }
+
+  def sql(handler: String => Unit) = {
+    handler(template)
+    this
+  }
 }
