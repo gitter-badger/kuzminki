@@ -14,6 +14,11 @@ class RunInsertReturning[P, R](
   def list(paramsList: List[P]) = cache.list(paramsList)
 
   def listAs[T](paramsList: List[P])(implicit custom: R => T) = cache.listAs(paramsList)(custom)
+
+  def sql(handler: String => Unit) = {
+    handler(coll.render)
+    this
+  }
 }
 
 

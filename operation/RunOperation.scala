@@ -11,4 +11,9 @@ class RunOperation[M](
   def runNum() = coll.db.execNum(coll.statement)
 
   def render = coll.render
+
+  def sql(handler: String => Unit) = {
+    handler(coll.render)
+    this
+  }
 }

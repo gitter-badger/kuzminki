@@ -68,10 +68,10 @@ case class InsertDoUpdateSec(parts: Seq[SetValue]) extends MultiRender {
   def glue = ", "
 }
 
-case class InsertDoUpdateNoArgsSec(parts: Seq[ModelCol]) extends Section with NoArgs {
+case class InsertDoUpdateNoArgsSec(parts: Seq[SetUpsert]) extends Section with NoArgs {
   def expression = "DO UPDATE SET %s"
   def render(prefix: Prefix) = expression.format(
-    parts.map(_.name).mkString(", ")
+    parts.map(_.render(prefix)).mkString(", ")
   )
 }
 

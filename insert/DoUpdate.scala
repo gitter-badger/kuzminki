@@ -38,7 +38,7 @@ class DoUpdate[M, P](
       coll.extend(Array(
         InsertBlankValuesSec(coll.paramShape.size),
         InsertOnConflictColumnSec(conflictCol),
-        InsertDoUpdateNoArgsSec(updateCols)
+        InsertDoUpdateNoArgsSec(updateCols.map(SetUpsert(_)))
       ))
     )
   }

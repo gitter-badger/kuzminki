@@ -14,4 +14,9 @@ class RunInsertDoNothing[M, P](
   def run(params: P) = cache.run(params)
 
   def runNum(params: P) = cache.runNum(params)
+
+  def sql(handler: String => Unit) = {
+    handler(coll.render)
+    this
+  }
 }

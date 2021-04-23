@@ -25,6 +25,11 @@ class RunInsert[M <: Model, P](
   def stream(source: Source[P, NotUsed]) = cache.stream(source)
 
   def streamList(paramsList: List[P]) = stream(Source(paramsList))
+
+  def sql(handler: String => Unit) = {
+    handler(coll.render)
+    this
+  }
 }
 
 

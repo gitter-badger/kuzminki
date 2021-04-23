@@ -22,15 +22,17 @@ object Reuse {
 }  
 
 trait Reuse {
+  val indexes: Vector[Int]
   def extend(values: Vector[Any]): Vector[Any]
 }
 
-class ReuseIndexes(indexes: Vector[Int]) extends Reuse {
+class ReuseIndexes(val indexes: Vector[Int]) extends Reuse {
   def extend(values: Vector[Any]): Vector[Any] = {
     values ++ indexes.map(values)
   }
 }
 
 object NoChange extends Reuse {
+  val indexes = Vector.empty[Int]
   def extend(values: Vector[Any]) = values
 }
