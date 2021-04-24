@@ -40,4 +40,9 @@ class StoredOperation[S](
   }
 
   def streamList(data: List[S]) = stream(Source(data))
+
+  def sql(handler: String => Unit) = {
+    handler(template)
+    this
+  }
 }

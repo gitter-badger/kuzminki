@@ -35,4 +35,9 @@ class RunOperationReturning[R](coll: OperationCollector, rowConv: RowConv[R]) {
       )
     }  
   }
+
+  def sql(handler: String => Unit) = {
+    handler(coll.render)
+    this
+  }
 }

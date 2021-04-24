@@ -46,8 +46,8 @@ class Where[M, R](
   def whereOpt(pick: M => Option[Filter]) = {
     toOrderBy(
       pick(model) match {
-        case Some(cond) =>
-          WhereSec(Seq(cond))
+        case Some(filter) =>
+          WhereSec(Seq(filter))
         case None =>
           WhereBlankSec
       }

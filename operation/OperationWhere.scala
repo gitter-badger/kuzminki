@@ -16,7 +16,7 @@ class OperationWhere[M](model: M, coll: OperationCollector) {
     )
   }
 
-  def whereAll(pick: M => Seq[Filter]) = {
+  def where(pick: M => Seq[Filter]) = {
     pick(model) match {
       case Nil =>
         throw KuzminkiException("WHERE conditions cannot be empty")
@@ -28,15 +28,29 @@ class OperationWhere[M](model: M, coll: OperationCollector) {
     }
   }
 
-  def whereOpt(pick: M => Seq[Option[Filter]]) = {
+  def whereOpts(pick: M => Seq[Option[Filter]]) = {
     pick(model).flatten match {
       case Nil =>
         new RunOperation(model, coll)
-      case conds =>
+      case filters =>
         new RunOperation(
           model,
-          coll.add(WhereSec(conds))
+          coll.add(WhereSec(filters))
         )
+    }
+  }
+
+  def whereOpt(pick: M => Option[Filter]) = {
+    pick(model) match {
+      case Some(filter) =>
+        new RunOperation(
+          model,
+          coll.add(
+            WhereSec(Seq(filter))
+          )
+        )
+      case None =>
+        new RunOperation(model, coll)
     }
   }
 
