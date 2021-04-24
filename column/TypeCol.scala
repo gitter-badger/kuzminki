@@ -13,6 +13,10 @@ trait StringColValue extends TypeCol[String] {
   def conv = StringConv
 }
 
+trait CharColValue extends TypeCol[Char] {
+  def conv = CharConv
+}
+
 trait BooleanColValue extends TypeCol[Boolean] {
   def conv = BooleanConv
 }
@@ -44,3 +48,46 @@ trait DecimalNumberColValue extends TypeCol[DecimalNumber] {
 trait BigDecimalColValue extends TypeCol[BigDecimal] {
   def conv = BigDecimalConv
 }
+
+trait InstantColValue extends TypeCol[Instant] {
+  def conv = InstantConv
+}
+
+trait ZonedDateTimeColValue extends TypeCol[ZonedDateTime] {
+  def conv = ZonedDateTimeConv
+}
+
+trait LocalDateTimeColValue extends TypeCol[LocalDateTime] {
+  def conv = LocalDateTimeConv
+}
+
+trait LocalDateColValue extends TypeCol[LocalDate] {
+  def conv = LocalDateConv
+}
+
+trait UUIDColValue extends TypeCol[UUID] {
+  def conv = UUIDConv
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
