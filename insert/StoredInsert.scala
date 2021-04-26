@@ -30,7 +30,7 @@ class StoredInsert[P](
     db.execNum(listStatement(paramsList))
   }
 
-  def stream(source: Source[P, NotUsed]) = {
+  def stream[T](source: Source[P, T]) = {
     db.insertStream(
       template,
       source.map(tansformParams)

@@ -110,7 +110,17 @@ class Conn(conf: SystemConfig)(implicit system: ActorSystem) extends LazyLogging
     }
   }
 
-  def insertStream(template: String, source: Source[Vector[Any], NotUsed]): Future[Unit] = {
+  def streamAsSource[R](statement: SqlWithParams)(transform: Row => R): Source[R, Future[NotUsed]] = {
+    Source.lazyFutureSource { () =>
+      pool.connection().map { conn =>
+        Source.fromPublisher(
+          conn.statement(statement).stream()(inf)
+        ).map(transform)
+      }
+    }
+  }
+
+  def insertStream[T](template: String, source: Source[Vector[Any], T]): Future[Unit] = {
     pool.withConnection { conn =>
       conn.withTransaction {
         conn.statement(template).streamArgsByIdx(
@@ -119,6 +129,14 @@ class Conn(conf: SystemConfig)(implicit system: ActorSystem) extends LazyLogging
       }
     }
   }
+
+  /*
+  def insertAsSink(template: String): Future[Unit] = {
+    Sink.lazyFutureSink { () =>
+
+    }
+  }
+  */
 
   def shutdown(): Future[Unit] = pool.shutdown()
 }

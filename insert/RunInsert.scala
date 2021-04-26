@@ -22,7 +22,7 @@ class RunInsert[M <: Model, P](
 
   def listNum(paramsList: List[P]) = cache.listNum(paramsList)
 
-  def stream(source: Source[P, NotUsed]) = cache.stream(source)
+  def stream[T](source: Source[P, T]) = cache.stream(source)
 
   def streamList(paramsList: List[P]) = stream(Source(paramsList))
 

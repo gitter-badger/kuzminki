@@ -13,15 +13,20 @@ import io.rdbc.sapi.Row
 object RowReader { 
 
   private val colStringType: TypeCol[_] => String = {
-    case col: StringCol        => "String"
-    case col: BooleanCol       => "Boolean"
-    case col: ShortCol         => "Short"
-    case col: IntCol           => "Int"
-    case col: LongCol          => "Long"
-    case col: FloatCol         => "Float"
-    case col: DoubleCol        => "Double"
-    case col: DecimalNumberCol => "String"
-    case col: BigDecimalCol    => "BigDecimal"
+    case col: StringCol         => "String"
+    case col: BooleanCol        => "Boolean"
+    case col: ShortCol          => "Short"
+    case col: IntCol            => "Int"
+    case col: LongCol           => "Long"
+    case col: FloatCol          => "Float"
+    case col: DoubleCol         => "Double"
+    case col: DecimalNumberCol  => "String"
+    case col: BigDecimalCol     => "BigDecimal"
+    case col: InstantCol        => "Instant"
+    case col: ZonedDateTimeCol  => "ZonedDateTime"
+    case col: LocalDateTimeCol  => "LocalDateTime"
+    case col: LocalDateCol      => "LocalDate"
+    case col: UUIDCol           => "UUID"
     case col => throw KuzminkiException(s"Unsupported column type: [$col]")
   }
 

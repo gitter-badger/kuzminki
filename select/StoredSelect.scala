@@ -59,6 +59,20 @@ class StoredSelect[R](
     }
   }
 
+  def asSource = {
+    db.streamAsSource(statement) { row =>
+      rowConv.fromRow(row)
+    }
+  }
+
+  def asSourceAs[T](implicit custom: R => T) = {
+    db.streamAsSource(statement) { row =>
+      custom(
+        rowConv.fromRow(row)
+      )
+    }
+  }
+
   def render(prefix: Prefix) = statement.sql
   
   def args = statement.params.toSeq

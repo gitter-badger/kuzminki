@@ -10,6 +10,8 @@ class RunSelect[M, R](
       model: M,
       coll: SelectCollector[R]
     ) extends SelectSubquery[R] {
+
+  def cache = coll.cache
   
   def run() = coll.cache.run()
 
@@ -22,6 +24,8 @@ class RunSelect[M, R](
   def stream(sink: Sink[R, Future[Done]]) = coll.cache.stream(sink)
 
   def streamAs[T](sink: Sink[T, Future[Done]])(implicit custom: R => T) = coll.cache.streamAs(sink)(custom)
+
+  def asSource = coll.cache.asSource
 
   def runCount() = coll.cache.runCount()
 
