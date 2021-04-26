@@ -32,14 +32,14 @@ class StoredOperation[S](
     db.execNum(statement(data))
   }
 
-  def stream(source: Source[S, NotUsed]) = {
-    db.insertStream(
+  def fromSource(source: Source[S, NotUsed]) = {
+    db.insertFromSource(
       template,
       source.map(transform)
     )
   }
 
-  def streamList(data: List[S]) = stream(Source(data))
+  def streamList(data: List[S]) = fromSource(Source(data))
 
   def sql(handler: String => Unit) = {
     handler(template)

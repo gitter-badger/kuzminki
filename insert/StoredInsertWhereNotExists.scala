@@ -22,14 +22,14 @@ class StoredInsertWhereNotExists[P](
     db.execNum(statement(params))
   }
 
-  def stream(source: Source[P, NotUsed]) = {
-    db.insertStream(
+  def fromSource(source: Source[P, NotUsed]) = {
+    db.insertFromSource(
       template,
       source.map(tansformParams)
     )
   }
 
-  def streamList(paramsList: List[P]) = stream(Source(paramsList))
+  def streamList(paramsList: List[P]) = fromSource(Source(paramsList))
 
   def sql(handler: String => Unit) = {
     handler(template)

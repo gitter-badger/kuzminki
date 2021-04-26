@@ -30,14 +30,14 @@ class StoredInsert[P](
     db.execNum(listStatement(paramsList))
   }
 
-  def stream[T](source: Source[P, T]) = {
-    db.insertStream(
+  def fromSource[T](source: Source[P, T]) = {
+    db.insertFromSource(
       template,
       source.map(tansformParams)
     )
   }
 
-  def streamList(paramsList: List[P]) = stream(Source(paramsList))
+  def streamList(paramsList: List[P]) = fromSource(Source(paramsList))
 
   def sql(handler: String => Unit) = {
     handler(template)

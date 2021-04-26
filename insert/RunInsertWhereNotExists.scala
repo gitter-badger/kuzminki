@@ -16,9 +16,9 @@ class RunInsertWhereNotExists[M, P](
 
   def runNum(params: P) = cache.runNum(params)
 
-  def stream(source: Source[P, NotUsed]) = cache.stream(source)
+  def fromSource(source: Source[P, NotUsed]) = cache.fromSource(source)
 
-  def streamList(paramsList: List[P]) = cache.stream(Source(paramsList))
+  def streamList(paramsList: List[P]) = cache.streamList(paramsList)
 
   def sql(handler: String => Unit) = {
     handler(coll.render)
