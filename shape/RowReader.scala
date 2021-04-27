@@ -10,9 +10,9 @@ import scala.reflect.runtime.universe._
 import io.rdbc.sapi.Row
 
 
-object RowReader { 
+trait RowTypeNames {
 
-  private val colStringType: TypeCol[_] => String = {
+  protected val colTypeName: TypeCol[_] => String = {
     case col: StringCol         => "String"
     case col: BooleanCol        => "Boolean"
     case col: ShortCol          => "Short"
@@ -30,47 +30,73 @@ object RowReader {
     case col => throw KuzminkiException(s"Unsupported column type: [$col]")
   }
 
-  private val cleanString: String => String = {
-    case "java.time.Instant"       => "Instant"
-    case "java.time.ZonedDateTime" => "ZonedDateTime"
-    case "java.time.LocalDateTime" => "LocalDateTime"
-    case "java.time.LocalDate"     => "LocalDate"
-    case "java.util.UUID"          => "UUID"
-    case name                      => name
+  protected val simplifyName: String => String = {
+    case "java.time.Instant"        => "Instant"
+    case "java.time.ZonedDateTime"  => "ZonedDateTime"
+    case "java.time.LocalDateTime"  => "LocalDateTime"
+    case "java.time.LocalDate"      => "LocalDate"
+    case "java.util.UUID"           => "UUID"
+    case name                       => name
   }
 
-  private def productMembers[T](implicit tag: TypeTag[T]) = {
+  protected def productTypeNames[T](implicit tag: TypeTag[T]) = {
     typeOf[T]
       .members
       .sorted
       .collect { case m: MethodSymbol if m.isCaseAccessor => m }
       .map(_.returnType.toString)
       .toSeq
-      .map(cleanString)
+      .map(simplifyName)
   }
 
-  def create[T](
-        cols: Seq[TypeCol[_]],
-        cTag: ClassTag[T],
-        tTag: TypeTag[T]
-      ) = {
-    
-    val colTypes = cols.map(colStringType)
-    val memberTypes = productMembers(tTag)
+  protected def validate[T](rti: RowTypeInfo[T]) = {
 
-    if (colTypes != memberTypes) {
+    val colTypeNames = rti.cols.map(colTypeName)
+    val memberTypeNames = productTypeNames(rti.tTag)
+
+    if (colTypeNames != memberTypeNames) {
       throw KuzminkiException(
         Seq(
           "Read error",
-          "Column types: (%s)".format(colTypes.mkString(", ")),
-          "Type members: (%s)".format(memberTypes.mkString(", "))
+          "Column types: (%s)".format(colTypeNames.mkString(", ")),
+          "Type members: (%s)".format(memberTypeNames.mkString(", "))
         ).mkString("\n")
       )
     }
-
-    new RowReader(cols, cTag)
   }
 }
+
+
+object RowWriter extends RowTypeNames {
+
+  def create[T](rti: RowTypeInfo[T]) = {
+    validate(rti)
+    new RowWriter(rti.cols, rti.cTag)
+  }
+}
+
+
+class RowWriter[P](val cols: Seq[TypeCol[_]], tag: ClassTag[P]) extends ParamConv[P] {
+
+  def fromShape(product: P): Vector[Any] = {
+    product.getClass.getDeclaredFields.map { f =>
+      f.setAccessible(true)
+      val value = f.get(product)
+      f.setAccessible(false)
+      value
+    }.toVector
+  }
+}
+
+
+object RowReader extends RowTypeNames { 
+
+  def create[T](rti: RowTypeInfo[T]) = {
+    validate(rti)
+    new RowReader(rti.cols, rti.cTag)
+  }
+}
+
 
 class RowReader[R](val cols: Seq[TypeCol[_]], tag: ClassTag[R]) extends RowShape[R] {
   def conv = new RowConvReader(cols.map(_.conv))(tag)

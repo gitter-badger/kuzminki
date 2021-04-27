@@ -6,6 +6,6 @@ import scala.reflect.runtime.universe._
 
 trait ModelRead {
   def read[T](cols: TypeCol[_]*)(implicit cTag: ClassTag[T], tTag: TypeTag[T]) = {
-    RowReader.create(cols, cTag, tTag)
+    RowReader.create(RowTypeInfo(cols, cTag, tTag))
   }
 }
