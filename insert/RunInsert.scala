@@ -18,9 +18,9 @@ class RunInsert[M <: Model, P](
 
   def runNum(params: P) = cache.runNum(params)
 
-  def list(paramsList: List[P]) = cache.list(paramsList)
+  def runList(paramsList: List[P]) = cache.runList(paramsList)
 
-  def listNum(paramsList: List[P]) = cache.listNum(paramsList)
+  def runListNum(paramsList: List[P]) = cache.runListNum(paramsList)
 
   def fromSource[T](source: Source[P, T]) = cache.fromSource(source)
 

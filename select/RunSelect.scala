@@ -13,21 +13,17 @@ class RunSelect[M, R](
 
   def cache = coll.cache
   
-  def run() = coll.cache.run()
+  def run() = cache.run()
 
-  def first() = coll.cache.first()
+  def headOpt() = cache.headOpt()
 
-  def runAs[T](implicit custom: R => T) = coll.cache.runAs(custom)
+  def runAs[T](implicit custom: R => T) = cache.runAs(custom)
 
-  def firstAs[T](implicit custom: R => T) = coll.cache.firstAs(custom)
+  def headOptAs[T](implicit custom: R => T) = cache.headOptAs(custom)
 
-  def stream(sink: Sink[R, Future[Done]]) = coll.cache.stream(sink)
+  def runCount() = cache.runCount()
 
-  def streamAs[T](sink: Sink[T, Future[Done]])(implicit custom: R => T) = coll.cache.streamAs(sink)(custom)
-
-  def asSource = coll.cache.asSource
-
-  def runCount() = coll.cache.runCount()
+  def source = cache.source
 
   // cache where
 
@@ -78,10 +74,6 @@ class RunSelect[M, R](
   def render(prefix: Prefix): String = coll.render
   
   def args = coll.args
-
-  def renderTo(printer: String => Unit): Unit = {
-    printer(coll.render)
-  }
 
   def sql(handler: String => Unit): RunSelect[M, R] = {
     handler(render(coll.prefix))

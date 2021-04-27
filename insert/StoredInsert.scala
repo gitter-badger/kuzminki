@@ -22,11 +22,11 @@ class StoredInsert[P](
     db.execNum(statement(params))
   }
 
-  def list(paramsList: List[P]) = {
+  def runList(paramsList: List[P]) = {
     db.exec(listStatement(paramsList))
   }
 
-  def listNum(paramsList: List[P]) = {
+  def runListNum(paramsList: List[P]) = {
     db.execNum(listStatement(paramsList))
   }
 

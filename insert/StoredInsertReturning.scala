@@ -27,14 +27,14 @@ class StoredInsertReturning[P, R](
     }  
   }
 
-  def list(paramsList: List[P]) = {
+  def runList(paramsList: List[P]) = {
     db.select(listStatement(paramsList)) { row =>
       rowConv.fromRow(row)
     }  
   }
 
 
-  def listAs[T](paramsList: List[P])(implicit custom: R => T) = {
+  def runListAs[T](paramsList: List[P])(implicit custom: R => T) = {
     db.select(listStatement(paramsList)) { row =>
       custom(
         rowConv.fromRow(row)

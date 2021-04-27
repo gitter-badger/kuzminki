@@ -33,12 +33,6 @@ class StoredSelectWhere[P, R](
     }  
   }
 
-  def first(params: P) = {
-    db.selectHeadOption(statement(params)) { row =>
-      rowConv.fromRow(row)
-    }
-  }
-
   def runAs[T](params: P)(implicit custom: R => T) = {
     db.select(statement(params)) { row =>
       custom(
@@ -47,7 +41,13 @@ class StoredSelectWhere[P, R](
     }  
   }
 
-  def firstAs[T](params: P)(implicit custom: R => T) = {
+  def headOpt(params: P) = {
+    db.selectHeadOption(statement(params)) { row =>
+      rowConv.fromRow(row)
+    }
+  }
+
+  def headOptAs[T](params: P)(implicit custom: R => T) = {
     db.selectHeadOption(statement(params)) { row =>
       custom(
         rowConv.fromRow(row)
@@ -55,17 +55,13 @@ class StoredSelectWhere[P, R](
     }  
   }
 
-  def stream(params: P, sink: Sink[R, Future[Done]]) = {
-    db.stream(statement(params), sink) { row =>
-      rowConv.fromRow(row)
-    }
+  def runCount(params: P) = {
+    db.count(statement(params))
   }
 
-  def streamAs[T](params: P, sink: Sink[T, Future[Done]])(implicit custom: R => T) = {
-    db.stream(statement(params), sink) { row =>
-      custom(
-        rowConv.fromRow(row)
-      )
+  def source(params: P) = {
+    db.streamAsSource(statement(params)) { row =>
+      rowConv.fromRow(row)
     }
   }
 

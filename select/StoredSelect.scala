@@ -19,12 +19,6 @@ class StoredSelect[R](
     }  
   }
 
-  def first() = {
-    db.selectHeadOption(statement) { row =>
-      rowConv.fromRow(row)
-    }
-  }
-
   def runAs[T](implicit custom: R => T) = {
     db.select(statement) { row =>
       custom(
@@ -33,7 +27,13 @@ class StoredSelect[R](
     }  
   }
 
-  def firstAs[T](implicit custom: R => T) = {
+  def headOpt() = {
+    db.selectHeadOption(statement) { row =>
+      rowConv.fromRow(row)
+    }
+  }
+
+  def headOptAs[T](implicit custom: R => T) = {
     db.selectHeadOption(statement) { row =>
       custom(
         rowConv.fromRow(row)
@@ -45,31 +45,9 @@ class StoredSelect[R](
     db.count(statement)
   }
 
-  def stream(sink: Sink[R, Future[Done]]) = {
-    db.stream(statement, sink) { row =>
-      rowConv.fromRow(row)
-    }
-  }
-
-  def streamAs[T](sink: Sink[T, Future[Done]])(implicit custom: R => T) = {
-    db.stream(statement, sink) { row =>
-      custom(
-        rowConv.fromRow(row)
-      )
-    }
-  }
-
-  def asSource = {
+  def source = {
     db.streamAsSource(statement) { row =>
       rowConv.fromRow(row)
-    }
-  }
-
-  def asSourceAs[T](implicit custom: R => T) = {
-    db.streamAsSource(statement) { row =>
-      custom(
-        rowConv.fromRow(row)
-      )
     }
   }
 
@@ -77,8 +55,9 @@ class StoredSelect[R](
   
   def args = statement.params.toSeq
   
-  def renderTo(printer: String => Unit): Unit = {
-    printer(statement.sql)
+  def sql(handler: String => Unit) = {
+    handler(statement.sql)
+    this
   }
 }
 

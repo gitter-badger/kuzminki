@@ -11,9 +11,9 @@ class RunInsertReturning[P, R](
 
   def runAs[T](params: P)(implicit custom: R => T) = cache.runAs(params)(custom)
 
-  def list(paramsList: List[P]) = cache.list(paramsList)
+  def runList(paramsList: List[P]) = cache.runList(paramsList)
 
-  def listAs[T](paramsList: List[P])(implicit custom: R => T) = cache.listAs(paramsList)(custom)
+  def runListAs[T](paramsList: List[P])(implicit custom: R => T) = cache.runListAs(paramsList)(custom)
 
   def sql(handler: String => Unit) = {
     handler(coll.render)
