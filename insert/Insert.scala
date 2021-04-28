@@ -30,6 +30,10 @@ class Insert[M <: Model](model: M, db: Conn) {
     )
   }
 
+  def colsWrite[P](pick: M => ParamShapeWrite[P]) = {
+    next(pick(model))
+  }
+
   def cols1[P](pick: M => TypeCol[P]) = {
     next(new ParamShapeSingle(pick(model)))
   }
