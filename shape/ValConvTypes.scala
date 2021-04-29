@@ -8,7 +8,7 @@ import io.rdbc.sapi.{Row, DecimalNumber}
 object SpecialConv {
   
   val toChar: String => Char = {
-    case str: String if str.size == 0 => str.charAt(0)
+    case str: String if str.size == 1 => str.charAt(0)
     case str: String => throw KuzminkiException(s"Cannot be converted to char: $str")
   }
 

@@ -105,7 +105,7 @@ case class BigDecimalCol(info: ColInfo) extends ModelCol
                                            with UniversalFilters[BigDecimal]
                                            with ComparativeFilters[BigDecimal] {
 
-  def opt = DoubleOptCol(info)
+  def opt = BigDecimalOptCol(info)
 }
 
 
