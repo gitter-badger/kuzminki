@@ -4,7 +4,7 @@ package kuzminki.model
 class Having[M, R](
       model: M,
       coll: SelectCollector[R]
-    ) extends OrderBy(model, coll) {
+    ) {
 
   private def toOrderBy(section: Section) = {
     new OrderBy(

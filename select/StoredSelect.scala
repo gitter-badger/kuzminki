@@ -41,6 +41,20 @@ class StoredSelect[R](
     }  
   }
 
+  def head() = {
+    db.selectHead(statement) { row =>
+      rowConv.fromRow(row)
+    }
+  }
+
+  def headAs[T](implicit custom: R => T) = {
+    db.selectHead(statement) { row =>
+      custom(
+        rowConv.fromRow(row)
+      )
+    }  
+  }
+
   def runCount() = {
     db.count(statement)
   }

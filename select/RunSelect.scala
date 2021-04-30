@@ -15,11 +15,15 @@ class RunSelect[M, R](
   
   def run() = cache.run()
 
-  def headOpt() = cache.headOpt()
-
   def runAs[T](implicit custom: R => T) = cache.runAs(custom)
 
+  def headOpt() = cache.headOpt()
+
   def headOptAs[T](implicit custom: R => T) = cache.headOptAs(custom)
+
+  def head() = cache.head()
+
+  def headAs[T](implicit custom: R => T) = cache.headOptAs(custom)
 
   def runCount() = cache.runCount()
 
