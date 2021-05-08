@@ -3,7 +3,7 @@ Postgres query builder inspired by knex
 
 ##### Connecting to the database
 
-###### Settings
+#### Settings
 ```sbt
 db.user = {
   host = "localhost"
@@ -15,7 +15,7 @@ db.user = {
 }
 ```
 
-###### Make a connection
+#### Make a connection
 ```scala
 import kuzminki.Kuzminki
 import kuzminki.model._
@@ -30,7 +30,7 @@ val conf = SystemConfigFactory.load()
 val db = new Kuzminki(conf.getConfig("db.kuzminki"))
 ```
 
-###### Data types
+#### Data types
 
 Postgres                  | Scala
 --------------------------|-----------------------------
@@ -49,7 +49,7 @@ timestamp                 | java.time.Instant
 timestamp with time zone  | java.time.ZonedDateTime
 uuid                      | java.util.UUID
 
-###### Defining a table
+#### Defining a table
 
 ```scala
 class User extends Model("user") {
@@ -65,14 +65,14 @@ class User extends Model("user") {
   val created = column[ZonedDateTime]("created")
 }
 ```
-In case of a column with null values use Option.
+If a column has null values Option.
 ```scala
 val country = column[Option[String]]("country")
 // or
 val country = column[String]("country").opt
 ```
 
-###### Defining result types
+#### Defining result types
 ```scala
 case class UserInfo(id: Int, username: String, email: String)
 
@@ -92,7 +92,7 @@ class User extends Model("user") {
 Model.register[User]
 ```
 
-###### Select query
+#### Select query
 ```scala
 val user = Model.get[User]
 
@@ -113,6 +113,7 @@ db
 
   // returns List[Tuple2[Int, String]]
 ```
+Output:
 ```sql
 SELECT "id", "username"
 FROM "user"
@@ -123,9 +124,71 @@ ORDER BY "age"
 DESC LIMIT 10
 ```
 
+#### Join
+```scala
+case class UserSpending(id: Int, username: String, amount: Int)
 
+class Customer extends Model("customer") {
+  val id = column[Int]("id")
+  val userId = column[Int]("user_id")
+  val amountSpent = column[Int]("amount_spent")
+}
 
+class UserCustomer extends ExtendedJoin[User, Customer] {
+  val userSpending = read[UserSpending](a.id, a.username, b.amountSpent)
+}
 
+implicit val toUserCustomer = Join.register[UserCustomer, User, Customer]
+```
+
+```scala
+val userCustomerJoin = Join.get[UserCustomer]
+
+db
+  .select(userCustomerJoin)
+  .colsRead(_.userSpending)
+  .joinOn(_.id, _.userId)
+  .where(t => Seq(
+    t.a.age > 25,
+    t.b.amountSpent > 1000
+  ))
+  .orderByOne(_.b.amountSpent.desc)
+  .limit(10)
+  .run()
+  // returns UserCustomer
+
+db
+  .select(user, customer)
+  .cols3(t => (
+    t.a.id,
+    t.a.username,
+    t.b.amountSpent
+  ))
+  .joinOn(_.id, _.userId)
+  .where(t => Seq(
+    t.a.age > 25,
+    t.b.amountSpent > 1000
+  ))
+  .orderByOne(_.b.amountSpent.desc)
+  .limit(10)
+  .run()
+  // returns Tuple3[Int, String, Int]
+
+// Both result in the same SQL statement
+```
+```sql
+SELECT
+  "a"."id",
+  "a"."username",
+  "b"."amount_spent"
+FROM "user" "a"
+INNER JOIN "customer" "b"
+ON "a"."id" = "b"."user_id"
+WHERE "a"."age" > 25
+AND "b"."amount_spent" > 1000
+ORDER BY "b"."amount_spent"
+DESC LIMIT 10
+```
 
 
 
