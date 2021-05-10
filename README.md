@@ -30,25 +30,6 @@ val conf = SystemConfigFactory.load()
 val db = new Kuzminki(conf.getConfig("db.kuzminki"))
 ```
 
-#### Data types
-
-Postgres                  | Scala
---------------------------|-----------------------------
-varchar / text            | String
-char(1)                   | Char
-bool                      | Boolean
-int2                      | Short
-int4                      | Int
-int8                      | Long
-float4                    | Float
-float8                    | Double
-numeric                   | io.rdbc.sapi.DecimalNumber
-date                      | java.time.LocalDate
-time                      | java.time.LocalTime
-timestamp                 | java.time.Instant
-timestamp with time zone  | java.time.ZonedDateTime
-uuid                      | java.util.UUID
-
 #### Defining a table
 
 ```scala
@@ -124,6 +105,65 @@ ORDER BY "age"
 DESC LIMIT 10
 ```
 
+#### Results types
+```scala
+.cols1(_.id)
+// Int
+
+.cols3(t => (
+  t.id,
+  t.username,
+  t.email
+))
+// Tuple3[Int, String, String]
+
+.colsAsSeq(t => Seq(
+  t.id,
+  t.username
+))
+// Seq[Any]
+
+.cols2(_.basic)
+// Tuple2[Int, String]
+
+.colsRead(_.info)
+// UserInfo
+```
+
+#### Results
+```scala
+.cols1(_.id)
+
+.run() // List[Int]
+.head() // Int
+.headOpt() // Option[Int]
+
+// Count
+
+.runCount() // Int
+
+// Conversion
+
+.cols2(t => (
+  t.age,
+  t.gender
+))
+
+case class AgeGender(age: Int, gender: Char)
+implicit val toAgeGender: Tuple2[Int, Char] => AgeGender = tup => AgeGender(tup._1, tup._2)
+
+.runAs[AgeGender]() // List[AgeGender]
+.headAs[AgeGender]() // AgeGender
+.headOptAs[AgeGender] // Option[AgeGender]
+
+// Streaming
+
+val source: Source[Tuple2[Int, String], Future[NotUsed]] =
+db.select(user).cols2(_.basic).all().orderByOne(_.id.asc).source
+source.runWith(Sink.foreach(println)
+```
+
+
 #### Join
 ```scala
 case class UserSpending(id: Int, username: String, amount: Int)
@@ -194,17 +234,48 @@ DESC LIMIT 10
 
 
 
+#### Data types
+
+Postgres                  | Scala
+--------------------------|-----------------------------
+varchar / text            | String
+char(1)                   | Char
+bool                      | Boolean
+int2                      | Short
+int4                      | Int
+int8                      | Long
+float4                    | Float
+float8                    | Double
+numeric                   | io.rdbc.sapi.DecimalNumber
+date                      | java.time.LocalDate
+time                      | java.time.LocalTime
+timestamp                 | java.time.Instant
+timestamp with time zone  | java.time.ZonedDateTime
+uuid                      | java.util.UUID
 
 
+#### Condition operators
 
-
-
-
-
-
-
-
-
+Operator           | Alternative      | Column type
+-------------------|------------------|------------------
+===                | matches          | Any
+!==                | not              | Any
+                   | isNull           | Any
+                   | isNotNull        | Any
+                   | in               | Any
+                   | notIn            | Any
+                   | like             | String
+                   | startsWith       | String
+                   | endsWith         | String
+                   | similarTo        | String
+~                  | reMatch          | String
+~*                 | reIMatch         | String
+!~                 | reNotMatch       | String
+!~*                | reNotIMatch      | String
+>                  | gt               | Numbers and time
+<                  | lt               | Numbers and time
+>=                 | gte              | Numbers and time
+<=                 | lte              | Numbers and time
 
 
 
