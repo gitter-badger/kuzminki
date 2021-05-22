@@ -313,16 +313,16 @@ Operator           | Alternative      | Column type
 -------------------|------------------|------------------
 ===                | matches          | Any
 !==                | not              | Any
-&nbsp;             | isNull           | Any
+|                  | isNull           | Any
 |                  | isNotNull        | Any
-                   | in               | Any
-                   | notIn            | Any
-                   | like             | String
-                   | startsWith       | String
-                   | endsWith         | String
-                   | similarTo        | String
-~                  | reMatch          | String
-~*                 | reIMatch         | String
+|                  | in               | Any
+|                  | notIn            | Any
+|                  | like             | String
+|                  | startsWith       | String
+|                  | endsWith         | String
+|                  | similarTo        | String
+`~`                | reMatch          | String
+`~*`               | reIMatch         | String
 !~                 | reNotMatch       | String
 !~*                | reNotIMatch      | String
 >                  | gt               | Numbers and time
