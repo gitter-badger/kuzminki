@@ -309,10 +309,10 @@ uuid                      | java.util.UUID
 
 #### Condition operators
 
-Operator           | Alternative      | Column type
--------------------|------------------|------------------
-===                | matches          | Any
-!==                | not              | Any
+|Operator           | Alternative      | Column type
+|-------------------|------------------|------------------
+|===                | matches          | Any
+|!==                | not              | Any
 |                  | isNull           | Any
 |                  | isNotNull        | Any
 |                  | in               | Any
@@ -325,10 +325,10 @@ Operator           | Alternative      | Column type
 |~*                | reIMatch         | String
 |!~                 | reNotMatch       | String
 |!~*                | reNotIMatch      | String
->                  | gt               | Numbers and time
-<                  | lt               | Numbers and time
->=                 | gte              | Numbers and time
-<=                 | lte              | Numbers and time
+|>                  | gt               | Numbers and time
+|<                  | lt               | Numbers and time
+|>=                 | gte              | Numbers and time
+|<=                 | lte              | Numbers and time
 
 
 
