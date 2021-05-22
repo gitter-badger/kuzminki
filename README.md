@@ -313,8 +313,8 @@ Operator           | Alternative      | Column type
 -------------------|------------------|------------------
 ===                | matches          | Any
 !==                | not              | Any
-\                  | isNull           | Any
-\                  | isNotNull        | Any
+&nbsp;             | isNull           | Any
+|                  | isNotNull        | Any
                    | in               | Any
                    | notIn            | Any
                    | like             | String
