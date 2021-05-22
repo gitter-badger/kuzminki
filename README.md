@@ -321,10 +321,10 @@ Operator           | Alternative      | Column type
 |                  | startsWith       | String
 |                  | endsWith         | String
 |                  | similarTo        | String
-`~`                | reMatch          | String
-`~*`               | reIMatch         | String
-!~                 | reNotMatch       | String
-!~*                | reNotIMatch      | String
+|~                 | reMatch          | String
+|~*                | reIMatch         | String
+|!~                 | reNotMatch       | String
+|!~*                | reNotIMatch      | String
 >                  | gt               | Numbers and time
 <                  | lt               | Numbers and time
 >=                 | gte              | Numbers and time
