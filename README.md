@@ -1,8 +1,6 @@
 # kuzminki
 Postgres query builder inspired by knex
 
-##### Connecting to the database
-
 #### Settings
 ```sbt
 db.user = {
@@ -15,11 +13,9 @@ db.user = {
 }
 ```
 
-#### Make a connection
+#### Connecting to the database
 ```scala
 import kuzminki.Kuzminki
-import kuzminki.model._
-import kuzminki.model.implicits._
 
 implicit val system = ActorSystem()
 implicit val ec = system.dispatcher
@@ -33,6 +29,9 @@ val db = new Kuzminki(conf.getConfig("db.kuzminki"))
 #### Defining a table
 
 ```scala
+import kuzminki.model._
+import kuzminki.model.implicits._
+
 class User extends Model("user") {
   val id = column[Int]("id")
   val username = column[String]("username")
@@ -46,7 +45,7 @@ class User extends Model("user") {
   val created = column[ZonedDateTime]("created")
 }
 ```
-If a column has null values Option.
+If a column has null values use Option.
 ```scala
 val country = column[Option[String]]("country")
 // or
@@ -55,6 +54,9 @@ val country = column[String]("country").opt
 
 #### Defining result types
 ```scala
+import kuzminki.model._
+import kuzminki.model.implicits._
+
 case class UserInfo(id: Int, username: String, email: String)
 
 class User extends Model("user") {
@@ -103,6 +105,57 @@ AND "age" > 25
 AND "country" = ANY(ARRAY['DE', 'FR', 'UK'])
 ORDER BY "age"
 DESC LIMIT 10
+```
+
+#### Conditions
+```scala
+.whereOne(_.id > 100)
+
+.where(t => Seq(
+    t.gender === 'f',
+    t.age > 25
+))
+
+// AND OR
+
+.where(t => Seq(
+  t.age > 25,
+  Or(
+    t.country === "RU",
+    t.country === "FR"
+  )
+))
+// WHERE "age" > 25 AND ("country" == 'RU' OR "country" == 'FR')
+
+.whereOne(t => Or(
+  And(
+    t.country === "RU",
+    t.city === "Moscow"
+  ),
+  And(
+    t.country === "FR",
+    t.city === "Paris"
+  )
+))
+// WHERE ("country" == 'RU' AND "city" == 'Moscow') OR ("country" == 'FR' AND "city" == 'Paris')
+
+// Optional conditions
+
+.whereOpt(_.id > Some(100))
+
+.whereOpts(t => Seq(
+  t.gender === None,
+  t.age > Some(25)
+))
+// WHERE "age" > 25
+
+.whereOpts(t => Seq(
+  t.age > Some(25),
+  Or.opts(
+    t.country === Some("RU"),
+    t.country === Some("FR")
+  )
+))
 ```
 
 #### Results types
@@ -160,7 +213,7 @@ implicit val toAgeGender: Tuple2[Int, Char] => AgeGender = tup => AgeGender(tup.
 
 val source: Source[Tuple2[Int, String], Future[NotUsed]] =
 db.select(user).cols2(_.basic).all().orderByOne(_.id.asc).source
-source.runWith(Sink.foreach(println)
+source.runWith(Sink.foreach(println))
 ```
 
 
@@ -260,8 +313,8 @@ Operator           | Alternative      | Column type
 -------------------|------------------|------------------
 ===                | matches          | Any
 !==                | not              | Any
-                   | isNull           | Any
-                   | isNotNull        | Any
+\                  | isNull           | Any
+\                  | isNotNull        | Any
                    | in               | Any
                    | notIn            | Any
                    | like             | String
