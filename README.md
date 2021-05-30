@@ -387,7 +387,65 @@ DESC LIMIT 10
 
 ### Insert
 
+#### Simple insert
+```scala
+db
+  .insert(user)
+  .cols2(t => (
+    t.username,
+    t.email
+  ))
+  .run(("bob", "bob@mail.com"))
+```
+```sql
+INSERT INTO "user" ("username", "email") VALUES ('bob', 'bob@mail.com')
+```
+#### Key/value insert
+```scala
+db
+  .insert(user)
+  .data(t => Seq(
+    t.username ==> "bob",
+    t.email ==> "bob@mail.com"
+  ))
+  .run()
+```
+```sql
+INSERT INTO "user" ("username", "email") VALUES ('bob', 'bob@mail.com')
+```
+#### Insert write
+```scala
+case class AddUser(username: String, email: String)
 
+// add write to the model
+class User extends Model("user") {
+  // ...
+  val addUser = write[AddUser](username, email)
+}
+
+db
+  .insert(user)
+  .colsWrite(userData)
+  .run(AddUser("bob", "bob@mail.com"))
+```
+```sql
+INSERT INTO "user" ("username", "email") VALUES ('bob', 'bob@mail.com')
+```
+#### Cache insert with returning
+```scala
+val stm = db
+  .insert(user)
+  .colsWrite(userData)
+  .returning1(_.id)
+
+stm.run(AddUser("bob", "bob@mail.com"))
+```
+```sql
+INSERT INTO "user" ("username", "email")
+VALUES ('bob', 'bob@mail.com')
+RETURNING "id", "username", "email"
+```
+#### 
 
 
 #### Data types
