@@ -287,6 +287,8 @@ DESC LIMIT 10
 
 #### Cache
 ```scala
+// no arguments
+
 val newUsers = db
   .select(user)
   .colsRead(_.info)
@@ -296,8 +298,11 @@ val newUsers = db
   .cache
 
 newUsers.run().map(\*...*\)
-// SELECT "id", "username", "email" ORDER BY "created" DESC LIMIT 10
-
+```
+```sql
+SELECT "id", "username", "email" ORDER BY "created" DESC LIMIT 10
+```
+```scala
 // with arguments
 
 val newUsers = db
@@ -312,8 +317,11 @@ val newUsers = db
   )
 
 newUsers.run(("CN", "Peking")).map(\*...*\)
-// SELECT "id", "username", "email" WHERE "country" = 'CN' AND "city" = 'Peking' ORDER BY "created" DESC LIMIT 10
-
+```
+```sql
+SELECT "id", "username", "email" WHERE "country" = 'CN' AND "city" = 'Peking' ORDER BY "created" DESC LIMIT 10
+```
+```scala
 // with static and dynamic argumnets
 
 val newUsers = db
@@ -325,8 +333,12 @@ val newUsers = db
   .cacheWhere1(_.country)
 
 newUsers.run("CN").map(\*...*\)
-// SELECT "id", "username", "email" WHERE "age" > 25 AND "country" = 'CN' ORDER BY "created" DESC LIMIT 10
 ```
+```sql
+SELECT "id", "username", "email" WHERE "age" > 25 AND "country" = 'CN' ORDER BY "created" DESC LIMIT 10
+```
+
+### Insert
 
 
 

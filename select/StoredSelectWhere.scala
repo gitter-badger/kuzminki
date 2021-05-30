@@ -16,11 +16,11 @@ class StoredSelectWhere[P, R](
       rowConv: RowConv[R]
     ) {
 
-  def transformParams(params: P) = {
+  private def transformParams(params: P) = {
     firstArgs ++ paramConv.fromShape(params) ++ lastArgs
   }
 
-  def statement(params: P) = {
+  private def statement(params: P) = {
     SqlWithParams(
       template,
       transformParams(params)
