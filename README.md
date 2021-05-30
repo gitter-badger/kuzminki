@@ -92,7 +92,9 @@ db
   ))
   .orderByOne(_.age.desc)
   .limit(10)
-  .map(//...)
+  .map(
+    //...
+  )
 
   // returns List[Tuple2[Int, String]]
 ```
@@ -283,6 +285,48 @@ ORDER BY "b"."amount_spent"
 DESC LIMIT 10
 ```
 
+#### Cache
+```scala
+val newUsers = db
+  .select(user)
+  .colsRead(_.info)
+  .all
+  .orderByOne(_.created.desc)
+  .limit(10)
+  .cache
+
+newUsers.run().map(\*...*\)
+// SELECT "id", "username", "email" ORDER BY "created" DESC LIMIT 10
+
+// with arguments
+
+val newUsers = db
+  .select(user)
+  .colsRead(_.info)
+  .all
+  .orderByOne(_.created.desc)
+  .limit(10)
+  .cacheWhere2(t => (
+    t.country,
+    t.city
+  )
+
+newUsers.run(("CN", "Peking")).map(\*...*\)
+// SELECT "id", "username", "email" WHERE "country" = 'CN' AND "city" = 'Peking' ORDER BY "created" DESC LIMIT 10
+
+// with static and dynamic argumnets
+
+val newUsers = db
+  .select(user)
+  .colsRead(_.info)
+  .whereOne(_.age > 25)
+  .orderByOne(_.created.desc)
+  .limit(10)
+  .cacheWhere1(_.country)
+
+newUsers.run("CN").map(\*...*\)
+// SELECT "id", "username", "email" WHERE "age" > 25 AND "country" = 'CN' ORDER BY "created" DESC LIMIT 10
+```
 
 
 
@@ -313,22 +357,23 @@ uuid                      | java.util.UUID
 |-------------------|------------------|------------------
 |===                | matches          | Any
 |!==                | not              | Any
-|                  | isNull           | Any
-|                  | isNotNull        | Any
-|                  | in               | Any
-|                  | notIn            | Any
-|                  | like             | String
-|                  | startsWith       | String
-|                  | endsWith         | String
-|                  | similarTo        | String
-|~                 | reMatch          | String
-|~*                | reIMatch         | String
-|!~                 | reNotMatch       | String
-|!~*                | reNotIMatch      | String
 |>                  | gt               | Numbers and time
 |<                  | lt               | Numbers and time
 |>=                 | gte              | Numbers and time
 |<=                 | lte              | Numbers and time
+|                   | isNull           | Any
+|                   | isNotNull        | Any
+|                   | in               | Any
+|                   | notIn            | Any
+|                   | like             | String
+|                   | startsWith       | String
+|                   | endsWith         | String
+|                   | similarTo        | String
+|~                  | reMatch          | String
+|~*                 | reIMatch         | String
+|!~                 | reNotMatch       | String
+|!~*                | reNotIMatch      | String
+
 
 
 
