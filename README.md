@@ -213,8 +213,13 @@ implicit val toAgeGender: Tuple2[Int, Char] => AgeGender = tup => AgeGender(tup.
 
 // Streaming
 
-val source: Source[Tuple2[Int, String], Future[NotUsed]] =
-db.select(user).cols2(_.basic).all().orderByOne(_.id.asc).source
+val source: Source[Tuple2[Int, String], Future[NotUsed]] = db
+  .select(user)
+  .cols2(_.basic)
+  .all
+  .orderByOne(_.id.asc)
+  .source
+
 source.runWith(Sink.foreach(println))
 ```
 
@@ -285,6 +290,35 @@ ORDER BY "b"."amount_spent"
 DESC LIMIT 10
 ```
 
+#### Nested query
+```scala
+class OldUser extends Model("old_user") {
+  val email = column[String]("email")
+  val spending = column[Int]("spending")
+}
+
+val oldUser = Model.get[OldUser]
+
+db
+  .select(user)
+  .cols2(_.basic)
+  .whereOne(_.email.in(
+    db.select(oldUser).cols1(_.email).whereOne(_.spending < 1000)
+  ))
+  .limit(10)
+  .run()
+```
+```sql
+SELECT "id", "username"
+FROM "user"
+WHERE "email" = ANY(
+  SELECT "email"
+  FROM "old_user"
+  WHERE "spending" < 1000
+)
+LIMIT 10
+```
+
 #### Cache
 ```scala
 // no arguments
@@ -300,7 +334,10 @@ val newUsers = db
 newUsers.run().map(\*...*\)
 ```
 ```sql
-SELECT "id", "username", "email" ORDER BY "created" DESC LIMIT 10
+SELECT "id", "username", "email"
+FROM "user"
+ORDER BY "created"
+DESC LIMIT 10
 ```
 ```scala
 // with arguments
@@ -319,7 +356,12 @@ val newUsers = db
 newUsers.run(("CN", "Peking")).map(\*...*\)
 ```
 ```sql
-SELECT "id", "username", "email" WHERE "country" = 'CN' AND "city" = 'Peking' ORDER BY "created" DESC LIMIT 10
+SELECT "id", "username", "email"
+FROM "user"
+WHERE "country" = 'CN'
+AND "city" = 'Peking'
+ORDER BY "created"
+DESC LIMIT 10
 ```
 ```scala
 // with static and dynamic argumnets
@@ -335,7 +377,12 @@ val newUsers = db
 newUsers.run("CN").map(\*...*\)
 ```
 ```sql
-SELECT "id", "username", "email" WHERE "age" > 25 AND "country" = 'CN' ORDER BY "created" DESC LIMIT 10
+SELECT "id", "username", "email"
+FROM "user"
+WHERE "age" > 25
+AND "country" = 'CN'
+ORDER BY "created"
+DESC LIMIT 10
 ```
 
 ### Insert
