@@ -387,7 +387,7 @@ DESC LIMIT 10
 
 ### Insert
 
-#### Simple insert
+#### Basic
 ```scala
 db
   .insert(user)
@@ -413,7 +413,7 @@ db
 ```sql
 INSERT INTO "user" ("username", "email") VALUES ('bob', 'bob@mail.com')
 ```
-#### Insert write
+#### Insert type
 ```scala
 case class AddUser(username: String, email: String)
 
@@ -438,10 +438,63 @@ val stm = db
   .colsWrite(userData)
   .cache
 
-stm.run(AddUser("bob", "bob@mail.com"))
+// you can call various methods on the cached statement
+stm.run(user: AddUser): Future[Unit]
+stm.runNum(user: AddUser): Future[Long]
+stm.runList(users: List[AddUser]): Future[Unit]
+stm.runListNum(users: List[AddUser]): Future[Long]
+stm.streamList(users: List[AddUser]): Future[Done]
+stm.streamList(users: Source[AddUser, T]): Future[Done]
 ```
 ```sql
 INSERT INTO "user" ("username", "email") VALUES ('bob', 'bob@mail.com')
+```
+#### Insert list
+```scala
+val stm = db
+  .insert(user)
+  .cols2(t => (
+    t.username,
+    t.email
+  ))
+  .cache
+
+stm.runList(List( 
+  ("bob", "bob@mail.com"),
+  ("joe", "joe@mail.com"),
+  ("paul", "paul@mail.com")
+))
+```
+```sql
+INSERT INTO "user" ("username", "email")
+VALUES ('bob', 'bob@mail.com'),
+       ('joe', 'joe@mail.com'),
+       ('paul', 'paul@mail.com')
+```
+#### Stream list
+```scala
+val stm = db
+  .insert(user)
+  .cols2(t => (
+    t.username,
+    t.email
+  ))
+  .cache
+
+val longListOfUsers: List[Tuple2[String, String]] = //...
+
+stm.streamList(longListOfUsers)
+```
+#### Insert stream
+```scala
+val stm = db
+  .insert(user)
+  .colsWrite(_.userData)
+  .cache
+
+val userSource: Source[AddUser, T] = //...
+
+stm.fromSource(userSource)
 ```
 #### Insert returning
 ```scala
@@ -497,7 +550,7 @@ val stm = db
 
 stm.run(("bob", "bob@mail.com"))
 ```
-```pgsql
+```sql
 INSERT INTO "user" ("username", "email")
 VALUES ('bob', 'bob@mail.com')
 ON CONFLICT ("username")
@@ -511,8 +564,7 @@ val stm = db
     t.username,
     t.email
   ))
-  .onConflictOnColumn(_.username)
-  .doUpdateOne(_.email)
+  .whereNotExistsOne(_.email)
   .cache
 
 stm.run(("bob", "bob@mail.com"))
@@ -525,6 +577,25 @@ WHERE NOT EXISTS (
   FROM "user_user"
   WHERE "email" = 'bob@mail.com'
 )
+```
+#### Insert from select
+```scala
+class Email extends Model("email") {
+  val email = column[String]("email")
+}
+
+val email = Model.get[Email]
+
+db
+  .insert(email)
+  .cols1(_.email)
+  .fromSelect(
+    db.select(user).cols1(_.email).all()
+  )
+  .run()
+```
+```sql
+INSERT INTO "email" ("email") SELECT "email" FROM "user"
 ```
 
 #### Data types
