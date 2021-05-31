@@ -425,18 +425,38 @@ class User extends Model("user") {
 
 db
   .insert(user)
-  .colsWrite(userData)
+  .colsWrite(_.userData)
   .run(AddUser("bob", "bob@mail.com"))
 ```
 ```sql
 INSERT INTO "user" ("username", "email") VALUES ('bob', 'bob@mail.com')
 ```
-#### Cache insert with returning
+#### Cache insert statement
 ```scala
 val stm = db
   .insert(user)
   .colsWrite(userData)
-  .returning1(_.id)
+  .cache
+
+stm.run(AddUser("bob", "bob@mail.com"))
+```
+```sql
+INSERT INTO "user" ("username", "email") VALUES ('bob', 'bob@mail.com')
+```
+#### Insert returning
+```scala
+val stm = db
+  .insert(user)
+  .cols2(t => (
+    t.username,
+    t.email
+  ))
+  .returning3(t => (
+    t.id,
+    t.username,
+    t.email
+  ))
+  .cache
 
 stm.run(AddUser("bob", "bob@mail.com"))
 ```
@@ -445,8 +465,67 @@ INSERT INTO "user" ("username", "email")
 VALUES ('bob', 'bob@mail.com')
 RETURNING "id", "username", "email"
 ```
-#### 
+#### Insert on conflict do nothing
+```scala
+val stm = db
+  .insert(user)
+  .cols2(t => (
+    t.username,
+    t.email
+  ))
+  .onConflictDoNothing
+  .cache
 
+stm.run(("bob", "bob@mail.com"))
+```
+```sql
+INSERT INTO "user" ("username", "email")
+VALUES ('bob', 'bob@mail.com')
+ON CONFLICT DO NOTHING
+```
+#### Upsert
+```scala
+val stm = db
+  .insert(user)
+  .cols2(t => (
+    t.username,
+    t.email
+  ))
+  .onConflictOnColumn(_.username)
+  .doUpdateOne(_.email)
+  .cache
+
+stm.run(("bob", "bob@mail.com"))
+```
+```pgsql
+INSERT INTO "user" ("username", "email")
+VALUES ('bob', 'bob@mail.com')
+ON CONFLICT ("username")
+DO UPDATE SET email = 'bob@mail.com'
+```
+#### Insert where not exists
+```scala
+val stm = db
+  .insert(user)
+  .cols2(t => (
+    t.username,
+    t.email
+  ))
+  .onConflictOnColumn(_.username)
+  .doUpdateOne(_.email)
+  .cache
+
+stm.run(("bob", "bob@mail.com"))
+```
+```sql
+INSERT INTO "user" ("username", "email")
+SELECT ('bob', 'bob@mail.com')
+WHERE NOT EXISTS (
+  SELECT 1
+  FROM "user_user"
+  WHERE "email" = 'bob@mail.com'
+)
+```
 
 #### Data types
 
