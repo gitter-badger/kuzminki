@@ -597,6 +597,84 @@ db
 INSERT INTO "email" ("email") SELECT "email" FROM "user"
 ```
 
+### Update
+```scala
+db
+  .update(user)
+  .setOne(_.country ==> "JP")
+  .whereOne(_.id === 103)
+  .run()
+
+// .runNum() for rows affected
+```
+```sql
+UPDATE "user" SET "country" = 'JP' WHERE id = 103
+```
+#### Update returning
+```scala
+db
+  .update(user)
+  .set(t => Seq(
+    t.country ==> "IS",
+    t.city ==> "RVK"
+  ))
+  .whereOne(_.id === 42)
+  .returning4(t => (
+    t.id,
+    t.email,
+    t.country,
+    t.city
+  ))
+  .run()
+```
+```sql
+UPDATE "user"
+SET "country" = 'IS',
+    "city" = 'RVK'
+WHERE id = 42
+RETURNING "id", "email", "country", "city"
+```
+#### Update stream
+```scala
+val stm = db
+  .update(user)
+  .setOne(_.isActive === true)
+  .cacheWhere(_.id)
+
+val ids = List(3, 27, 135)
+stm.streamList(ids)
+// or
+stm.fromSource(Source(ids))
+```
+### Delete
+```scala
+db
+  .delete(user)
+  .whereOne(_.id === 103)
+  .run()
+```
+```sql
+DELETE FROM "user" WHERE id = 103
+```
+#### Delete multiple
+```scala
+db
+  .delete(user)
+  .whereOne(_.id.in(
+    db.select(customer).cols1(_.userId).whereOne(_.amountSpent === 0)
+  ))
+  .run()
+
+// or
+
+val stm = db
+  .delete(user)
+  .cacheWhere1(_.id)
+
+stm.fromSource(
+  db.select(customer).whereOne(_.amountSpent === 0).source
+)
+```
 #### Data types
 
 Postgres                  | Scala
