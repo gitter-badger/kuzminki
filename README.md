@@ -443,7 +443,7 @@ stm.runNum(user: AddUser): Future[Long]
 stm.runList(users: List[AddUser]): Future[Unit]
 stm.runListNum(users: List[AddUser]): Future[Long]
 stm.streamList(users: List[AddUser]): Future[Done]
-stm.streamList(users: Source[AddUser, T]): Future[Done]
+stm.fromSource(users: Source[AddUser, T]): Future[Done]
 ```
 ```sql
 INSERT INTO "user" ("username", "email") VALUES ('bob', 'bob@mail.com')
