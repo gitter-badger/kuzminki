@@ -87,8 +87,7 @@ db
   ))
   .where(t => Seq(
     t.gender === 'f',
-    t.age > 25,
-    t.country in Seq("DE", "FR", "UK")
+    t.age > 25
   ))
   .orderByOne(_.age.desc)
   .limit(10)
@@ -104,7 +103,6 @@ SELECT "id", "username"
 FROM "user"
 WHERE "gender" = 'f'
 AND "age" > 25
-AND "country" = ANY(ARRAY['DE', 'FR', 'UK'])
 ORDER BY "age"
 DESC LIMIT 10
 ```
@@ -158,6 +156,7 @@ DESC LIMIT 10
     t.country === Some("FR")
   )
 ))
+// WHERE "age" > 25 AND ("country" == 'RU' OR "country" == 'FR')
 ```
 
 #### Results types
