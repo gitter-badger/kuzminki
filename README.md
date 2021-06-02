@@ -675,6 +675,87 @@ stm.fromSource(
   db.select(customer).whereOne(_.amountSpent === 0).source
 )
 ```
+### Aggregation
+
+#### Count
+```scala
+val stm = db
+  .count(user)
+  .cacheOne(_.country)
+
+stm.runCount("IT") // returns Long
+```
+```sql
+SELECT count(*) FROM "user" WHERE country = 'IT'
+```
+#### Avg Max Min
+```scala
+db
+  .select(user)
+  .cols3(t => (
+    t.age.avg,
+    t.age.max,
+    t.age.min
+  ))
+  .whereOne(_.country === 'US')
+  .run()
+```
+```sql
+SELECT
+  avg("age"),
+  max("max"),
+  min("min")
+FROM "user"
+WHERE "country" = 'US'
+```
+#### Aggregation having
+```scala
+val stm = db
+  .select(userCustomerJoin)
+  .cols3(t => (
+    b.amountSpent.avg,
+    a.city
+  ))
+  .joinOn(_.id, _.userId)
+  .groupByOne(_.a.city)
+  .havingOne(_.b.amountSpent > 0)
+  .orderByOne(_.b.amountSpent.avg.desc)
+  .limit(10)
+  .cacheWhere1(_.a.country)
+
+stm.run("US")
+```
+```sql
+SELECT
+  avg("b"."amount_spent"),
+  "a"."city"
+FROM "user" "a"
+INNER JOIN "customer" "b"
+ON "a"."id" = "b"."user_id"
+GROUP BY "a"."city"
+HAVING "b"."amount_spent" > 0
+AND "a"."country" = 'US'
+ORDER BY "b"."amount_spent"
+LIMIT 10
+```
+#### Nested aggrigation
+```scala
+db
+  .select(user)
+  .colsRead(_.info)
+  .cols1(_.age.gt(
+    db.subqueryNumber(user).cols1(_.age.avg).all
+  ))
+  orderByOne(_.age.desc)
+  .run()
+```
+```sql
+SELECT "id", "username", "email"
+FROM "user"
+WHERE "age" > (SELECT avg("age") FROM "user")
+ORDER BY "age" DESC
+```
+
 #### Data types
 
 Postgres                  | Scala

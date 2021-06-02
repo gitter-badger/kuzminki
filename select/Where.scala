@@ -14,7 +14,7 @@ class Where[M, R](
     )
   }
 
-  def all() = {
+  def all = {
     toOrderBy(WhereBlankSec)
   }
 
