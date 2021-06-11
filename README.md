@@ -27,7 +27,7 @@ val db = new Kuzminki(conf.getConfig("db.kuzminki"))
 ```
 
 #### Defining a table
-
+It makes sure that the compiler can check that the column exists and the type is correct. The model does not create or modify the database table.
 ```scala
 import kuzminki.model._
 import kuzminki.model.implicits._
@@ -54,6 +54,7 @@ val country = column[String]("country").opt
 ```
 
 #### Defining result types
+In the model you can define result types. That way you do not have to list the columns each time you make a query.
 ```scala
 import kuzminki.model._
 import kuzminki.model.implicits._
@@ -74,6 +75,16 @@ class User extends Model("user") {
 }
 
 Model.register[User]
+```
+
+#### Create an instance of a model
+If you create a shortcut to read columns into a type as shown above you will not get an error at compile time if the columns don't match the type. If the the model is registered right after it is defined a possible error will be thrown at startup rather than unexpectedly at runtime.
+```scala
+// Create an instance of the model for later use and make sure there is only one instance of the model.
+Model.register[User]
+
+// Get an existing instance of the model. If it does not exist, it is created.
+val user = Model.get[User]
 ```
 
 #### Select query
@@ -223,37 +234,13 @@ source.runWith(Sink.foreach(println))
 
 #### Join
 ```scala
-case class UserSpending(id: Int, username: String, amount: Int)
-
 class Customer extends Model("customer") {
   val id = column[Int]("id")
   val userId = column[Int]("user_id")
   val spending = column[Int]("amount_spent")
 }
 
-class UserCustomer extends ExtendedJoin[User, Customer] {
-  val userSpending = read[UserSpending](a.id, a.username, b.spending)
-}
-
-implicit val toUserCustomer = Join.register[UserCustomer, User, Customer]
-```
-
-```scala
-val userCustomerJoin = Join.get[UserCustomer]
-
-db
-  .select(userCustomerJoin)
-  .colsRead(_.userSpending)
-  .joinOn(_.id, _.userId)
-  .where(t => Seq(
-    t.a.age > 25,
-    t.b.spending > 1000
-  ))
-  .orderByOne(_.b.spending.desc)
-  .limit(10)
-  .sql(printSql)
-  .run()
-  // returns UserCustomer
+val customer = Model.get[Customer]
 
 db
   .select(user, customer)
@@ -262,10 +249,14 @@ db
     t.a.username,
     t.b.spending
   ))
-  // ...
+  .where(t => Seq(
+    t.a.age > 25,
+    t.b.spending > 1000
+  ))
+  .orderByOne(_.b.spending.desc)
+  .limit(10)
+  .run()
   // returns Tuple3[Int, String, Int]
-
-// Both result in the same SQL statement
 ```
 ```sql
 SELECT
@@ -279,6 +270,30 @@ WHERE "a"."age" > 25
 AND "b"."spending" > 1000
 ORDER BY "b"."spending"
 DESC LIMIT 10
+```
+```scala
+case class UserSpending(id: Int, username: String, amount: Int)
+
+class UserCustomer extends ExtendedJoin[User, Customer] {
+  val userSpending = read[UserSpending](a.id, a.username, b.spending)
+}
+
+implicit val toUserCustomer = Join.register[UserCustomer, User, Customer]
+
+val userCustomerJoin = Join.get[UserCustomer]
+
+db
+  .select(userCustomerJoin)
+  .colsRead(_.userSpending)
+  .joinOn(_.id, _.userId)
+  .where(t => Seq(
+    t.a.age > 25,
+    t.b.spending > 1000
+  ))
+  .orderByOne(_.b.spending.desc)
+  .limit(10)
+  .run()
+  // returns UserCustomer
 ```
 
 #### Nested query
@@ -311,6 +326,7 @@ LIMIT 10
 ```
 
 #### Cache
+The query can be cached. That way the statement will by built once.
 ```scala
 // no arguments
 
@@ -330,9 +346,8 @@ FROM "user_profile"
 ORDER BY "created" DESC
 LIMIT 10
 ```
-```scala
-// with arguments
 
+```scala
 val newUsers = db
   .select(user)
   .colsRead(_.info)
@@ -342,7 +357,7 @@ val newUsers = db
   .cacheWhere2(t => (
     t.country,
     t.city
-  )
+  ))
 
 newUsers.run(("CN", "Peking")).map(handleResult)
 ```
