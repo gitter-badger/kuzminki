@@ -31,7 +31,7 @@ class StoredInsert[P](
   }
 
   def fromSource[T](source: Source[P, T]) = {
-    db.insertFromSource(
+    db.fromSource(
       template,
       source.map(tansformParams)
     )

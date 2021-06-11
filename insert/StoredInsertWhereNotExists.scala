@@ -23,7 +23,7 @@ class StoredInsertWhereNotExists[P](
   }
 
   def fromSource(source: Source[P, NotUsed]) = {
-    db.insertFromSource(
+    db.fromSource(
       template,
       source.map(tansformParams)
     )

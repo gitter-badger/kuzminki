@@ -32,8 +32,8 @@ class StoredOperation[S](
     db.execNum(statement(data))
   }
 
-  def fromSource(source: Source[S, NotUsed]) = {
-    db.insertFromSource(
+  def fromSource[T](source: Source[S, T]) = {
+    db.fromSource(
       template,
       source.map(transform)
     )

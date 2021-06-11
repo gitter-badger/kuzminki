@@ -38,14 +38,12 @@ class WhereSubqueryNumber[M](model: M, coll: SubCollector) {
   }
 
   def whereOpt(pick: M => Option[Filter]) = {
-    toOrderBy(
-      pick(model) match {
-        case Some(filter) =>
-          WhereSec(Seq(filter))
-        case None =>
-          new SingleNumberSubquery(coll)
-      }
-    )
+    pick(model) match {
+      case Some(filter) =>
+        WhereSec(Seq(filter))
+      case None =>
+        new SingleNumberSubquery(coll)
+    }
   }
 }
 

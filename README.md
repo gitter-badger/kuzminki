@@ -38,9 +38,10 @@ class User extends Model("user") {
   val email = column[String]("email")
   val name = column[String]("name")
   val age = column[Int]("age")
-  val gender = column[Char]("gender")
+  val gender = column[String]("gender")
   val country = column[String]("country")
   val city = column[String]("city")
+  val discount = column[Int]("discount")
   val isActive = column[Boolean]("is_active")
   val created = column[ZonedDateTime]("created")
 }
@@ -86,21 +87,19 @@ db
     t.username
   ))
   .where(t => Seq(
-    t.gender === 'f',
+    t.gender === "f",
     t.age > 25
   ))
   .orderByOne(_.age.desc)
   .limit(10)
-  .map(
-    //...
-  )
+  .map(handleResult)
 
   // returns List[Tuple2[Int, String]]
 ```
 Output:
 ```sql
 SELECT "id", "username"
-FROM "user"
+FROM "user_profile"
 WHERE "gender" = 'f'
 AND "age" > 25
 ORDER BY "age"
@@ -112,7 +111,7 @@ DESC LIMIT 10
 .whereOne(_.id > 100)
 
 .where(t => Seq(
-    t.gender === 'f',
+    t.gender === "f",
     t.age > 25
 ))
 
@@ -203,8 +202,8 @@ DESC LIMIT 10
   t.gender
 ))
 
-case class AgeGender(age: Int, gender: Char)
-implicit val toAgeGender: Tuple2[Int, Char] => AgeGender = tup => AgeGender(tup._1, tup._2)
+case class AgeGender(age: Int, gender: String)
+implicit val toAgeGender: Tuple2[Int, String] => AgeGender = tup => AgeGender(tup._1, tup._2)
 
 .runAs[AgeGender]() // List[AgeGender]
 .headAs[AgeGender]() // AgeGender
@@ -222,7 +221,6 @@ val source: Source[Tuple2[Int, String], Future[NotUsed]] = db
 source.runWith(Sink.foreach(println))
 ```
 
-
 #### Join
 ```scala
 case class UserSpending(id: Int, username: String, amount: Int)
@@ -230,11 +228,11 @@ case class UserSpending(id: Int, username: String, amount: Int)
 class Customer extends Model("customer") {
   val id = column[Int]("id")
   val userId = column[Int]("user_id")
-  val amountSpent = column[Int]("amount_spent")
+  val spending = column[Int]("amount_spent")
 }
 
 class UserCustomer extends ExtendedJoin[User, Customer] {
-  val userSpending = read[UserSpending](a.id, a.username, b.amountSpent)
+  val userSpending = read[UserSpending](a.id, a.username, b.spending)
 }
 
 implicit val toUserCustomer = Join.register[UserCustomer, User, Customer]
@@ -249,10 +247,11 @@ db
   .joinOn(_.id, _.userId)
   .where(t => Seq(
     t.a.age > 25,
-    t.b.amountSpent > 1000
+    t.b.spending > 1000
   ))
-  .orderByOne(_.b.amountSpent.desc)
+  .orderByOne(_.b.spending.desc)
   .limit(10)
+  .sql(printSql)
   .run()
   // returns UserCustomer
 
@@ -261,16 +260,9 @@ db
   .cols3(t => (
     t.a.id,
     t.a.username,
-    t.b.amountSpent
+    t.b.spending
   ))
-  .joinOn(_.id, _.userId)
-  .where(t => Seq(
-    t.a.age > 25,
-    t.b.amountSpent > 1000
-  ))
-  .orderByOne(_.b.amountSpent.desc)
-  .limit(10)
-  .run()
+  // ...
   // returns Tuple3[Int, String, Int]
 
 // Both result in the same SQL statement
@@ -279,21 +271,20 @@ db
 SELECT
   "a"."id",
   "a"."username",
-  "b"."amount_spent"
-FROM "user" "a"
+  "b"."spending"
+FROM "user_profile" "a"
 INNER JOIN "customer" "b"
 ON "a"."id" = "b"."user_id"
 WHERE "a"."age" > 25
-AND "b"."amount_spent" > 1000
-ORDER BY "b"."amount_spent"
+AND "b"."spending" > 1000
+ORDER BY "b"."spending"
 DESC LIMIT 10
 ```
 
 #### Nested query
 ```scala
-class OldUser extends Model("old_user") {
+class Emails extends Model("old_user") {
   val email = column[String]("email")
-  val spending = column[Int]("spending")
 }
 
 val oldUser = Model.get[OldUser]
@@ -306,10 +297,11 @@ db
   ))
   .limit(10)
   .run()
+  .map(handleResult)
 ```
 ```sql
 SELECT "id", "username"
-FROM "user"
+FROM "user_profile"
 WHERE "email" = ANY(
   SELECT "email"
   FROM "old_user"
@@ -330,13 +322,13 @@ val newUsers = db
   .limit(10)
   .cache
 
-newUsers.run().map(\*...*\)
+newUsers.run().map(handleResult)
 ```
 ```sql
 SELECT "id", "username", "email"
-FROM "user"
-ORDER BY "created"
-DESC LIMIT 10
+FROM "user_profile"
+ORDER BY "created" DESC
+LIMIT 10
 ```
 ```scala
 // with arguments
@@ -352,15 +344,15 @@ val newUsers = db
     t.city
   )
 
-newUsers.run(("CN", "Peking")).map(\*...*\)
+newUsers.run(("CN", "Peking")).map(handleResult)
 ```
 ```sql
 SELECT "id", "username", "email"
-FROM "user"
+FROM "user_profile"
 WHERE "country" = 'CN'
 AND "city" = 'Peking'
-ORDER BY "created"
-DESC LIMIT 10
+ORDER BY "created" DESC
+LIMIT 10
 ```
 ```scala
 // with static and dynamic argumnets
@@ -373,15 +365,15 @@ val newUsers = db
   .limit(10)
   .cacheWhere1(_.country)
 
-newUsers.run("CN").map(\*...*\)
+newUsers.run("CN").map(handleResult)
 ```
 ```sql
 SELECT "id", "username", "email"
-FROM "user"
+FROM "user_profile"
 WHERE "age" > 25
 AND "country" = 'CN'
-ORDER BY "created"
-DESC LIMIT 10
+ORDER BY "created" DESC
+LIMIT 10
 ```
 
 ### Insert
@@ -424,7 +416,7 @@ class User extends Model("user") {
 
 db
   .insert(user)
-  .colsWrite(_.userData)
+  .colsWrite(_.addUser)
   .run(AddUser("bob", "bob@mail.com"))
 ```
 ```sql
@@ -510,11 +502,11 @@ val stm = db
   ))
   .cache
 
-stm.run(AddUser("bob", "bob@mail.com"))
+stm.run(("bob", "bob@mail.com"))
 ```
 ```sql
-INSERT INTO "user" ("username", "email")
-VALUES ('bob', 'bob@mail.com')
+INSERT INTO "user_profile" ("username", "email")
+VALUES ("bob", "bob@mail.com")
 RETURNING "id", "username", "email"
 ```
 #### Insert on conflict do nothing
@@ -531,7 +523,7 @@ val stm = db
 stm.run(("bob", "bob@mail.com"))
 ```
 ```sql
-INSERT INTO "user" ("username", "email")
+INSERT INTO "user_profile" ("username", "email")
 VALUES ('bob', 'bob@mail.com')
 ON CONFLICT DO NOTHING
 ```
@@ -547,13 +539,13 @@ val stm = db
   .doUpdateOne(_.email)
   .cache
 
-stm.run(("bob", "bob@mail.com"))
+stm.run(("bob", "bob@hotmail.com"))
 ```
 ```sql
-INSERT INTO "user" ("username", "email")
-VALUES ('bob', 'bob@mail.com')
+INSERT INTO "user_profile" ("username", "email")
+VALUES ('bob', 'bob@hotmail.com')
 ON CONFLICT ("username")
-DO UPDATE SET email = 'bob@mail.com'
+DO UPDATE SET email = 'bob@hotmail.com'
 ```
 #### Insert where not exists
 ```scala
@@ -569,11 +561,11 @@ val stm = db
 stm.run(("bob", "bob@mail.com"))
 ```
 ```sql
-INSERT INTO "user" ("username", "email")
-SELECT ('bob', 'bob@mail.com')
+INSERT INTO "user_profile" ("username", "email")
+SELECT 'bob', 'bob@mail.com'
 WHERE NOT EXISTS (
   SELECT 1
-  FROM "user_user"
+  FROM "user_profile"
   WHERE "email" = 'bob@mail.com'
 )
 ```
@@ -628,18 +620,18 @@ db
   .run()
 ```
 ```sql
-UPDATE "user"
+UPDATE "user_profile"
 SET "country" = 'IS',
     "city" = 'RVK'
-WHERE id = 42
+WHERE "id" = 42
 RETURNING "id", "email", "country", "city"
 ```
 #### Update stream
 ```scala
 val stm = db
   .update(user)
-  .setOne(_.isActive === true)
-  .cacheWhere(_.id)
+  .setOne(_.isActive ==> true)
+  .cacheWhere1(_.id)
 
 val ids = List(3, 27, 135)
 stm.streamList(ids)
@@ -661,7 +653,7 @@ DELETE FROM "user" WHERE id = 103
 db
   .delete(user)
   .whereOne(_.id.in(
-    db.select(customer).cols1(_.userId).whereOne(_.amountSpent === 0)
+    db.select(customer).cols1(_.userId).whereOne(_.spending === 0)
   ))
   .run()
 
@@ -672,7 +664,7 @@ val stm = db
   .cacheWhere1(_.id)
 
 stm.fromSource(
-  db.select(customer).whereOne(_.amountSpent === 0).source
+  db.select(customer).whereOne(_.spending === 0).source
 )
 ```
 ### Aggregation
@@ -697,7 +689,7 @@ db
     t.age.max,
     t.age.min
   ))
-  .whereOne(_.country === 'US')
+  .whereOne(_.country === "US")
   .run()
 ```
 ```sql
@@ -713,13 +705,13 @@ WHERE "country" = 'US'
 val stm = db
   .select(userCustomerJoin)
   .cols3(t => (
-    b.amountSpent.avg,
+    b.spending.avg,
     a.city
   ))
   .joinOn(_.id, _.userId)
   .groupByOne(_.a.city)
-  .havingOne(_.b.amountSpent > 0)
-  .orderByOne(_.b.amountSpent.avg.desc)
+  .havingOne(_.b.spending > 0)
+  .orderByOne(_.b.spending.avg.desc)
   .limit(10)
   .cacheWhere1(_.a.country)
 
@@ -761,7 +753,6 @@ ORDER BY "age" DESC
 Postgres                  | Scala
 --------------------------|-----------------------------
 varchar / text            | String
-char(1)                   | Char
 bool                      | Boolean
 int2                      | Short
 int4                      | Int
