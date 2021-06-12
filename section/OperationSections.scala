@@ -7,7 +7,7 @@ case class ReturningSec(parts: Seq[AnyCol]) extends MultiRender {
 }
 
 case class CountFromSec(part: ModelTable) extends SingleRender {
-  def expression = "SELECT COUNT(*) FROM %s"
+  def expression = "SELECT count(*) FROM %s"
 }
 
 case class DeleteFromSec(part: ModelTable) extends SingleRender {

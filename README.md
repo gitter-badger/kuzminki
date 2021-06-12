@@ -233,6 +233,7 @@ source.runWith(Sink.foreach(println))
 ```
 
 #### Join
+In a join the columns of each table are accessable under "a" and "b".
 ```scala
 class Customer extends Model("customer") {
   val id = column[Int]("id")
@@ -271,6 +272,7 @@ AND "b"."spending" > 1000
 ORDER BY "b"."spending"
 DESC LIMIT 10
 ```
+To return the result of a joined query into a type you can extend ExtendedJoin and create a read. You will also hvae to create an implicit conversion.
 ```scala
 case class UserSpending(id: Int, username: String, amount: Int)
 
@@ -326,7 +328,7 @@ LIMIT 10
 ```
 
 #### Cache
-The query can be cached. That way the statement will by built once.
+The query can be cached. That way the statement will by built once and the performance will be the same as with a raw query.
 ```scala
 // no arguments
 
@@ -346,7 +348,7 @@ FROM "user_profile"
 ORDER BY "created" DESC
 LIMIT 10
 ```
-
+You can use conditions with a cached query. The arguments will match the value in a given column (=)
 ```scala
 val newUsers = db
   .select(user)
@@ -369,9 +371,8 @@ AND "city" = 'Peking'
 ORDER BY "created" DESC
 LIMIT 10
 ```
+If you need other conditions conditions in your cached query than match, you can add them as static conditions.
 ```scala
-// with static and dynamic argumnets
-
 val newUsers = db
   .select(user)
   .colsRead(_.info)
@@ -394,6 +395,7 @@ LIMIT 10
 ### Insert
 
 #### Basic
+For insert you define the columns as tuple and then pass a tuple of the same type to .run()
 ```scala
 db
   .insert(user)
@@ -403,6 +405,7 @@ db
   ))
   .run(("bob", "bob@mail.com"))
 ```
+If you need to insert colums that exceed the limits of a tuple, larger than 22, you can use a Seq.
 ```sql
 INSERT INTO "user" ("username", "email") VALUES ('bob', 'bob@mail.com')
 ```
@@ -416,6 +419,7 @@ db
   ))
   .run()
 ```
+Insert a type.
 ```sql
 INSERT INTO "user" ("username", "email") VALUES ('bob', 'bob@mail.com')
 ```
@@ -437,6 +441,7 @@ db
 ```sql
 INSERT INTO "user" ("username", "email") VALUES ('bob', 'bob@mail.com')
 ```
+In most cases you will want to cache your insert statements.
 #### Cache insert statement
 ```scala
 val stm = db
@@ -455,6 +460,7 @@ stm.fromSource(users: Source[AddUser, T]): Future[Done]
 ```sql
 INSERT INTO "user" ("username", "email") VALUES ('bob', 'bob@mail.com')
 ```
+You can insert a list. The size of the list has the limit that the generated statement may exceed the maximum length of a an SQL statement.
 #### Insert list
 ```scala
 val stm = db
@@ -477,6 +483,7 @@ VALUES ('bob', 'bob@mail.com'),
        ('joe', 'joe@mail.com'),
        ('paul', 'paul@mail.com')
 ```
+If you need to insert a long list, use .streamList()
 #### Stream list
 ```scala
 val stm = db
@@ -562,6 +569,7 @@ VALUES ('bob', 'bob@hotmail.com')
 ON CONFLICT ("username")
 DO UPDATE SET email = 'bob@hotmail.com'
 ```
+If do not want duplications on a column that does not have a unique constraint use .whereNotExists(). Also, if you are streaming, using ON CONFLICT will fail. Use .whereNotExists() instead.
 #### Insert where not exists
 ```scala
 val stm = db
@@ -641,6 +649,7 @@ SET "country" = 'IS',
 WHERE "id" = 42
 RETURNING "id", "email", "country", "city"
 ```
+You can cache an update statement if the updated column and value are static.
 #### Update stream
 ```scala
 val stm = db
@@ -661,9 +670,9 @@ db
   .run()
 ```
 ```sql
-DELETE FROM "user" WHERE id = 103
+DELETE FROM "user_profile" WHERE id = 103
 ```
-#### Delete multiple
+#### Delete from select
 ```scala
 db
   .delete(user)
@@ -671,9 +680,9 @@ db
     db.select(customer).cols1(_.userId).whereOne(_.spending === 0)
   ))
   .run()
-
-// or
-
+```
+With streaming
+```scala
 val stm = db
   .delete(user)
   .cacheWhere1(_.id)
@@ -688,12 +697,13 @@ stm.fromSource(
 ```scala
 val stm = db
   .count(user)
-  .cacheOne(_.country)
+  .all
+  .cacheWhere1(_.country)
 
 stm.runCount("IT") // returns Long
 ```
 ```sql
-SELECT count(*) FROM "user" WHERE country = 'IT'
+SELECT count(*) FROM "user_profile" WHERE "country" = 'IT'
 ```
 #### Avg Max Min
 ```scala

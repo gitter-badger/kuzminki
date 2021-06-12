@@ -11,7 +11,7 @@ object AllCols extends AnyCol with NoArgs {
 }
 
 trait AggCount extends AggNumeric {
-  def template = "COUNT(%s)"
+  def template = "count(%s)"
 }
 
 
