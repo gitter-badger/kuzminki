@@ -1,5 +1,5 @@
+[![license](https://img.shields.io/github/license/rdbc-io/rdbc.svg?style=flat-square)](https://github.com/rdbc-io/rdbc/blob/master/LICENSE)
 # kuzminki
-#Kuzminki
 
 Kuzminki is a PostgreSQL query and access library for Scala. For driver it uses the asynchronous [rdbc](https://github.com/rdbc-io/rdbc).
 The project is currently not fully tested.
