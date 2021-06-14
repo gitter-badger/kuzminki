@@ -304,17 +304,21 @@ db
 
 #### Nested query
 ```scala
-class Emails extends Model("old_user") {
+class Newsletter extends Model("newsletter") {
   val email = column[String]("email")
+  val isSubscribed = column[Boolean]("is_subscribed")
 }
 
-val oldUser = Model.get[OldUser]
+val newsletter = Model.get[Newsletter]
 
 db
   .select(user)
   .cols2(_.basic)
   .whereOne(_.email.in(
-    db.select(oldUser).cols1(_.email).whereOne(_.spending < 1000)
+    db
+      .select(newsletter)
+      .cols1(_.email)
+      .whereOne(_.isSubscribed === true)
   ))
   .limit(10)
   .run()
@@ -325,8 +329,8 @@ SELECT "id", "username"
 FROM "user_profile"
 WHERE "email" = ANY(
   SELECT "email"
-  FROM "old_user"
-  WHERE "spending" < 1000
+  FROM "newsletter"
+  WHERE "is_subscribed" = true
 )
 LIMIT 10
 ```
