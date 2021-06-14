@@ -2,9 +2,10 @@
 #Kuzminki
 
 Kuzminki is a PostgreSQL query and access library for Scala. For driver it uses the asynchronous [rdbc](https://github.com/rdbc-io/rdbc).
-This is a beta version and not fully tested.
+The project is currently not fully tested.
 
 #### Settings
+Database settings in sbt
 ```sbt
 db.user = {
   host = "localhost"
