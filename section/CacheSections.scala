@@ -20,11 +20,11 @@ object HavingBlankSec extends TextOnly {
 }
 
 case class HavingCacheSec(cols: Seq[AnyCol]) extends CacheCondition {
-  def expression = "Having %s"
+  def expression = "HAVING %s"
 }
 
 case class HavingMixedSec(conds: Seq[Renderable], cols: Seq[AnyCol]) extends MixedCondition {
-  def expression = "WHERE %s"
+  def expression = "HAVING %s"
 }
 
 

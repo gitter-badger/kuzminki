@@ -4,7 +4,7 @@ import io.rdbc.sapi.DecimalNumber
 
 
 trait AggMin extends AggNumeric {
-  def template = "MIN(%s)"
+  def template = "min(%s)"
 }
 
 

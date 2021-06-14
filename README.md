@@ -125,9 +125,9 @@ DESC LIMIT 10
     t.gender === "f",
     t.age > 25
 ))
-
-// AND OR
-
+```
+AND OR
+```scala
 .where(t => Seq(
   t.age > 25,
   Or(
@@ -148,9 +148,9 @@ DESC LIMIT 10
   )
 ))
 // WHERE ("country" == 'RU' AND "city" == 'Moscow') OR ("country" == 'FR' AND "city" == 'Paris')
-
-// Optional conditions
-
+```
+Optional conditions
+```scala
 .whereOpt(_.id > Some(100))
 
 .whereOpts(t => Seq(
@@ -700,7 +700,7 @@ val stm = db
   .all
   .cacheWhere1(_.country)
 
-stm.runCount("IT") // returns Long
+stm.runCount("IT")
 ```
 ```sql
 SELECT count(*) FROM "user_profile" WHERE "country" = 'IT'
@@ -719,57 +719,65 @@ db
 ```
 ```sql
 SELECT
-  avg("age"),
-  max("max"),
-  min("min")
-FROM "user"
+  AVG("age"),
+  MAX("age"),
+  MIN("age")
+FROM "user_profile"
 WHERE "country" = 'US'
 ```
 #### Aggregation having
 ```scala
 val stm = db
   .select(userCustomerJoin)
-  .cols3(t => (
-    b.spending.avg,
-    a.city
+  .cols2(t => (
+    t.a.city,
+    t.b.spending.avg
   ))
   .joinOn(_.id, _.userId)
-  .groupByOne(_.a.city)
-  .havingOne(_.b.spending > 0)
+  .groupBy(t  => Seq(
+    t.a.city,
+    t.a.country
+  ))
+  .havingOne(_.b.spending.avg > 0)
   .orderByOne(_.b.spending.avg.desc)
   .limit(10)
-  .cacheWhere1(_.a.country)
+  .cacheHaving1(_.a.country)
+
+println(stm.args)
 
 stm.run("US")
 ```
 ```sql
 SELECT
-  avg("b"."amount_spent"),
-  "a"."city"
-FROM "user" "a"
+  "a"."city",
+  avg("b"."spending")
+FROM "user_profile" "a"
 INNER JOIN "customer" "b"
 ON "a"."id" = "b"."user_id"
-GROUP BY "a"."city"
-HAVING "b"."amount_spent" > 0
+GROUP BY "a"."city", "a"."country"
+HAVING avg("b"."spending") > 0
 AND "a"."country" = 'US'
-ORDER BY "b"."amount_spent"
-LIMIT 10
+ORDER BY avg("b"."spending")
+DESC LIMIT 10
 ```
 #### Nested aggrigation
 ```scala
 db
   .select(user)
   .colsRead(_.info)
-  .cols1(_.age.gt(
+  .whereOne(_.age.gt(
     db.subqueryNumber(user).cols1(_.age.avg).all
   ))
-  orderByOne(_.age.desc)
+  .orderByOne(_.age.desc)
   .run()
 ```
 ```sql
 SELECT "id", "username", "email"
-FROM "user"
-WHERE "age" > (SELECT avg("age") FROM "user")
+FROM "user_profile"
+WHERE "age" > (
+  SELECT avg("age")
+  FROM "user_profile"
+)
 ORDER BY "age" DESC
 ```
 
@@ -802,18 +810,20 @@ uuid                      | java.util.UUID
 |<                  | lt               | Numbers and time
 |>=                 | gte              | Numbers and time
 |<=                 | lte              | Numbers and time
-|                   | isNull           | Any
-|                   | isNotNull        | Any
-|                   | in               | Any
-|                   | notIn            | Any
-|                   | like             | String
-|                   | startsWith       | String
-|                   | endsWith         | String
-|                   | similarTo        | String
 |~                  | reMatch          | String
 |~*                 | reIMatch         | String
 |!~                 | reNotMatch       | String
 |!~*                | reNotIMatch      | String
+|                   | like             | String
+|                   | startsWith       | String
+|                   | endsWith         | String
+|                   | similarTo        | String
+|                   | isNull           | Any
+|                   | isNotNull        | Any
+|                   | in               | Any
+|                   | notIn            | Any
+
+
 
 
 

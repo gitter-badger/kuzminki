@@ -45,7 +45,7 @@ case class SelectCollector[R](
       case HavingBlankSec =>
         HavingCacheSec(paramShape.cols)
       
-      case WhereSec(conds) =>
+      case HavingSec(conds) =>
         HavingMixedSec(conds, paramShape.cols)
       
       case section: Section =>

@@ -4,7 +4,7 @@ import io.rdbc.sapi.DecimalNumber
 
 
 trait AggMax extends AggNumeric {
-  def template = "MAX(%s)"
+  def template = "max(%s)"
 }
 
 
