@@ -1,5 +1,8 @@
 # kuzminki
-Postgres query builder inspired by knex
+#Kuzminki
+
+Kuzminki is a PostgreSQL query and access library for Scala. For driver it uses the asynchronous [rdbc](https://github.com/rdbc-io/rdbc).
+This is a beta version and not fully tested.
 
 #### Settings
 ```sbt
@@ -26,8 +29,8 @@ val conf = SystemConfigFactory.load()
 val db = new Kuzminki(conf.getConfig("db.kuzminki"))
 ```
 
-#### Defining a table
-It makes sure that the compiler can check that the column exists and the type is correct. The model does not create or modify the database table.
+#### Defining a model
+The model makes sure that the compiler can check that the columns exists and the types are correct. The model does not create or modify the database table.
 ```scala
 import kuzminki.model._
 import kuzminki.model.implicits._
@@ -54,7 +57,7 @@ val country = column[String]("country").opt
 ```
 
 #### Defining result types
-In the model you can define result types. That way you do not have to list the columns each time you make a query.
+You can define result types in the model. That way you do not have to list the columns each time you make a query.
 ```scala
 import kuzminki.model._
 import kuzminki.model.implicits._
@@ -78,7 +81,7 @@ Model.register[User]
 ```
 
 #### Create an instance of a model
-If you create a shortcut to read columns into a type as shown above you will not get an error at compile time if the columns don't match the type. If the the model is registered right after it is defined a possible error will be thrown at startup rather than unexpectedly at runtime.
+If you create a shortcut to read columns into a type as shown above, the compiler will not be able to check if the columns match the type. If they don not match, an error will be thrown when an instance of the class is created. Therefore, it is wise to create an instance where the model is defined to make sure an error is thrown at start-up and not unexpectedly at runtime.
 ```scala
 // Create an instance of the model for later use and make sure there is only one instance of the model.
 Model.register[User]
@@ -126,7 +129,7 @@ DESC LIMIT 10
     t.age > 25
 ))
 ```
-AND OR
+AND / OR
 ```scala
 .where(t => Seq(
   t.age > 25,
@@ -233,7 +236,7 @@ source.runWith(Sink.foreach(println))
 ```
 
 #### Join
-In a join the columns of each table are accessable under "a" and "b".
+In a join the columns of each table are accessible under "a" and "b".
 ```scala
 class Customer extends Model("customer") {
   val id = column[Int]("id")
@@ -272,7 +275,7 @@ AND "b"."spending" > 1000
 ORDER BY "b"."spending"
 DESC LIMIT 10
 ```
-To return the result of a joined query into a type you can extend ExtendedJoin and create a read. You will also hvae to create an implicit conversion.
+To return the result of a joined query into a type you can extend ExtendedJoin and create a read. You will also have to create an implicit conversion.
 ```scala
 case class UserSpending(id: Int, username: String, amount: Int)
 
@@ -330,8 +333,6 @@ LIMIT 10
 #### Cache
 The query can be cached. That way the statement will by built once and the performance will be the same as with a raw query.
 ```scala
-// no arguments
-
 val newUsers = db
   .select(user)
   .colsRead(_.info)
@@ -348,7 +349,7 @@ FROM "user_profile"
 ORDER BY "created" DESC
 LIMIT 10
 ```
-You can use conditions with a cached query. The arguments will match the value in a given column (=)
+You can use dynamic conditions with a cached query. The arguments will match the value in a given column.
 ```scala
 val newUsers = db
   .select(user)
@@ -371,7 +372,7 @@ AND "city" = 'Peking'
 ORDER BY "created" DESC
 LIMIT 10
 ```
-If you need other conditions conditions in your cached query than match, you can add them as static conditions.
+You can use both static and dynamic conditions in a cached query.
 ```scala
 val newUsers = db
   .select(user)
@@ -395,7 +396,7 @@ LIMIT 10
 ### Insert
 
 #### Basic
-For insert you define the columns as tuple and then pass a tuple of the same type to .run()
+To insert you define the columns as tuple and then pass a tuple of the same type to .run()
 ```scala
 db
   .insert(user)
@@ -405,7 +406,7 @@ db
   ))
   .run(("bob", "bob@mail.com"))
 ```
-If you need to insert colums that exceed the limits of a tuple, larger than 22, you can use a Seq.
+If you need to insert columns that exceed the limits of a tuple, larger than 22.
 ```sql
 INSERT INTO "user" ("username", "email") VALUES ('bob', 'bob@mail.com')
 ```
@@ -569,7 +570,7 @@ VALUES ('bob', 'bob@hotmail.com')
 ON CONFLICT ("username")
 DO UPDATE SET email = 'bob@hotmail.com'
 ```
-If do not want duplications on a column that does not have a unique constraint use .whereNotExists(). Also, if you are streaming, using ON CONFLICT will fail. Use .whereNotExists() instead.
+If you do not want duplications on a column that does not have a unique constraint use .whereNotExists(). Also, if you are streaming, using ON CONFLICT will fail. Use .whereNotExists() instead.
 #### Insert where not exists
 ```scala
 val stm = db
@@ -649,7 +650,7 @@ SET "country" = 'IS',
 WHERE "id" = 42
 RETURNING "id", "email", "country", "city"
 ```
-You can cache an update statement if the updated column and value are static.
+You can cache an update statement if the updated column and values are static.
 #### Update stream
 ```scala
 val stm = db
