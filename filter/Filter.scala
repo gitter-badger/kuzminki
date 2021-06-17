@@ -93,15 +93,15 @@ case class FilterIsNotNull(col: AnyCol) extends NoArgFilter {
 }
 
 case class FilterLike(col: AnyCol, arg: String) extends SingleArgFilter {
-  def template = "%s LIKE %?%"
+  def template = "%s LIKE concat('%%', ?, '%%')"
 }
 
 case class FilterStartsWith(col: AnyCol, arg: String) extends SingleArgFilter {
-  def template = "%s LIKE ?%"
+  def template = "%s LIKE concat(?, '%%')"
 }
 
 case class FilterEndsWith(col: AnyCol, arg: String) extends SingleArgFilter {
-  def template = "%s LIKE %?"
+  def template = "%s LIKE concat('%%', ?)"
 }
 
 case class FilterSimilarTo(col: AnyCol, arg: String) extends SingleArgFilter {
