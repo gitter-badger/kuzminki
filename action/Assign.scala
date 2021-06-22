@@ -19,22 +19,28 @@ package kuzminki.model
 
 trait Assign extends Renderable {
   val col: ModelCol
-  val value: Any
   def format(name: String): String
   def render(prefix: Prefix) = format(col.render(prefix))
-  def args = Seq(value)
 }
 
 case class SetValue(col: ModelCol, value: Any) extends Assign {
   def format(name: String) = s"$name = ?"
+  def args = Seq(value)
+}
+
+case class SetToNull(col: ModelCol) extends Assign {
+  def format(name: String) = s"$name = NULL"
+  def args = Seq.empty[Any]
 }
 
 case class Increment(col: ModelCol, value: Any) extends Assign {
   def format(name: String) = s"$name = $name + ?"
+  def args = Seq(value)
 }
 
 case class Decrement(col: ModelCol, value: Any) extends Assign {
   def format(name: String) = s"$name = $name - ?"
+  def args = Seq(value)
 }
 
 

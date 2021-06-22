@@ -28,3 +28,11 @@ trait NumericUpdateMethods[T] {
   def +=(value: T) = Increment(col, value)
   def -=(value: T) = Decrement(col, value)
 }
+
+trait NullUpdateMethod[T] extends UpdateMethod[T] {
+  def setToNull = SetToNull(col)
+}
+
+trait NullNumericUpdateMethods[T] extends UpdateMethod[T] {
+  def setToNull = SetToNull(col)
+}

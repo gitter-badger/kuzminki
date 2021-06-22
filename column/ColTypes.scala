@@ -173,7 +173,7 @@ case class UUIDCol(info: ColInfo) extends ModelCol
 
 case class StringOptCol(info: ColInfo) extends ModelCol
                                           with StringOptColValue
-                                          with UpdateMethod[String]
+                                          with NullUpdateMethod[String]
                                           with UniversalFilters[String]
                                           with StringFilters {
 
@@ -183,7 +183,7 @@ case class StringOptCol(info: ColInfo) extends ModelCol
 
 case class CharOptCol(info: ColInfo) extends ModelCol
                                         with CharOptColValue
-                                        with UpdateMethod[Char]
+                                        with NullUpdateMethod[Char]
                                         with UniversalFilters[Char] {
 
   def unOpt = CharCol(info)
@@ -192,7 +192,7 @@ case class CharOptCol(info: ColInfo) extends ModelCol
 
 case class BooleanOptCol(info: ColInfo) extends ModelCol
                                            with BooleanOptColValue
-                                           with UpdateMethod[Boolean]
+                                           with NullUpdateMethod[Boolean]
                                            with UniversalFilters[Boolean] {
 
   def unOpt = BooleanCol(info)
@@ -202,7 +202,7 @@ case class BooleanOptCol(info: ColInfo) extends ModelCol
 case class ShortOptCol(info: ColInfo) extends ModelCol
                                          with ShortOptColValue
                                          with ShortAggregations
-                                         with NumericUpdateMethods[Short]
+                                         with NullNumericUpdateMethods[Short]
                                          with UniversalFilters[Short]
                                          with ComparativeFilters[Short] {
 
@@ -214,7 +214,7 @@ case class IntOptCol(info: ColInfo) extends ModelCol
                                        with IntOptColValue
                                        with IntAggregations
                                        with SubqueryNumberFilters
-                                       with NumericUpdateMethods[Int]
+                                       with NullNumericUpdateMethods[Int]
                                        with UniversalFilters[Int]
                                        with ComparativeFilters[Int] {
 
@@ -225,7 +225,7 @@ case class IntOptCol(info: ColInfo) extends ModelCol
 case class LongOptCol(info: ColInfo) extends ModelCol
                                         with LongOptColValue
                                         with LongAggregations
-                                        with NumericUpdateMethods[Long]
+                                        with NullNumericUpdateMethods[Long]
                                         with UniversalFilters[Long]
                                         with ComparativeFilters[Long] {
 
@@ -236,7 +236,7 @@ case class LongOptCol(info: ColInfo) extends ModelCol
 case class FloatOptCol(info: ColInfo) extends ModelCol
                                          with FloatOptColValue
                                          with FloatAggregations
-                                         with NumericUpdateMethods[Float]
+                                         with NullNumericUpdateMethods[Float]
                                          with UniversalFilters[Float]
                                          with ComparativeFilters[Float] {
 
@@ -247,7 +247,7 @@ case class FloatOptCol(info: ColInfo) extends ModelCol
 case class DoubleOptCol(info: ColInfo) extends ModelCol
                                           with DoubleOptColValue
                                           with DoubleAggregations
-                                          with NumericUpdateMethods[Double]
+                                          with NullNumericUpdateMethods[Double]
                                           with UniversalFilters[Double]
                                           with ComparativeFilters[Double] {
 
@@ -257,7 +257,7 @@ case class DoubleOptCol(info: ColInfo) extends ModelCol
 
 case class DecimalNumberOptCol(info: ColInfo) extends ModelCol
                                                  with DecimalNumberOptColValue
-                                                 with NumericUpdateMethods[DecimalNumber]
+                                                 with NullNumericUpdateMethods[DecimalNumber]
                                                  with UniversalFilters[DecimalNumber]
                                                  with ComparativeFilters[DecimalNumber] {
 
@@ -267,7 +267,7 @@ case class DecimalNumberOptCol(info: ColInfo) extends ModelCol
 
 case class BigDecimalOptCol(info: ColInfo) extends ModelCol
                                               with BigDecimalOptColValue
-                                              with NumericUpdateMethods[BigDecimal]
+                                              with NullNumericUpdateMethods[BigDecimal]
                                               with UniversalFilters[BigDecimal]
                                               with ComparativeFilters[BigDecimal] {
 
@@ -277,6 +277,7 @@ case class BigDecimalOptCol(info: ColInfo) extends ModelCol
 
 case class InstantOptCol(info: ColInfo) extends ModelCol
                                            with InstantOptColValue
+                                           with NullUpdateMethod[Boolean]
                                            with UniversalFilters[Instant]
                                            with ComparativeFilters[Instant] {
 
@@ -286,6 +287,7 @@ case class InstantOptCol(info: ColInfo) extends ModelCol
 
 case class ZonedDateTimeOptCol(info: ColInfo) extends ModelCol
                                                  with ZonedDateTimeOptColValue
+                                                 with NullUpdateMethod[Boolean]
                                                  with UniversalFilters[ZonedDateTime]
                                                  with ComparativeFilters[ZonedDateTime] {
 
@@ -295,6 +297,7 @@ case class ZonedDateTimeOptCol(info: ColInfo) extends ModelCol
 
 case class LocalDateTimeOptCol(info: ColInfo) extends ModelCol
                                                  with LocalDateTimeOptColValue
+                                                 with NullUpdateMethod[Boolean]
                                                  with UniversalFilters[LocalDateTime]
                                                  with ComparativeFilters[LocalDateTime] {
 
@@ -304,6 +307,7 @@ case class LocalDateTimeOptCol(info: ColInfo) extends ModelCol
 
 case class LocalDateOptCol(info: ColInfo) extends ModelCol
                                              with LocalDateOptColValue
+                                             with NullUpdateMethod[Boolean]
                                              with UniversalFilters[LocalDate]
                                              with ComparativeFilters[LocalDate] {
 
@@ -313,6 +317,7 @@ case class LocalDateOptCol(info: ColInfo) extends ModelCol
 
 case class UUIDOptCol(info: ColInfo) extends ModelCol
                                         with UUIDOptColValue
+                                        with NullUpdateMethod[Boolean]
                                         with UniversalFilters[UUID]
                                         with ComparativeFilters[UUID] {
 
