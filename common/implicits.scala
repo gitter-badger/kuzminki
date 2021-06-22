@@ -83,22 +83,22 @@ object implicits {
   // opt filters
 
   implicit val modelColToStringOptCol: TypeCol[Option[String]] => StringOptCol = col => col.asInstanceOf[StringOptCol]
-  implicit val modelColToCharOptCol: TypeCol[Option[Char]] => CharCol = col => col.asInstanceOf[CharCol]
-  implicit val modelColToBooleanOptCol: TypeCol[Option[Boolean]] => BooleanCol = col => col.asInstanceOf[BooleanCol]
+  implicit val modelColToCharOptCol: TypeCol[Option[Char]] => CharOptCol = col => col.asInstanceOf[CharOptCol]
+  implicit val modelColToBooleanOptCol: TypeCol[Option[Boolean]] => BooleanOptCol = col => col.asInstanceOf[BooleanOptCol]
   
-  implicit val modelColToShortOptCol: TypeCol[Option[Short]] => ShortCol = col => col.asInstanceOf[ShortCol]
-  implicit val modelColToIntOptCol: TypeCol[Option[Int]] => IntCol = col => col.asInstanceOf[IntCol]
-  implicit val modelColToLongOptCol: TypeCol[Option[Long]] => LongCol = col => col.asInstanceOf[LongCol]
-  implicit val modelColToFloatOptCol: TypeCol[Option[Float]] => FloatCol = col => col.asInstanceOf[FloatCol]
-  implicit val modelColToDoubleOptCol: TypeCol[Option[Double]] => DoubleCol = col => col.asInstanceOf[DoubleCol]
-  implicit val modelColToDecimalNumberOptCol: TypeCol[Option[DecimalNumber]] => DecimalNumberCol = col => col.asInstanceOf[DecimalNumberCol]
-  implicit val modelColToBigDecimalOptCol: TypeCol[Option[BigDecimal]] => BigDecimalCol = col => col.asInstanceOf[BigDecimalCol]
+  implicit val modelColToShortOptCol: TypeCol[Option[Short]] => ShortOptCol = col => col.asInstanceOf[ShortOptCol]
+  implicit val modelColToIntOptCol: TypeCol[Option[Int]] => IntOptCol = col => col.asInstanceOf[IntOptCol]
+  implicit val modelColToLongOptCol: TypeCol[Option[Long]] => LongOptCol = col => col.asInstanceOf[LongOptCol]
+  implicit val modelColToFloatOptCol: TypeCol[Option[Float]] => FloatOptCol = col => col.asInstanceOf[FloatOptCol]
+  implicit val modelColToDoubleOptCol: TypeCol[Option[Double]] => DoubleOptCol = col => col.asInstanceOf[DoubleOptCol]
+  implicit val modelColToDecimalNumberOptCol: TypeCol[Option[DecimalNumber]] => DecimalNumberOptCol = col => col.asInstanceOf[DecimalNumberOptCol]
+  implicit val modelColToBigDecimalOptCol: TypeCol[Option[BigDecimal]] => BigDecimalOptCol = col => col.asInstanceOf[BigDecimalOptCol]
 
-  implicit val modelColToInstantOptCol: TypeCol[Option[Instant]] => InstantCol = col => col.asInstanceOf[InstantCol]
-  implicit val modelColToZonedDateTimeOptCol: TypeCol[Option[ZonedDateTime]] => ZonedDateTimeCol = col => col.asInstanceOf[ZonedDateTimeCol]
-  implicit val modelColToLocalDateTimeOptCol: TypeCol[Option[LocalDateTime]] => LocalDateTimeCol = col => col.asInstanceOf[LocalDateTimeCol]
-  implicit val modelColToLocalDateOptCol: TypeCol[Option[LocalDate]] => LocalDateCol = col => col.asInstanceOf[LocalDateCol]
-  implicit val modelColToUUIDOptCol: TypeCol[Option[UUID]] => UUIDCol = col => col.asInstanceOf[UUIDCol]
+  implicit val modelColToInstantOptCol: TypeCol[Option[Instant]] => InstantOptCol = col => col.asInstanceOf[InstantOptCol]
+  implicit val modelColToZonedDateTimeOptCol: TypeCol[Option[ZonedDateTime]] => ZonedDateTimeOptCol = col => col.asInstanceOf[ZonedDateTimeOptCol]
+  implicit val modelColToLocalDateTimeOptCol: TypeCol[Option[LocalDateTime]] => LocalDateTimeOptCol = col => col.asInstanceOf[LocalDateTimeOptCol]
+  implicit val modelColToLocalDateOptCol: TypeCol[Option[LocalDate]] => LocalDateOptCol = col => col.asInstanceOf[LocalDateOptCol]
+  implicit val modelColToUUIDOptCol: TypeCol[Option[UUID]] => UUIDOptCol = col => col.asInstanceOf[UUIDOptCol]
 
   /*
   implicit def typeColToUniversalFilters[T](col: TypeCol[T]) = col.asInstanceOf[UniversalFilters[T]]

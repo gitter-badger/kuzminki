@@ -194,8 +194,11 @@ case class ShortOptCol(info: ColInfo) extends ModelCol
                                          with ShortOptColValue
                                          with ShortAggregations
                                          with NumericUpdateMethods[Short]
-                                         with UniversalFilters[Int]
-                                         with ComparativeFilters[Short]
+                                         with UniversalFilters[Short]
+                                         with ComparativeFilters[Short] {
+
+  def unOpt = ShortCol(info)
+}
 
 
 case class IntOptCol(info: ColInfo) extends ModelCol
