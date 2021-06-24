@@ -17,23 +17,46 @@
 package kuzminki.model
 
 
-class SubqueryNumber[M <: Model](model: M) {
-
-  def cols1(pick: M => AnyCol) = {
-    new WhereSubqueryNumber(
-      model,
-      SubCollector(
-        Prefix.forModel,
-        Array(
-          SelectSec(
-            Seq(pick(model))
-          ),
-          FromSec(ModelTable(model))
-        )
-      )
-    )
-  }
+object Max {
+  protected val func = "max"
+  def decimalNumber(col: AnyCol) = AggDecimalNumber(col, func)
+  def float(col: AnyCol) = AggFloat(col, func)
+  def double(col: AnyCol) = AggDouble(col, func)
+  def instant(col: AnyCol) = AggInstant(col, func)
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

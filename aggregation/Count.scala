@@ -17,30 +17,16 @@
 package kuzminki.model
 
 
-class SubqueryNumber[M <: Model](model: M) {
-
-  def cols1(pick: M => AnyCol) = {
-    new WhereSubqueryNumber(
-      model,
-      SubCollector(
-        Prefix.forModel,
-        Array(
-          SelectSec(
-            Seq(pick(model))
-          ),
-          FromSec(ModelTable(model))
-        )
-      )
-    )
-  }
+object Count {
+  def all = Count(AllCols)
 }
 
+object AllCols extends AnyCol with NoArgs {
+  val col = this
+  def render(prefix: Prefix) = "*"
+}
 
-
-
-
-
-
-
-
+case class Count(col: AnyCol) extends LongFunction with NoArgs {
+  def template = "count(%s)"
+}
 

@@ -29,7 +29,7 @@ class Having[M, R](
     )
   }
 
-  def all() = {
+  def all = {
     toOrderBy(HavingBlankSec)
   }
 

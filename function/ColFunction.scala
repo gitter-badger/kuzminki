@@ -17,4 +17,8 @@
 package kuzminki.model
 
 
-trait AggNumeric extends ColFunction with NoArgs with SortingDirection
+trait ColFunction extends AnyCol with SortingDirection {
+  val self = this
+  def template: String
+  def render(prefix: Prefix) = template.format(col.render(prefix))
+}

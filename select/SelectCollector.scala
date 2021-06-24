@@ -54,7 +54,7 @@ case class SelectCollector[R](
 
   def cacheHaving[P](paramShape: ParamShape[P]) = {
 
-    canUseHaving()
+    //canUseHaving()
     
     val modifiedSections = sections.map {
       
@@ -87,7 +87,7 @@ case class SelectCollector[R](
   // check
 
   val isAggrigation: AnyCol => Boolean = {
-    case col: AggNumeric => true
+    case col: Aggregation => true
     case col: AnyCol => false
   }
 

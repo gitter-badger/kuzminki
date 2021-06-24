@@ -17,23 +17,42 @@
 package kuzminki.model
 
 
-class SubqueryNumber[M <: Model](model: M) {
-
-  def cols1(pick: M => AnyCol) = {
-    new WhereSubqueryNumber(
-      model,
-      SubCollector(
-        Prefix.forModel,
-        Array(
-          SelectSec(
-            Seq(pick(model))
-          ),
-          FromSec(ModelTable(model))
-        )
-      )
-    )
-  }
+object Avg {
+  protected val func = "avg"
+  def decimalNumber(col: AnyCol) = AggDecimalNumber(col, func)
+  def float(col: AnyCol) = AggDouble(col, func)
+  def double(col: AnyCol) = AggDouble(col, func)
 }
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

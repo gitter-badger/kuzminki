@@ -19,7 +19,7 @@ package kuzminki.model
 
 class SubqueryNumberJoin[A <: Model, B <: Model](join: Join[A, B]) {
 
-  def cols1(pick: Join[A, B] => AggNumeric) = {
+  def cols1(pick: Join[A, B] => AnyCol) = {
     new SubqueryNumberJoinOn(
       join,
       SubCollector(

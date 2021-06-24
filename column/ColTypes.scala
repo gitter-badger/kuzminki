@@ -50,8 +50,8 @@ case class BooleanCol(info: ColInfo) extends ModelCol
 
 
 case class ShortCol(info: ColInfo) extends ModelCol
+                                      with NumericCol
                                       with ShortColValue
-                                      with ShortAggregations
                                       with NumericUpdateMethods[Short]
                                       with UniversalFilters[Int]
                                       with ComparativeFilters[Short] {
@@ -61,8 +61,8 @@ case class ShortCol(info: ColInfo) extends ModelCol
 
 
 case class IntCol(info: ColInfo) extends ModelCol
+                                    with NumericCol
                                     with IntColValue
-                                    with IntAggregations
                                     with SubqueryNumberFilters
                                     with NumericUpdateMethods[Int]
                                     with UniversalFilters[Int]
@@ -73,8 +73,8 @@ case class IntCol(info: ColInfo) extends ModelCol
 
 
 case class LongCol(info: ColInfo) extends ModelCol
+                                     with NumericCol
                                      with LongColValue
-                                     with LongAggregations
                                      with NumericUpdateMethods[Long]
                                      with UniversalFilters[Long]
                                      with ComparativeFilters[Long] {
@@ -84,8 +84,8 @@ case class LongCol(info: ColInfo) extends ModelCol
 
 
 case class FloatCol(info: ColInfo) extends ModelCol
+                                      with NumericCol
                                       with FloatColValue
-                                      with FloatAggregations
                                       with NumericUpdateMethods[Float]
                                       with UniversalFilters[Float]
                                       with ComparativeFilters[Float] {
@@ -95,8 +95,8 @@ case class FloatCol(info: ColInfo) extends ModelCol
 
 
 case class DoubleCol(info: ColInfo) extends ModelCol
+                                       with NumericCol
                                        with DoubleColValue
-                                       with DoubleAggregations
                                        with NumericUpdateMethods[Double]
                                        with UniversalFilters[Double]
                                        with ComparativeFilters[Double] {
@@ -106,6 +106,7 @@ case class DoubleCol(info: ColInfo) extends ModelCol
 
 
 case class DecimalNumberCol(info: ColInfo) extends ModelCol
+                                              with NumericCol
                                               with DecimalNumberColValue
                                               with NumericUpdateMethods[DecimalNumber]
                                               with UniversalFilters[DecimalNumber]
@@ -116,6 +117,7 @@ case class DecimalNumberCol(info: ColInfo) extends ModelCol
 
 
 case class BigDecimalCol(info: ColInfo) extends ModelCol
+                                           with NumericCol
                                            with BigDecimalColValue
                                            with NumericUpdateMethods[BigDecimal]
                                            with UniversalFilters[BigDecimal]
@@ -201,7 +203,6 @@ case class BooleanOptCol(info: ColInfo) extends ModelCol
 
 case class ShortOptCol(info: ColInfo) extends ModelCol
                                          with ShortOptColValue
-                                         with ShortAggregations
                                          with NullNumericUpdateMethods[Short]
                                          with UniversalFilters[Short]
                                          with ComparativeFilters[Short] {
@@ -212,7 +213,6 @@ case class ShortOptCol(info: ColInfo) extends ModelCol
 
 case class IntOptCol(info: ColInfo) extends ModelCol
                                        with IntOptColValue
-                                       with IntAggregations
                                        with SubqueryNumberFilters
                                        with NullNumericUpdateMethods[Int]
                                        with UniversalFilters[Int]
@@ -224,7 +224,6 @@ case class IntOptCol(info: ColInfo) extends ModelCol
 
 case class LongOptCol(info: ColInfo) extends ModelCol
                                         with LongOptColValue
-                                        with LongAggregations
                                         with NullNumericUpdateMethods[Long]
                                         with UniversalFilters[Long]
                                         with ComparativeFilters[Long] {
@@ -235,7 +234,6 @@ case class LongOptCol(info: ColInfo) extends ModelCol
 
 case class FloatOptCol(info: ColInfo) extends ModelCol
                                          with FloatOptColValue
-                                         with FloatAggregations
                                          with NullNumericUpdateMethods[Float]
                                          with UniversalFilters[Float]
                                          with ComparativeFilters[Float] {
@@ -246,7 +244,6 @@ case class FloatOptCol(info: ColInfo) extends ModelCol
 
 case class DoubleOptCol(info: ColInfo) extends ModelCol
                                           with DoubleOptColValue
-                                          with DoubleAggregations
                                           with NullNumericUpdateMethods[Double]
                                           with UniversalFilters[Double]
                                           with ComparativeFilters[Double] {

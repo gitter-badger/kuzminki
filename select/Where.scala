@@ -73,7 +73,7 @@ class Where[M, R](
   // group by
 
   private def toHaving(cols: Seq[ModelCol]) = {
-    coll.canUseHaving()
+    //coll.canUseHaving()
     new Having(
       model,
       coll.add(GroupBySec(cols))
