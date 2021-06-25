@@ -25,7 +25,7 @@ import akka.Done
 class RunSelect[M, R](
       model: M,
       coll: SelectCollector[R]
-    ) extends SelectSubquery[R] {
+    ) {
 
   def cache = coll.cache
   

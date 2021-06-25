@@ -17,22 +17,20 @@
 package kuzminki.model
 
 
-case class AggDecimalNumber(col: AnyCol, func: String) extends DecimalNumberFunction with Aggregation {
+case class AggNumeric(col: AnyCol, func: String) extends NumericFunction with Aggregation {
   def asString = Cast.asString(this)
-  def round = Round.decimalNumber(this)
-  def round(prec: Int) = Round.decimalNumber(this, prec)
+  def round = Round.numeric(this)
+  def round(prec: Int) = Round.numeric(this, prec)
 }
 
 case class AggFloat(col: AnyCol, func: String) extends FloatFunction with Aggregation {
   def asString = Cast.asString(this)
   def round = Round.float(this)
-  def round(prec: Int) = Round.float(this, prec)
 }
 
 case class AggDouble(col: AnyCol, func: String) extends DoubleFunction with Aggregation {
   def asString = Cast.asString(this)
   def round = Round.double(this)
-  def round(prec: Int) = Round.double(this, prec)
 }
 
 case class AggInstant(col: AnyCol, func: String) extends InstantFunction with Aggregation

@@ -17,30 +17,8 @@
 package kuzminki.model
 
 
-case class SubCollector(prefix: Prefix, sections: Array[Section]) {
-
-  def add(section: Section) = this.copy(sections = sections :+ section)
-
-  def extend(added: Array[Section]) = this.copy(sections = sections ++ added)
-
-  def render = sections.map(_.render(prefix)).mkString(" ")
-
-  def args = sections.toSeq.map(_.args).flatten.toVector
+trait OptColMethods[T] extends TypeOptCol[T] with ColRef with NoArgs {
+  def modifyOpt[R](func: Option[T] => R) = ModifyOptCol(this, func)
+  def mapOpt(func: T => T) = MapOptCol(this, func)
+  def getOrElse(default: T) = GetOrElseCol(this, default)
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

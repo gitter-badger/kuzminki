@@ -27,7 +27,7 @@ class StoredSelect[R](
       db: Conn,
       statement: SqlWithParams,
       rowConv: RowConv[R]
-    ) extends SelectSubquery[R] {
+    ) {
   
   def run() = {
     db.select(statement) { row =>

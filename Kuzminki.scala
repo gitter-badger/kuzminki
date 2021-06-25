@@ -71,16 +71,6 @@ class Kuzminki(conf: SystemConfig)(implicit system: ActorSystem) {
     new SelectJoin(join, db).cols1(t => Count.all)
   }
 
-  // sub query
-
-  def subqueryNumber[M <: Model](model: M): SubqueryNumber[M] = {
-    new SubqueryNumber(model)
-  }
-
-  def subqueryNumber[A <: Model, B <: Model](join: Join[A, B]): SubqueryNumberJoin[A, B] = {
-    new SubqueryNumberJoin(join)
-  }
-
   def shutdown(): Future[Unit] = db.shutdown()
 }
 

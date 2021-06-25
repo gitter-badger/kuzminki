@@ -26,8 +26,8 @@ trait StringColDefaults extends Aggregation
                            with UniversalFilters[String]
 
 
-trait DecimalNumberColDefaults extends Aggregation
-                                  with DecimalNumberColValue
+trait NumericColDefaults extends Aggregation
+                                  with NumericColValue
                                   with UniversalFilters[DecimalNumber]
                                   with ComparativeFilters[DecimalNumber]
 

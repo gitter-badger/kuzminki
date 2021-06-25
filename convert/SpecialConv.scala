@@ -16,11 +16,20 @@
 
 package kuzminki.model
 
+import java.time._
+import java.util.UUID
+import io.rdbc.sapi.{Row, DecimalNumber}
 
-class SingleNumberSubquery(coll: SubCollector) extends Renderable {
-  def render(prefix: Prefix) = coll.render
-  def args = coll.args
+
+object SpecialConv {
+  
+  val toChar: String => Char = {
+    case str: String if str.size == 1 => str.charAt(0)
+    case str: String => throw KuzminkiException(s"Cannot be converted to char: $str")
+  }
+
+  val toCharOpt: Option[String] => Option[Char] = {
+    case Some(str) => Some(toChar(str))
+    case None => None
+  }
 }
-
-
-

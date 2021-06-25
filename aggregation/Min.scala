@@ -19,7 +19,7 @@ package kuzminki.model
 
 object Min {
   protected val func = "min"
-  def decimalNumber(col: AnyCol) = AggDecimalNumber(col, func)
+  def numeric(col: AnyCol) = AggNumeric(col, func)
   def float(col: AnyCol) = AggFloat(col, func)
   def double(col: AnyCol) = AggDouble(col, func)
   def instant(col: AnyCol) = AggInstant(col, func)

@@ -25,8 +25,7 @@ class RunInsert[M <: Model, P](
       protected val coll: InsertCollector[P]
     ) extends PickInsertReturning[M, P]
          with WhereNotExists[M, P]
-         with OnConflict[M, P]
-         with InsertSubquery[M, P] {
+         with OnConflict[M, P] {
 
   def cache = coll.add(InsertBlankValuesSec(coll.paramShape.size)).cacheInsert
 

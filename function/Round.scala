@@ -19,8 +19,8 @@ package kuzminki.model
 
 object Round {
 
-  def decimalNumber(col: AnyCol) = RoundAllDecimalNumber(col)
-  def decimalNumber(col: AnyCol, prec: Int) = RoundDecimalNumber(col, prec)
+  def numeric(col: AnyCol) = RoundAllNumeric(col)
+  def numeric(col: AnyCol, prec: Int) = RoundNumeric(col, prec)
 
   def float(col: AnyCol) = RoundAllFloat(col)
   def float(col: AnyCol, prec: Int) = RoundFloat(col, prec)
@@ -35,7 +35,7 @@ trait RoundAll extends AnyCol with PassArgs {
   def asString = Cast.asString(this)
 }
 
-case class RoundAllDecimalNumber(col: AnyCol) extends DecimalNumberFunction with RoundAll
+case class RoundAllNumeric(col: AnyCol) extends NumericFunction with RoundAll
 
 case class RoundAllFloat(col: AnyCol) extends FloatFunction with RoundAll
 
@@ -49,7 +49,7 @@ trait RoundPrec extends AnyCol {
   def asString = Cast.asString(this)
 }
 
-case class RoundDecimalNumber(col: AnyCol, prec: Int) extends DecimalNumberFunction with RoundPrec
+case class RoundNumeric(col: AnyCol, prec: Int) extends NumericFunction with RoundPrec
 
 case class RoundFloat(col: AnyCol, prec: Int) extends FloatFunction with RoundPrec
 

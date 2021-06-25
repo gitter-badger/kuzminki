@@ -26,8 +26,8 @@ trait StringFunction extends ColFunction
                            with UniversalFilters[String]
 
 
-trait DecimalNumberFunction extends ColFunction
-                                  with DecimalNumberColValue
+trait NumericFunction extends ColFunction
+                                  with NumericColValue
                                   with UniversalFilters[DecimalNumber]
                                   with ComparativeFilters[DecimalNumber]
 

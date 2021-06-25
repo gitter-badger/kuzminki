@@ -17,49 +17,6 @@
 package kuzminki.model
 
 
-object Avg {
-  protected val func = "avg"
-  def umeric(col: AnyCol) = AggNumeric(col, func)
-  def float(col: AnyCol) = AggDouble(col, func)
-  def double(col: AnyCol) = AggDouble(col, func)
+trait RenderColRef extends ColRef {
+  def render(prefix: Prefix) = col.render(prefix)
 }
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

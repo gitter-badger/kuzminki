@@ -16,50 +16,7 @@
 
 package kuzminki.model
 
-
-object Avg {
-  protected val func = "avg"
-  def umeric(col: AnyCol) = AggNumeric(col, func)
-  def float(col: AnyCol) = AggDouble(col, func)
-  def double(col: AnyCol) = AggDouble(col, func)
-}
-  
+import io.rdbc.sapi.Row
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+trait TypeOptCol[T] extends TypeCol[Option[T]] with RenderColRef with NoArgs

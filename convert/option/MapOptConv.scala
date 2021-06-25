@@ -16,50 +16,11 @@
 
 package kuzminki.model
 
+import java.time._
+import java.util.UUID
+import io.rdbc.sapi.{Row, DecimalNumber}
 
-object Avg {
-  protected val func = "avg"
-  def umeric(col: AnyCol) = AggNumeric(col, func)
-  def float(col: AnyCol) = AggDouble(col, func)
-  def double(col: AnyCol) = AggDouble(col, func)
+
+case class MapOptConv[T, R](original: ValConv[Option[T]], func: T => T) extends ValConv[Option[T]] {
+  def get(row: Row, index: Int) = original.get(row, index).map(func)
 }
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

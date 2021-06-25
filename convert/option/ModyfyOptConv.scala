@@ -16,5 +16,11 @@
 
 package kuzminki.model
 
+import java.time._
+import java.util.UUID
+import io.rdbc.sapi.{Row, DecimalNumber}
 
-trait SelectSubquery[R] extends Renderable
+
+case class ModyfyOptConv[T, R](original: ValConv[Option[T]], func: Option[T] => R) extends ValConv[R] {
+  def get(row: Row, index: Int) = func(original.get(row, index))
+}

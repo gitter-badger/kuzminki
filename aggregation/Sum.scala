@@ -19,7 +19,7 @@ package kuzminki.model
 
 object Sum {
   protected val func = "sum"
-  def decimalNumber(col: AnyCol) = AggDecimalNumber(col, func)
+  def numeric(col: AnyCol) = AggNumeric(col, func)
   def float(col: AnyCol) = AggFloat(col, func)
   def double(col: AnyCol) = AggDouble(col, func)
 }

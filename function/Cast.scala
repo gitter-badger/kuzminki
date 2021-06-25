@@ -19,7 +19,7 @@ package kuzminki.model
 
 object Cast {
   def asString(col: AnyCol) = CastString(col)
-  def asDecimalNumber(col: AnyCol) = CastDecimalNumber(col)
+  def asNumeric(col: AnyCol) = CastNumeric(col)
   def asFloat(col: AnyCol) = CastFloat(col)
   def asDouble(col: AnyCol) = CastDouble(col)
   def asShort(col: AnyCol) = CastShort(col)
@@ -32,7 +32,7 @@ case class CastString(col: AnyCol) extends StringFunction with PassArgs {
   val template = "%s::text"
 }
 
-case class CastDecimalNumber(col: AnyCol) extends DecimalNumberFunction with PassArgs {
+case class CastNumeric(col: AnyCol) extends NumericFunction with PassArgs {
   val template = "%s::numeric"
 }
 

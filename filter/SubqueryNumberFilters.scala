@@ -16,7 +16,7 @@
 
 package kuzminki.model
 
-
+/*
 trait SubqueryNumberFilters extends SelfRef {
 
   def matches(sub: SingleNumberSubquery): Filter = FilterAggMatches(self, sub)
@@ -36,7 +36,7 @@ trait SubqueryNumberFilters extends SelfRef {
 
   def lte(sub: SingleNumberSubquery): Filter = FilterAggLte(self, sub)
   def <=(sub: SingleNumberSubquery): Filter = lte(sub)
-
+*/
   // optional
 
   /*
@@ -61,4 +61,5 @@ trait SubqueryNumberFilters extends SelfRef {
   def lte(opt: Option[SingleNumberSubquery]): Option[Filter] = opt.map(lte)
   def <=(opt: Option[SingleNumberSubquery]): Option[Filter] = opt.map(lte)
   */
-}
+//}
+

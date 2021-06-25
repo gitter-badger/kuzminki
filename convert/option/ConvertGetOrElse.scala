@@ -16,31 +16,12 @@
 
 package kuzminki.model
 
+import java.time._
+import java.util.UUID
+import io.rdbc.sapi.{Row, DecimalNumber}
 
-class SubqueryNumber[M <: Model](model: M) {
 
-  def cols1(pick: M => AnyCol) = {
-    new WhereSubqueryNumber(
-      model,
-      SubCollector(
-        Prefix.forModel,
-        Array(
-          SelectSec(
-            Seq(pick(model))
-          ),
-          FromSec(ModelTable(model))
-        )
-      )
-    )
-  }
+case class GetOrElseConv[T](original: ValConv[Option[T]], default: T) extends ValConv[T] {
+  def get(row: Row, index: Int) = original.get(row, index).getOrElse(default)
 }
-
-
-
-
-
-
-
-
-
 

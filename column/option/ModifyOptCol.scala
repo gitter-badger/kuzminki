@@ -17,49 +17,9 @@
 package kuzminki.model
 
 
-object Avg {
-  protected val func = "avg"
-  def umeric(col: AnyCol) = AggNumeric(col, func)
-  def float(col: AnyCol) = AggDouble(col, func)
-  def double(col: AnyCol) = AggDouble(col, func)
+case class ModifyOptCol[T, R](col: TypeOptCol[T], func: Option[T] => R) extends TypeCol[R]
+                                                                                with RenderColRef
+                                                                                with NoArgs {
+
+  def conv = ModyfyOptConv(col.conv, func)
 }
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

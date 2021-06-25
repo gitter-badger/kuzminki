@@ -21,305 +21,78 @@ import java.util.UUID
 import io.rdbc.sapi._
 
 
-case class StringCol(info: ColInfo) extends ModelCol
-                                       with StringColValue
-                                       with UpdateMethod[String]
-                                       with UniversalFilters[String]
-                                       with StringFilters {
+trait StringCol extends StringColValue
+                   with UniversalFilters[String]
+                   with StringFilters
 
-  def opt = StringOptCol(info)
-}
+trait CharCol extends CharColValue
+                      with UniversalFilters[Char]
 
 
-case class CharCol(info: ColInfo) extends ModelCol
-                                     with CharColValue
-                                     with UpdateMethod[Char]
-                                     with UniversalFilters[Char] {
+trait BooleanCol extends BooleanColValue
+                         with UniversalFilters[Boolean]
 
-  def opt = CharOptCol(info)
-}
 
+trait ShortCol extends ShortColValue
+                       with UniversalFilters[Int]
+                       with ComparativeFilters[Short]
 
-case class BooleanCol(info: ColInfo) extends ModelCol
-                                        with BooleanColValue
-                                        with UpdateMethod[Boolean]
-                                        with UniversalFilters[Boolean] {
 
-  def opt = BooleanOptCol(info)
-}
+trait IntCol extends IntColValue
+                     with UniversalFilters[Int]
+                     with ComparativeFilters[Int]
 
 
-case class ShortCol(info: ColInfo) extends ModelCol
-                                      with NumericCol
-                                      with ShortColValue
-                                      with NumericUpdateMethods[Short]
-                                      with UniversalFilters[Int]
-                                      with ComparativeFilters[Short] {
+trait LongCol extends LongColValue
+                      with UniversalFilters[Long]
+                      with ComparativeFilters[Long]
 
-  def opt = ShortOptCol(info)
-}
 
+trait FloatCol extends FloatColValue
+                       with UniversalFilters[Float]
+                       with ComparativeFilters[Float]
 
-case class IntCol(info: ColInfo) extends ModelCol
-                                    with NumericCol
-                                    with IntColValue
-                                    with SubqueryNumberFilters
-                                    with NumericUpdateMethods[Int]
-                                    with UniversalFilters[Int]
-                                    with ComparativeFilters[Int] {
 
-  def opt = IntOptCol(info)
-}
+trait DoubleCol extends DoubleColValue
+                        with UniversalFilters[Double]
+                        with ComparativeFilters[Double]
 
 
-case class LongCol(info: ColInfo) extends ModelCol
-                                     with NumericCol
-                                     with LongColValue
-                                     with NumericUpdateMethods[Long]
-                                     with UniversalFilters[Long]
-                                     with ComparativeFilters[Long] {
+trait NumericCol extends NumericColValue
+                         with UniversalFilters[DecimalNumber]
+                         with ComparativeFilters[DecimalNumber]
 
-  def opt = LongOptCol(info)
-}
 
+trait BigDecimalCol extends BigDecimalColValue
+                            with UniversalFilters[BigDecimal]
+                            with ComparativeFilters[BigDecimal]
 
-case class FloatCol(info: ColInfo) extends ModelCol
-                                      with NumericCol
-                                      with FloatColValue
-                                      with NumericUpdateMethods[Float]
-                                      with UniversalFilters[Float]
-                                      with ComparativeFilters[Float] {
 
-  def opt = FloatOptCol(info)
-}
+trait InstantCol extends InstantColValue
+                         with UniversalFilters[Instant]
+                         with ComparativeFilters[Instant]
 
 
-case class DoubleCol(info: ColInfo) extends ModelCol
-                                       with NumericCol
-                                       with DoubleColValue
-                                       with NumericUpdateMethods[Double]
-                                       with UniversalFilters[Double]
-                                       with ComparativeFilters[Double] {
+trait ZonedDateTimeCol extends ZonedDateTimeColValue
+                               with UniversalFilters[ZonedDateTime]
+                               with ComparativeFilters[ZonedDateTime]
 
-  def opt = DoubleOptCol(info)
-}
 
+trait LocalDateTimeCol extends LocalDateTimeColValue
+                               with UniversalFilters[LocalDateTime]
+                               with ComparativeFilters[LocalDateTime]
 
-case class DecimalNumberCol(info: ColInfo) extends ModelCol
-                                              with NumericCol
-                                              with DecimalNumberColValue
-                                              with NumericUpdateMethods[DecimalNumber]
-                                              with UniversalFilters[DecimalNumber]
-                                              with ComparativeFilters[DecimalNumber] {
 
-  def opt = DecimalNumberOptCol(info)
-}
+trait LocalDateCol extends LocalDateColValue
+                           with UniversalFilters[LocalDate]
+                           with ComparativeFilters[LocalDate]
 
 
-case class BigDecimalCol(info: ColInfo) extends ModelCol
-                                           with NumericCol
-                                           with BigDecimalColValue
-                                           with NumericUpdateMethods[BigDecimal]
-                                           with UniversalFilters[BigDecimal]
-                                           with ComparativeFilters[BigDecimal] {
+trait UUIDCol extends UUIDColValue
+                      with UniversalFilters[UUID]
+                      with ComparativeFilters[UUID]
 
-  def opt = BigDecimalOptCol(info)
-}
 
-
-case class InstantCol(info: ColInfo) extends ModelCol
-                                        with InstantColValue
-                                        with UniversalFilters[Instant]
-                                        with ComparativeFilters[Instant] {
-
-  def opt = InstantOptCol(info)
-}
-
-
-case class ZonedDateTimeCol(info: ColInfo) extends ModelCol
-                                              with ZonedDateTimeColValue
-                                              with UniversalFilters[ZonedDateTime]
-                                              with ComparativeFilters[ZonedDateTime] {
-
-  def opt = ZonedDateTimeOptCol(info)
-}
-
-
-case class LocalDateTimeCol(info: ColInfo) extends ModelCol
-                                              with LocalDateTimeColValue
-                                              with UniversalFilters[LocalDateTime]
-                                              with ComparativeFilters[LocalDateTime] {
-
-  def opt = LocalDateTimeOptCol(info)
-}
-
-
-case class LocalDateCol(info: ColInfo) extends ModelCol
-                                          with LocalDateColValue
-                                          with UniversalFilters[LocalDate]
-                                          with ComparativeFilters[LocalDate] {
-
-  def opt = LocalDateOptCol(info)
-}
-
-
-case class UUIDCol(info: ColInfo) extends ModelCol
-                                     with UUIDColValue
-                                     with UniversalFilters[UUID]
-                                     with ComparativeFilters[UUID] {
-
-  def opt = UUIDOptCol(info)
-}
-
-// option
-
-case class StringOptCol(info: ColInfo) extends ModelCol
-                                          with StringOptColValue
-                                          with NullUpdateMethod[String]
-                                          with UniversalFilters[String]
-                                          with StringFilters {
-
-  def unOpt = StringCol(info)
-}
-
-
-case class CharOptCol(info: ColInfo) extends ModelCol
-                                        with CharOptColValue
-                                        with NullUpdateMethod[Char]
-                                        with UniversalFilters[Char] {
-
-  def unOpt = CharCol(info)
-}
-
-
-case class BooleanOptCol(info: ColInfo) extends ModelCol
-                                           with BooleanOptColValue
-                                           with NullUpdateMethod[Boolean]
-                                           with UniversalFilters[Boolean] {
-
-  def unOpt = BooleanCol(info)
-}
-
-
-case class ShortOptCol(info: ColInfo) extends ModelCol
-                                         with ShortOptColValue
-                                         with NullNumericUpdateMethods[Short]
-                                         with UniversalFilters[Short]
-                                         with ComparativeFilters[Short] {
-
-  def unOpt = ShortCol(info)
-}
-
-
-case class IntOptCol(info: ColInfo) extends ModelCol
-                                       with IntOptColValue
-                                       with SubqueryNumberFilters
-                                       with NullNumericUpdateMethods[Int]
-                                       with UniversalFilters[Int]
-                                       with ComparativeFilters[Int] {
-
-  def unOpt = IntCol(info)
-}
-
-
-case class LongOptCol(info: ColInfo) extends ModelCol
-                                        with LongOptColValue
-                                        with NullNumericUpdateMethods[Long]
-                                        with UniversalFilters[Long]
-                                        with ComparativeFilters[Long] {
-
-  def unOpt = LongCol(info)
-}
-
-
-case class FloatOptCol(info: ColInfo) extends ModelCol
-                                         with FloatOptColValue
-                                         with NullNumericUpdateMethods[Float]
-                                         with UniversalFilters[Float]
-                                         with ComparativeFilters[Float] {
-
-  def unOpt = FloatCol(info)
-}
-
-
-case class DoubleOptCol(info: ColInfo) extends ModelCol
-                                          with DoubleOptColValue
-                                          with NullNumericUpdateMethods[Double]
-                                          with UniversalFilters[Double]
-                                          with ComparativeFilters[Double] {
-
-  def unOpt = DoubleCol(info)
-}
-
-
-case class DecimalNumberOptCol(info: ColInfo) extends ModelCol
-                                                 with DecimalNumberOptColValue
-                                                 with NullNumericUpdateMethods[DecimalNumber]
-                                                 with UniversalFilters[DecimalNumber]
-                                                 with ComparativeFilters[DecimalNumber] {
-
-  def unOpt = DecimalNumberCol(info)
-}
-
-
-case class BigDecimalOptCol(info: ColInfo) extends ModelCol
-                                              with BigDecimalOptColValue
-                                              with NullNumericUpdateMethods[BigDecimal]
-                                              with UniversalFilters[BigDecimal]
-                                              with ComparativeFilters[BigDecimal] {
-
-  def unOpt = BigDecimalCol(info)
-}
-
-
-case class InstantOptCol(info: ColInfo) extends ModelCol
-                                           with InstantOptColValue
-                                           with NullUpdateMethod[Boolean]
-                                           with UniversalFilters[Instant]
-                                           with ComparativeFilters[Instant] {
-
-  def unOpt = BigDecimalCol(info)
-}
-
-
-case class ZonedDateTimeOptCol(info: ColInfo) extends ModelCol
-                                                 with ZonedDateTimeOptColValue
-                                                 with NullUpdateMethod[Boolean]
-                                                 with UniversalFilters[ZonedDateTime]
-                                                 with ComparativeFilters[ZonedDateTime] {
-
-  def unOpt = ZonedDateTimeCol(info)
-}
-
-
-case class LocalDateTimeOptCol(info: ColInfo) extends ModelCol
-                                                 with LocalDateTimeOptColValue
-                                                 with NullUpdateMethod[Boolean]
-                                                 with UniversalFilters[LocalDateTime]
-                                                 with ComparativeFilters[LocalDateTime] {
-
-  def unOpt = LocalDateTimeCol(info)
-}
-
-
-case class LocalDateOptCol(info: ColInfo) extends ModelCol
-                                             with LocalDateOptColValue
-                                             with NullUpdateMethod[Boolean]
-                                             with UniversalFilters[LocalDate]
-                                             with ComparativeFilters[LocalDate] {
-
-  def unOpt = LocalDateCol(info)
-}
-
-
-case class UUIDOptCol(info: ColInfo) extends ModelCol
-                                        with UUIDOptColValue
-                                        with NullUpdateMethod[Boolean]
-                                        with UniversalFilters[UUID]
-                                        with ComparativeFilters[UUID] {
-
-  def unOpt = UUIDCol(info)
-}
 
 
 

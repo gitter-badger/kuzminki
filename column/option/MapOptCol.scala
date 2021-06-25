@@ -17,20 +17,10 @@
 package kuzminki.model
 
 
-class SubqueryNumberJoin[A <: Model, B <: Model](join: Join[A, B]) {
-
-  def cols1(pick: Join[A, B] => AnyCol) = {
-    new SubqueryNumberJoinOn(
-      join,
-      SubCollector(
-        Prefix.forJoin(join),
-        Array(
-          SelectSec(
-            Seq(pick(join))
-          ),
-          FromSec(ModelTable(join.a))
-        )
-      )
-    )
-  }
+case class MapOptCol[T](col: TypeOptCol[T], func: T => T) extends TypeCol[Option[T]]
+                                                             with RenderColRef
+                                                             with NoArgs {
+  def conv = MapOptConv(col.conv, func)
 }
+
+

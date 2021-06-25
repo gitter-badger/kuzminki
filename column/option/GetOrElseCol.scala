@@ -17,15 +17,11 @@
 package kuzminki.model
 
 
-class SubqueryNumberJoinOn[A <: Model, B <: Model](join: Join[A, B], coll: SubCollector) {
-
-  def joinOn(pickLeft: A => ModelCol, pickRight: B => ModelCol) = {
-    new WhereSubqueryNumber(
-      join,
-      coll.extend(Array(
-        InnerJoinSec(ModelTable(join.b)),
-        OnSec(pickLeft(join.a), pickRight(join.b))
-      ))
-    )
-  }
+case class GetOrElseCol[T](col: TypeOptCol[T], default: T) extends TypeCol[T]
+                                                              with RenderColRef
+                                                              with NoArgs {
+                                                                
+  def conv = GetOrElseConv(col.conv, default)
 }
+
+
