@@ -17,8 +17,8 @@
 package kuzminki.model
 
 
-trait ColFunction extends AnyCol with SortingDirection {
+trait ColFunction extends UsableCol with UnderlyingRef {
   val self = this
   def template: String
-  def render(prefix: Prefix) = template.format(col.render(prefix))
+  def render(prefix: Prefix) = template.format(underlying.render(prefix))
 }

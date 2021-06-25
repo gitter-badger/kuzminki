@@ -16,12 +16,11 @@
 
 package kuzminki.model
 
+import java.time._
+import java.util.UUID
+import io.rdbc.sapi.{Row, DecimalNumber}
 
-case class GetOrElseCol[T](col: TypeOptCol[T], default: T) extends TypeCol[T]
-                                                              with RenderColRef
-                                                              with NoArgs {
-                                                                
-  def conv = GetOrElseConv(col.conv, default)
+
+case class ModyfyConv[T, R](original: ValConv[T], func: T => R) extends ValConv[R] {
+  def get(row: Row, index: Int) = func(original.get(row, index))
 }
-
-

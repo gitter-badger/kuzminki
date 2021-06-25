@@ -38,7 +38,7 @@ case class BooleanModelCol(info: ColInfo) extends ModelCol
 
 case class ShortModelCol(info: ColInfo) extends ModelCol
                                            with ShortCol
-                                           with NumericUpdateMethods[Int]
+                                           with NumericUpdateMethods[Short]
 
 
 case class IntModelCol(info: ColInfo) extends ModelCol

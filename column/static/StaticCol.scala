@@ -17,10 +17,15 @@
 package kuzminki.model
 
 
-object Sum {
-  protected val func = "sum"
-  def numeric(col: UsableCol) = AggNumeric(col, func)
-  def float(col: UsableCol) = AggFloat(col, func)
-  def double(col: UsableCol) = AggDouble(col, func)
+object Static {
+  def string(value: String) = StaticStringCol(value)
 }
 
+trait StaticCol extends Renderable {
+  val value: Any
+  def render(prefix: Prefix) = "?"
+  def args = Seq(value)
+}
+
+
+case class StaticStringCol(value: String) extends StaticCol with StringColValue

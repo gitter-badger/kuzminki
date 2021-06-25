@@ -17,10 +17,12 @@
 package kuzminki.model
 
 
-object Sum {
-  protected val func = "sum"
-  def numeric(col: UsableCol) = AggNumeric(col, func)
-  def float(col: UsableCol) = AggFloat(col, func)
-  def double(col: UsableCol) = AggDouble(col, func)
+case class TransformOptColMap[T](
+      underlying: TypeOptCol[T],
+      func: T => T
+    ) extends TransformCol[Option[T]] {
+
+  def conv = MapOptConv(underlying.conv, func)
 }
+
 

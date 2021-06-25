@@ -17,8 +17,6 @@
 package kuzminki.model
 
 
-trait OptColMethods[T] extends TypeOptCol[T] with ColRef with NoArgs {
-  def modifyOpt[R](func: Option[T] => R) = ModifyOptCol(this, func)
-  def mapOpt(func: T => T) = MapOptCol(this, func)
-  def getOrElse(default: T) = GetOrElseCol(this, default)
+trait UnderlyingRef {
+  val underlying: AnyCol
 }

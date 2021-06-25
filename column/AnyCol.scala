@@ -17,6 +17,4 @@
 package kuzminki.model
 
 
-trait AnyCol extends Renderable {
-  val col: AnyCol
-}
+trait AnyCol extends Renderable

@@ -17,10 +17,6 @@
 package kuzminki.model
 
 
-object Sum {
-  protected val func = "sum"
-  def numeric(col: UsableCol) = AggNumeric(col, func)
-  def float(col: UsableCol) = AggFloat(col, func)
-  def double(col: UsableCol) = AggDouble(col, func)
+trait UnderlyingRender extends UnderlyingRef {
+  def render(prefix: Prefix) = underlying.render(prefix)
 }
-

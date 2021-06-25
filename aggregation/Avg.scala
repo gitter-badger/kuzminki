@@ -19,9 +19,9 @@ package kuzminki.model
 
 object Avg {
   protected val func = "avg"
-  def umeric(col: AnyCol) = AggNumeric(col, func)
-  def float(col: AnyCol) = AggDouble(col, func)
-  def double(col: AnyCol) = AggDouble(col, func)
+  def numeric(col: UsableCol) = AggNumeric(col, func)
+  def float(col: UsableCol) = AggDouble(col, func)
+  def double(col: UsableCol) = AggDouble(col, func)
 }
   
 

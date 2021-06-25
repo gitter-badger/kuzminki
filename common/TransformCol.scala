@@ -17,6 +17,4 @@
 package kuzminki.model
 
 
-trait RenderColRef extends ColRef {
-  def render(prefix: Prefix) = col.render(prefix)
-}
+trait TransformCol[T] extends TypeCol[T] with UnderlyingRenderAndArgs

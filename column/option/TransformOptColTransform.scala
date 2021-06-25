@@ -17,9 +17,10 @@
 package kuzminki.model
 
 
-case class ModifyOptCol[T, R](col: TypeOptCol[T], func: Option[T] => R) extends TypeCol[R]
-                                                                                with RenderColRef
-                                                                                with NoArgs {
+case class TransformOptColTransform[T, R](
+      underlying: TypeOptCol[T],
+      func: Option[T] => R
+    ) extends TransformCol[R] {
 
-  def conv = ModyfyOptConv(col.conv, func)
+  def conv = ModyfyOptConv(underlying.conv, func)
 }

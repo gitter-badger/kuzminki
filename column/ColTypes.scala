@@ -22,75 +22,136 @@ import io.rdbc.sapi._
 
 
 trait StringCol extends StringColValue
-                   with UniversalFilters[String]
-                   with StringFilters
+                   with UsableCol
+                   with UniversalMethods[String]
+                   with StringFilters {
+
+  def asOpt = StringOptCol(this)
+}
+
 
 trait CharCol extends CharColValue
-                      with UniversalFilters[Char]
+                 with UsableCol
+                 with UniversalMethods[Char] {
+
+  def asOpt = CharOptCol(this)
+}
 
 
 trait BooleanCol extends BooleanColValue
-                         with UniversalFilters[Boolean]
+                    with UsableCol
+                    with UniversalMethods[Boolean] {
+
+  def asOpt = BooleanOptCol(this)
+}
 
 
 trait ShortCol extends ShortColValue
-                       with UniversalFilters[Int]
-                       with ComparativeFilters[Short]
+                  with UsableCol
+                  with UniversalMethods[Short]
+                  with ComparativeFilters[Short] {
+
+  def asOpt = ShortOptCol(this)
+}
 
 
 trait IntCol extends IntColValue
-                     with UniversalFilters[Int]
-                     with ComparativeFilters[Int]
+                with UsableCol
+                with UniversalMethods[Int]
+                with ComparativeFilters[Int] {
+
+  def asOpt = IntOptCol(this)
+}
 
 
 trait LongCol extends LongColValue
-                      with UniversalFilters[Long]
-                      with ComparativeFilters[Long]
+                 with UsableCol
+                 with UniversalMethods[Long]
+                 with ComparativeFilters[Long] {
+
+  def asOpt = LongOptCol(this)
+}
 
 
 trait FloatCol extends FloatColValue
-                       with UniversalFilters[Float]
-                       with ComparativeFilters[Float]
+                  with UsableCol
+                  with UniversalMethods[Float]
+                  with ComparativeFilters[Float] {
+
+  def asOpt = FloatOptCol(this)
+}
 
 
 trait DoubleCol extends DoubleColValue
-                        with UniversalFilters[Double]
-                        with ComparativeFilters[Double]
+                   with UsableCol
+                   with UniversalMethods[Double]
+                   with ComparativeFilters[Double] {
+
+  def asOpt = DoubleOptCol(this)
+}
 
 
 trait NumericCol extends NumericColValue
-                         with UniversalFilters[DecimalNumber]
-                         with ComparativeFilters[DecimalNumber]
+                    with UsableCol
+                    with UniversalMethods[DecimalNumber]
+                    with ComparativeFilters[DecimalNumber] {
+
+  def asOpt = NumericOptCol(this)
+}
 
 
 trait BigDecimalCol extends BigDecimalColValue
-                            with UniversalFilters[BigDecimal]
-                            with ComparativeFilters[BigDecimal]
+                       with UsableCol
+                       with UniversalMethods[BigDecimal]
+                       with ComparativeFilters[BigDecimal] {
+
+  def asOpt = BigDecimalOptCol(this)
+}
 
 
 trait InstantCol extends InstantColValue
-                         with UniversalFilters[Instant]
-                         with ComparativeFilters[Instant]
+                    with UsableCol
+                    with UniversalMethods[Instant]
+                    with ComparativeFilters[Instant] {
+
+  def asOpt = InstantOptCol(this)
+}
 
 
 trait ZonedDateTimeCol extends ZonedDateTimeColValue
-                               with UniversalFilters[ZonedDateTime]
-                               with ComparativeFilters[ZonedDateTime]
+                          with UsableCol
+                          with UniversalMethods[ZonedDateTime]
+                          with ComparativeFilters[ZonedDateTime] {
+
+  def asOpt = ZonedDateTimeOptCol(this)
+}
 
 
 trait LocalDateTimeCol extends LocalDateTimeColValue
-                               with UniversalFilters[LocalDateTime]
-                               with ComparativeFilters[LocalDateTime]
+                          with UsableCol
+                          with UniversalMethods[LocalDateTime]
+                          with ComparativeFilters[LocalDateTime] {
+
+  def asOpt = LocalDateTimeOptCol(this)
+}
 
 
 trait LocalDateCol extends LocalDateColValue
-                           with UniversalFilters[LocalDate]
-                           with ComparativeFilters[LocalDate]
+                      with UsableCol
+                      with UniversalMethods[LocalDate]
+                      with ComparativeFilters[LocalDate] {
+
+  def asOpt = LocalDateOptCol(this)
+}
 
 
 trait UUIDCol extends UUIDColValue
-                      with UniversalFilters[UUID]
-                      with ComparativeFilters[UUID]
+                 with UsableCol
+                 with UniversalMethods[UUID]
+                 with ComparativeFilters[UUID] {
+
+  def asOpt = UUIDOptCol(this)
+}
 
 
 

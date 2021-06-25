@@ -53,7 +53,7 @@ trait DoubleOptColValue extends TypeOptCol[Double] {
   def conv = DoubleOptConv
 }
 
-trait DecimalNumberOptColValue extends TypeOptCol[DecimalNumber] {
+trait NumericOptColValue extends TypeOptCol[DecimalNumber] {
   def conv = DecimalNumberOptConv
 }
 

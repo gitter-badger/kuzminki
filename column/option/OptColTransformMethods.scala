@@ -17,10 +17,8 @@
 package kuzminki.model
 
 
-object Sum {
-  protected val func = "sum"
-  def numeric(col: UsableCol) = AggNumeric(col, func)
-  def float(col: UsableCol) = AggFloat(col, func)
-  def double(col: UsableCol) = AggDouble(col, func)
+trait OptColTransformMethods[T] extends TypeOptCol[T] with UnderlyingRenderAndArgs{
+  def transform[R](func: Option[T] => R) = TransformOptColTransform(this, func)
+  def map(func: T => T) = TransformOptColMap(this, func)
+  def getOrElse(default: T) = TransformOptColGetOrElse(this, default)
 }
-

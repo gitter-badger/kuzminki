@@ -17,10 +17,4 @@
 package kuzminki.model
 
 
-case class MapOptCol[T](col: TypeOptCol[T], func: T => T) extends TypeCol[Option[T]]
-                                                             with RenderColRef
-                                                             with NoArgs {
-  def conv = MapOptConv(col.conv, func)
-}
-
-
+trait UsableCol extends AnyCol with SortingDirection with SelfRef 

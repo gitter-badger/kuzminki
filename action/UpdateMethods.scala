@@ -18,21 +18,21 @@ package kuzminki.model
 
 
 trait UpdateMethod[T] {
-  val col: ModelCol
-  def ==>(value: T) = SetValue(col, value)
+  val real: ModelCol
+  def ==>(value: T) = SetValue(real, value)
 }
 
 trait NumericUpdateMethods[T] {
-  val col: ModelCol
-  def ==>(value: T) = SetValue(col, value)
-  def +=(value: T) = Increment(col, value)
-  def -=(value: T) = Decrement(col, value)
+  val real: ModelCol
+  def ==>(value: T) = SetValue(real, value)
+  def +=(value: T) = Increment(real, value)
+  def -=(value: T) = Decrement(real, value)
 }
 
 trait NullUpdateMethod[T] extends UpdateMethod[T] {
-  def setToNull = SetToNull(col)
+  def setToNull = SetToNull(real)
 }
 
 trait NullNumericUpdateMethods[T] extends UpdateMethod[T] {
-  def setToNull = SetToNull(col)
+  def setToNull = SetToNull(real)
 }

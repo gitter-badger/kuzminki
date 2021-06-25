@@ -18,41 +18,41 @@ package kuzminki.model
 
 
 object Cast {
-  def asString(col: AnyCol) = CastString(col)
-  def asNumeric(col: AnyCol) = CastNumeric(col)
-  def asFloat(col: AnyCol) = CastFloat(col)
-  def asDouble(col: AnyCol) = CastDouble(col)
-  def asShort(col: AnyCol) = CastShort(col)
-  def asInt(col: AnyCol) = CastInt(col)
-  def asLong(col: AnyCol) = CastLong(col)
+  def asString(col: UsableCol) = CastString(col)
+  def asNumeric(col: UsableCol) = CastNumeric(col)
+  def asFloat(col: UsableCol) = CastFloat(col)
+  def asDouble(col: UsableCol) = CastDouble(col)
+  def asShort(col: UsableCol) = CastShort(col)
+  def asInt(col: UsableCol) = CastInt(col)
+  def asLong(col: UsableCol) = CastLong(col)
 }
 
 
-case class CastString(col: AnyCol) extends StringFunction with PassArgs {
+case class CastString(underlying: UsableCol) extends StringFunction with UnderlyingArgs {
   val template = "%s::text"
 }
 
-case class CastNumeric(col: AnyCol) extends NumericFunction with PassArgs {
+case class CastNumeric(underlying: UsableCol) extends NumericFunction with UnderlyingArgs {
   val template = "%s::numeric"
 }
 
-case class CastFloat(col: AnyCol) extends FloatFunction with PassArgs {
+case class CastFloat(underlying: UsableCol) extends FloatFunction with UnderlyingArgs {
   val template = "%s::real"
 }
 
-case class CastDouble(col: AnyCol) extends DoubleFunction with PassArgs {
+case class CastDouble(underlying: UsableCol) extends DoubleFunction with UnderlyingArgs {
   val template = "%s::float8"
 }
 
-case class CastShort(col: AnyCol) extends ShortFunction with PassArgs {
+case class CastShort(underlying: UsableCol) extends ShortFunction with UnderlyingArgs {
   val template = "%s::smallint"
 }
 
-case class CastInt(col: AnyCol) extends IntFunction with PassArgs {
+case class CastInt(underlying: UsableCol) extends IntFunction with UnderlyingArgs {
   val template = "%s::int"
 }
 
-case class CastLong(col: AnyCol) extends LongFunction with PassArgs {
+case class CastLong(underlying: UsableCol) extends LongFunction with UnderlyingArgs {
   val template = "%s::text"
 }
 

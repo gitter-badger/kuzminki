@@ -19,4 +19,4 @@ package kuzminki.model
 import io.rdbc.sapi.Row
 
 
-trait TypeOptCol[T] extends TypeCol[Option[T]] with RenderColRef with NoArgs
+trait TypeOptCol[T] extends TypeCol[Option[T]] with AnyCol

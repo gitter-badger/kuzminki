@@ -17,10 +17,22 @@
 package kuzminki.model
 
 
-object Sum {
-  protected val func = "sum"
-  def numeric(col: UsableCol) = AggNumeric(col, func)
-  def float(col: UsableCol) = AggFloat(col, func)
-  def double(col: UsableCol) = AggDouble(col, func)
-}
+import java.time._
+import io.rdbc.sapi.DecimalNumber
 
+
+trait StringFunction extends StringCol with ColFunction
+
+trait NumericFunction extends NumericCol with ColFunction
+
+trait ShortFunction extends ShortCol with ColFunction
+
+trait IntFunction extends IntCol with ColFunction
+
+trait LongFunction extends LongCol with ColFunction
+
+trait FloatFunction extends FloatCol with ColFunction
+
+trait DoubleFunction extends DoubleCol with ColFunction
+
+trait InstantFunction extends InstantCol with ColFunction

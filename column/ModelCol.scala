@@ -17,10 +17,10 @@
 package kuzminki.model
 
 
-trait ModelCol extends AnyCol with SelfRef with NoArgs with SortingDirection {          
+trait ModelCol extends UsableCol with NoArgs {          
   val info: ColInfo
-  val col: ModelCol = this
   val self = this
+  val real = this
   def name = info.name
   def render(prefix: Prefix) = prefix.pick(info)
 }
