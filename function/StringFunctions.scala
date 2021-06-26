@@ -17,3 +17,18 @@
 package kuzminki.model
 
 
+
+object StringFn {
+  def concat(cols: Seq[UsableCol]) = StringFnConcat(cols)
+}
+
+
+case class StringFnConcat(cols: Seq[AnyCol]) extends StringFunction {
+  def template = "concat(%)"
+  def render(prefix: Prefix) = {
+    template.format(
+      cols.map(_.render(prefix)).mkString(", ")
+    )
+  }
+  def args = cols.map(_.args).flatten
+}
