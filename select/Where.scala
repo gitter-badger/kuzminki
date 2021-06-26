@@ -72,7 +72,7 @@ class Where[M, R](
 
   // group by
 
-  private def toHaving(cols: Seq[ModelCol]) = {
+  private def toHaving(cols: Seq[UsableCol]) = {
     //coll.canUseHaving()
     new Having(
       model,
@@ -80,13 +80,13 @@ class Where[M, R](
     )
   }
 
-  def groupByOne(pick: M => ModelCol) = {
+  def groupByOne(pick: M => UsableCol) = {
     toHaving(
       Seq(pick(model))
     )
   }
 
-  def groupBy(pick: M => Seq[ModelCol]) = {
+  def groupBy(pick: M => Seq[UsableCol]) = {
     toHaving(pick(model))
   }
 }

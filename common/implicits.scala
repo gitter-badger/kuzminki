@@ -41,8 +41,8 @@ object implicits {
   implicit val implLocalDateCol: ColInfo => TypeCol[LocalDate] = info => LocalDateModelCol(info)
   implicit val implUUIDCol: ColInfo => TypeCol[UUID] = info => UUIDModelCol(info)
 
-  // filters
-  
+  // model col
+  /*
   implicit val modelColToStringCol: TypeCol[String] => StringModelCol = col => col.asInstanceOf[StringModelCol]
   implicit val modelColToCharCol: TypeCol[Char] => CharModelCol = col => col.asInstanceOf[CharModelCol]
   implicit val modelColToBooleanCol: TypeCol[Boolean] => BooleanModelCol = col => col.asInstanceOf[BooleanModelCol]
@@ -60,6 +60,26 @@ object implicits {
   implicit val modelColToLocalDateTimeCol: TypeCol[LocalDateTime] => LocalDateTimeModelCol = col => col.asInstanceOf[LocalDateTimeModelCol]
   implicit val modelColToLocalDateCol: TypeCol[LocalDate] => LocalDateModelCol = col => col.asInstanceOf[LocalDateModelCol]
   implicit val modelColToUUIDCol: TypeCol[UUID] => UUIDModelCol = col => col.asInstanceOf[UUIDModelCol]
+  */
+  // col
+
+  implicit val typeColToStringCol: TypeCol[String] => StringCol = col => col.asInstanceOf[StringCol]
+  implicit val typeColToCharCol: TypeCol[Char] => CharCol = col => col.asInstanceOf[CharCol]
+  implicit val typeColToBooleanCol: TypeCol[Boolean] => BooleanCol = col => col.asInstanceOf[BooleanCol]
+  
+  implicit val typeColToShortCol: TypeCol[Short] => ShortCol = col => col.asInstanceOf[ShortCol]
+  implicit val typeColToIntCol: TypeCol[Int] => IntCol = col => col.asInstanceOf[IntCol]
+  implicit val typeColToLongCol: TypeCol[Long] => LongCol = col => col.asInstanceOf[LongCol]
+  implicit val typeColToFloatCol: TypeCol[Float] => FloatCol = col => col.asInstanceOf[FloatCol]
+  implicit val typeColToDoubleCol: TypeCol[Double] => DoubleCol = col => col.asInstanceOf[DoubleCol]
+  implicit val typeColToNumericCol: TypeCol[DecimalNumber] => NumericCol = col => col.asInstanceOf[NumericCol]
+  implicit val typeColToBigDecimalCol: TypeCol[BigDecimal] => BigDecimalCol = col => col.asInstanceOf[BigDecimalCol]
+
+  implicit val typeColToInstantCol: TypeCol[Instant] => InstantCol = col => col.asInstanceOf[InstantCol]
+  implicit val typeColToZonedDateTimeCol: TypeCol[ZonedDateTime] => ZonedDateTimeCol = col => col.asInstanceOf[ZonedDateTimeCol]
+  implicit val typeColToLocalDateTimeCol: TypeCol[LocalDateTime] => LocalDateTimeCol = col => col.asInstanceOf[LocalDateTimeCol]
+  implicit val typeColToLocalDateCol: TypeCol[LocalDate] => LocalDateCol = col => col.asInstanceOf[LocalDateCol]
+  implicit val typeColToUUIDCol: TypeCol[UUID] => UUIDCol = col => col.asInstanceOf[UUIDCol]
 
   // opt column
 

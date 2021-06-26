@@ -45,7 +45,7 @@ case class RoundDouble(underlying: UsableCol) extends DoubleFunctionSingle
                                                  with RoundInteger
 
 
-trait RoundDecimal extends UsableCol with UnderlyingRender {
+trait RoundDecimal extends UsableCol with UnderlyingFunctionRender {
   val size: Int
   val template = "round(%s, ?)"
   def args = underlying.args ++ Seq(size)

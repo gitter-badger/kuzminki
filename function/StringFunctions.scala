@@ -19,12 +19,12 @@ package kuzminki.model
 
 
 object StringFn {
-  def concat(cols: Seq[UsableCol]) = StringFnConcat(cols)
+  def concat(cols: Seq[TypeCol[_]]) = StringFnConcat(cols)
 }
 
 
-case class StringFnConcat(cols: Seq[AnyCol]) extends StringFunction {
-  def template = "concat(%)"
+case class StringFnConcat(cols: Seq[TypeCol[_]]) extends StringFunction {
+  def template = "concat(%s)"
   def render(prefix: Prefix) = {
     template.format(
       cols.map(_.render(prefix)).mkString(", ")

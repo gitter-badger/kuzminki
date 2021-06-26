@@ -96,7 +96,7 @@ class RunSelect[M, R](
   def args = coll.args
 
   def sql(handler: String => Unit): RunSelect[M, R] = {
-    handler(render(coll.prefix))
+    handler(render(coll.prefix) + " - " + coll.args)
     this
   }
 }
