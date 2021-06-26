@@ -22,5 +22,5 @@ case class TransformOptColTransform[T, R](
       func: Option[T] => R
     ) extends TransformCol[R] {
 
-  def conv = ModyfyOptConv(underlying.conv, func)
+  def conv = TransformOptConv(underlying.conv, func)
 }

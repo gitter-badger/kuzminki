@@ -19,6 +19,6 @@ package kuzminki.model
 
 trait OptColTransformMethods[T] extends TypeOptCol[T] with UnderlyingRenderAndArgs{
   def transform[R](func: Option[T] => R) = TransformOptColTransform(this, func)
-  def map(func: T => T) = TransformOptColMap(this, func)
+  def map[R](func: T => R) = TransformOptColMap(this, func)
   def getOrElse(default: T) = TransformOptColGetOrElse(this, default)
 }

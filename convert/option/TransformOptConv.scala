@@ -21,6 +21,6 @@ import java.util.UUID
 import io.rdbc.sapi.{Row, DecimalNumber}
 
 
-case class ModyfyOptConv[T, R](original: ValConv[Option[T]], func: Option[T] => R) extends ValConv[R] {
+case class TransformOptConv[T, R](original: ValConv[Option[T]], func: Option[T] => R) extends ValConv[R] {
   def get(row: Row, index: Int) = func(original.get(row, index))
 }

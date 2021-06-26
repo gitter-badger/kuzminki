@@ -17,10 +17,10 @@
 package kuzminki.model
 
 
-case class TransformOptColMap[T](
+case class TransformOptColMap[T, R](
       underlying: TypeOptCol[T],
-      func: T => T
-    ) extends TransformCol[Option[T]] {
+      func: T => R
+    ) extends TransformCol[Option[R]] {
 
   def conv = MapOptConv(underlying.conv, func)
 }
