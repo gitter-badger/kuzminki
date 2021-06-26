@@ -18,9 +18,9 @@ package kuzminki.model
 
 
 object Sum {
-  protected val func = "sum"
-  def numeric(col: UsableCol) = AggNumeric(col, func)
-  def float(col: UsableCol) = AggFloat(col, func)
-  def double(col: UsableCol) = AggDouble(col, func)
+  protected val template = "sum(%s)"
+  def numeric(col: UsableCol) = AggNumeric(col, template)
+  def float(col: UsableCol) = AggFloat(col, template)
+  def double(col: UsableCol) = AggDouble(col, template)
 }
 

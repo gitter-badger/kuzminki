@@ -18,11 +18,11 @@ package kuzminki.model
 
 
 object Max {
-  protected val func = "max"
-  def numeric(col: UsableCol) = AggNumeric(col, func)
-  def float(col: UsableCol) = AggFloat(col, func)
-  def double(col: UsableCol) = AggDouble(col, func)
-  def instant(col: UsableCol) = AggInstant(col, func)
+  protected val template = "max(%s)"
+  def numeric(col: UsableCol) = AggNumeric(col, template)
+  def float(col: UsableCol) = AggFloat(col, template)
+  def double(col: UsableCol) = AggDouble(col, template)
+  def instant(col: UsableCol) = AggInstant(col, template)
 }
 
 

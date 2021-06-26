@@ -18,10 +18,10 @@ package kuzminki.model
 
 
 object Avg {
-  protected val func = "avg"
-  def numeric(col: UsableCol) = AggNumeric(col, func)
-  def float(col: UsableCol) = AggDouble(col, func)
-  def double(col: UsableCol) = AggDouble(col, func)
+  protected val template = "avg(%s)"
+  def numeric(col: UsableCol) = AggNumeric(col, template)
+  def float(col: UsableCol) = AggDouble(col, template)
+  def double(col: UsableCol) = AggDouble(col, template)
 }
   
 

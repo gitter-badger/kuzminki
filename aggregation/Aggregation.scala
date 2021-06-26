@@ -17,7 +17,4 @@
 package kuzminki.model
 
 
-trait Aggregation extends UnderlyingArgs {
-  val func: String
-  def template = s"$func(%s)"
-}
+trait Aggregation

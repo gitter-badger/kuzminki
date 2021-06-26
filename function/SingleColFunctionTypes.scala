@@ -17,16 +17,22 @@
 package kuzminki.model
 
 
-object Count {
-  def all = Count(AllCols)
-}
+import java.time._
+import io.rdbc.sapi.DecimalNumber
 
-object AllCols extends UsableCol with NoArgs {
-  val self = this
-  def render(prefix: Prefix) = "*"
-}
 
-case class Count(underlying: UsableCol) extends LongFunctionSingle {
-  def template = "count(%s)"
-}
+trait StringFunctionSingle extends SingleColFunction with StringCol
 
+trait NumericFunctionSingle extends SingleColFunction with NumericCol
+
+trait ShortFunctionSingle extends SingleColFunction with ShortCol
+
+trait IntFunctionSingle extends SingleColFunction with IntCol
+
+trait LongFunctionSingle extends SingleColFunction with LongCol
+
+trait FloatFunctionSingle extends SingleColFunction with FloatCol
+
+trait DoubleFunctionSingle extends SingleColFunction with DoubleCol
+
+trait InstantFunctionSingle extends SingleColFunction with InstantCol

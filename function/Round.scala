@@ -30,30 +30,36 @@ object Round {
 }
 
 
-trait RoundInteger extends UsableCol with UnderlyingArgs {
+trait RoundInteger extends UsableCol {
   val template = "round(%s)"
   def asString = Cast.asString(this)
 }
 
-case class RoundNumeric(underlying: UsableCol) extends NumericFunction with RoundInteger
+case class RoundNumeric(underlying: UsableCol) extends NumericFunctionSingle
+                                                  with RoundInteger
 
-case class RoundFloat(underlying: UsableCol) extends FloatFunction with RoundInteger
+case class RoundFloat(underlying: UsableCol) extends FloatFunctionSingle
+                                                with RoundInteger
 
-case class RoundDouble(underlying: UsableCol) extends DoubleFunction with RoundInteger
+case class RoundDouble(underlying: UsableCol) extends DoubleFunctionSingle
+                                                 with RoundInteger
 
 
-trait RoundDecimal extends UsableCol with UnderlyingRef{
+trait RoundDecimal extends UsableCol with UnderlyingRender {
   val size: Int
   val template = "round(%s, ?)"
   def args = underlying.args ++ Seq(size)
   def asString = Cast.asString(this)
 }
 
-case class RoundDigitsNumeric(underlying: UsableCol, size: Int) extends NumericFunction with RoundDecimal
+case class RoundDigitsNumeric(underlying: UsableCol, size: Int) extends NumericFunction
+                                                                   with RoundDecimal
 
-case class RoundDigitsFloat(underlying: UsableCol, size: Int) extends FloatFunction with RoundDecimal
+case class RoundDigitsFloat(underlying: UsableCol, size: Int) extends FloatFunction
+                                                                 with RoundDecimal
 
-case class RoundDigitsDouble(underlying: UsableCol, size: Int) extends DoubleFunction with RoundDecimal
+case class RoundDigitsDouble(underlying: UsableCol, size: Int) extends DoubleFunction
+                                                                  with RoundDecimal
 
 
 

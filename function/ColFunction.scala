@@ -17,8 +17,8 @@
 package kuzminki.model
 
 
-trait ColFunction extends UsableCol with UnderlyingRef {
+trait ColFunction extends UsableCol {
   val self = this
   def template: String
-  def render(prefix: Prefix) = template.format(underlying.render(prefix))
 }
+

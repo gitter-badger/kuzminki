@@ -17,16 +17,7 @@
 package kuzminki.model
 
 
-object Count {
-  def all = Count(AllCols)
-}
-
-object AllCols extends UsableCol with NoArgs {
-  val self = this
-  def render(prefix: Prefix) = "*"
-}
-
-case class Count(underlying: UsableCol) extends LongFunctionSingle {
-  def template = "count(%s)"
-}
-
+trait SingleColFunction extends ColFunction
+                           with UnderlyingFunctionRender
+                           with UnderlyingArgs
+                           with UnderlyingRef

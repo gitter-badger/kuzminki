@@ -21,18 +21,18 @@ import java.time._
 import io.rdbc.sapi.DecimalNumber
 
 
-trait StringFunction extends StringCol with ColFunction
+trait StringFunction extends ColFunction with StringCol
 
-trait NumericFunction extends NumericCol with ColFunction
+trait NumericFunction extends ColFunction with NumericCol
 
-trait ShortFunction extends ShortCol with ColFunction
+trait ShortFunction extends ColFunction with ShortCol
 
-trait IntFunction extends IntCol with ColFunction
+trait IntFunction extends ColFunction with IntCol
 
-trait LongFunction extends LongCol with ColFunction
+trait LongFunction extends ColFunction with LongCol
 
-trait FloatFunction extends FloatCol with ColFunction
+trait FloatFunction extends ColFunction with FloatCol
 
-trait DoubleFunction extends DoubleCol with ColFunction
+trait DoubleFunction extends ColFunction with DoubleCol
 
-trait InstantFunction extends InstantCol with ColFunction
+trait InstantFunction extends ColFunction with InstantCol

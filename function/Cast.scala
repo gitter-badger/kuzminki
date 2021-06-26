@@ -28,31 +28,31 @@ object Cast {
 }
 
 
-case class CastString(underlying: UsableCol) extends StringFunction with UnderlyingArgs {
+case class CastString(underlying: UsableCol) extends StringFunctionSingle {
   val template = "%s::text"
 }
 
-case class CastNumeric(underlying: UsableCol) extends NumericFunction with UnderlyingArgs {
+case class CastNumeric(underlying: UsableCol) extends StringFunctionSingle {
   val template = "%s::numeric"
 }
 
-case class CastFloat(underlying: UsableCol) extends FloatFunction with UnderlyingArgs {
+case class CastFloat(underlying: UsableCol) extends StringFunctionSingle {
   val template = "%s::real"
 }
 
-case class CastDouble(underlying: UsableCol) extends DoubleFunction with UnderlyingArgs {
+case class CastDouble(underlying: UsableCol) extends StringFunctionSingle {
   val template = "%s::float8"
 }
 
-case class CastShort(underlying: UsableCol) extends ShortFunction with UnderlyingArgs {
+case class CastShort(underlying: UsableCol) extends StringFunctionSingle {
   val template = "%s::smallint"
 }
 
-case class CastInt(underlying: UsableCol) extends IntFunction with UnderlyingArgs {
+case class CastInt(underlying: UsableCol) extends StringFunctionSingle {
   val template = "%s::int"
 }
 
-case class CastLong(underlying: UsableCol) extends LongFunction with UnderlyingArgs {
+case class CastLong(underlying: UsableCol) extends StringFunctionSingle {
   val template = "%s::text"
 }
 

@@ -17,23 +17,27 @@
 package kuzminki.model
 
 
-case class AggNumeric(underlying: UsableCol, func: String) extends NumericFunction with Aggregation {
+case class AggNumeric(underlying: UsableCol, template: String) extends NumericFunctionSingle
+                                                                  with Aggregation {
   def asString = Cast.asString(this)
   def round = Round.numeric(this)
   def round(prec: Int) = Round.numeric(this, prec)
 }
 
-case class AggFloat(underlying: UsableCol, func: String) extends FloatFunction with Aggregation {
+case class AggFloat(underlying: UsableCol, template: String) extends FloatFunctionSingle
+                                                                with Aggregation {
   def asString = Cast.asString(this)
   def round = Round.float(this)
 }
 
-case class AggDouble(underlying: UsableCol, func: String) extends DoubleFunction with Aggregation {
+case class AggDouble(underlying: UsableCol, template: String) extends DoubleFunctionSingle
+                                                                 with Aggregation {
   def asString = Cast.asString(this)
   def round = Round.double(this)
 }
 
-case class AggInstant(underlying: UsableCol, func: String) extends InstantFunction with Aggregation
+case class AggInstant(underlying: UsableCol, template: String) extends InstantFunctionSingle
+                                                                  with Aggregation
 
 
 
