@@ -33,45 +33,45 @@ case class SelectCollector[R](
 
   def cache = new StoredSelect(db, statement, rowShape.conv)
 
-  def cacheWhere[P](paramShape: ParamShape[P]) = {
+  def cacheWhere[P](condShape: CondShape[P]) = {
 
-    canUseWhere()
+    //canUseWhere()
     
     val modifiedSections = sections.map {
       
       case WhereBlankSec =>
-        WhereCacheSec(paramShape.cols)
+        WhereCacheSec(condShape.cols)
       
       case WhereSec(conds) =>
-        WhereMixedSec(conds, paramShape.cols)
+        WhereMixedSec(conds, condShape.cols)
       
       case section: Section =>
         section
     }
 
-    storedConditional(modifiedSections, paramShape)
+    storedConditional(modifiedSections, condShape)
   }
 
-  def cacheHaving[P](paramShape: ParamShape[P]) = {
+  def cacheHaving[P](condShape: CondShape[P]) = {
 
     //canUseHaving()
     
     val modifiedSections = sections.map {
       
       case HavingBlankSec =>
-        HavingCacheSec(paramShape.cols)
+        HavingCacheSec(condShape.cols)
       
       case HavingSec(conds) =>
-        HavingMixedSec(conds, paramShape.cols)
+        HavingMixedSec(conds, condShape.cols)
       
       case section: Section =>
         section
     }
 
-    storedConditional(modifiedSections, paramShape)
+    storedConditional(modifiedSections, condShape)
   }
 
-  def storedConditional[P](modifiedSections: Array[Section], paramShape: ParamShape[P]) = {
+  def storedConditional[P](modifiedSections: Array[Section], condShape: condShape[P]) = {
 
     val template = modifiedSections.map(_.render(prefix)).mkString(" ")
     val cacheArgs = modifiedSections.map(_.args).flatten.toVector
@@ -81,7 +81,7 @@ case class SelectCollector[R](
         (first, last.tail) 
     }
 
-    new StoredSelectWhere(db, template, firstArgs, lastArgs, paramShape.conv, rowShape.conv)
+    new StoredSelectWhere(db, template, firstArgs, lastArgs, condShape.conv, rowShape.conv)
   }
 
   // check

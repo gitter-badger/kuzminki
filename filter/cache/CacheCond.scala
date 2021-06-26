@@ -16,35 +16,25 @@
 
 package kuzminki.model
 
-import akka.Done
 
-
-object WhereBlankSec extends TextOnly {
-  def expression = ""
-}
-
-case class WhereCacheSec(cols: Seq[AnyCol]) extends CacheCondition {
-  def expression = "WHERE %s"
-}
-
-case class WhereMixedSec(conds: Seq[Renderable], cacheConds: Seq[Renderable]) extends MixedCondition {
-  def expression = "WHERE %s"
-}
-
-object HavingBlankSec extends TextOnly {
-  def expression = ""
-}
-
-case class HavingCacheSec(cols: Seq[AnyCol]) extends CacheCondition {
-  def expression = "HAVING %s"
-}
-
-case class HavingMixedSec(conds: Seq[Renderable], cacheConds: Seq[Renderable]) extends MixedCondition {
-  def expression = "HAVING %s"
+case class CacheCond(col: AnyCol) extends AnyCol with NoArgs {
+  def template = "%s = ?"
+  def render(prefix: Prefix) = template.format(col.render(prefix))
 }
 
 
+abstract class CacheOpr[T](operator: String) {
+  val col: TypeCol[T]
+  def template = s"%s $operator ?"
+  def render(prefix: Prefix) = template.format(col.render(prefix))
+  def args = col.args
+}
 
 
+case class CacheEq[T](col: TypeCol[T]) extends CacheOpr("=")
 
+case class CacheNot[T](col: TypeCol[T]) extends CacheOpr("!=")
 
+case class CacheGt[T](col: TypeCol[T]) extends CacheOpr(">")
+
+case class CacheLt[T](col: TypeCol[T]) extends CacheOpr("<")

@@ -45,6 +45,11 @@ trait ComparativeFilters[T] extends SelfRef {
   def lte(opt: Option[T]): Option[Filter] = opt.map(lte)
   def <=(opt: Option[T]): Option[Filter] = opt.map(lte)
 
+  // cache
+
+  def cacheEq = CacheEq(self)
+  def cacheNot = CacheNot(self)
+
   // sub agg
   /*
   def matches(sub: AggSubQuery[T]): Filter = FilterAggMatches(ref, sub.untyped)

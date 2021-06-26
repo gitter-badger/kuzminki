@@ -50,6 +50,11 @@ trait UniversalFilters[T] extends SelfRef {
   def in(opt: Option[Seq[T]]): Option[Filter] = opt.map(in)
   def notIn(opt: Option[Seq[T]]): Option[Filter] = opt.map(notIn)
 
+  // cache
+
+  def cacheEq = CacheEq(self)
+  def cacheNot = CacheNot(self)
+
   // -----
 
   //def modify[R](modifier: T => R) = ModifyCol(self, modifier)

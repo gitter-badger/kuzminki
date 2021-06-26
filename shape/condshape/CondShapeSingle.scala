@@ -17,7 +17,6 @@
 package kuzminki.model
 
 
-case class CacheCond(col: AnyCol) extends AnyCol with NoArgs {
-  def template = "%s = ?"
-  def render(prefix: Prefix) = template.format(col.render(prefix))
+class CondShapeSingle[P](cond: P) extends CondShape[P] {
+  def conds = Seq(cond)
 }
