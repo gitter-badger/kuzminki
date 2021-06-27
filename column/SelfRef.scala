@@ -17,6 +17,6 @@
 package kuzminki.model
 
 
-trait SelfRef {
-  val self: UsableCol
+trait SelfRef[T] {
+  val self: TypeCol[T]
 }

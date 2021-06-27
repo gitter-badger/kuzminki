@@ -25,8 +25,7 @@ import akka.Done
 class RunSelect[M, R](
       model: M,
       coll: SelectCollector[R]
-    ) extends CacheWhereMethods[R]
-         with CacheHavingMethods[R] {
+    ) extends SelectCacheMethods(model, coll) {
 
   def cache = coll.cache
   

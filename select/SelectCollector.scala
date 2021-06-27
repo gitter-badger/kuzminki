@@ -40,10 +40,10 @@ case class SelectCollector[R](
     val modifiedSections = sections.map {
       
       case WhereBlankSec =>
-        WhereCacheSec(condShape.cols)
+        WhereCacheSec(condShape.conds)
       
       case WhereSec(conds) =>
-        WhereMixedSec(conds, condShape.cols)
+        WhereMixedSec(conds, condShape.conds)
       
       case section: Section =>
         section
@@ -59,10 +59,10 @@ case class SelectCollector[R](
     val modifiedSections = sections.map {
       
       case HavingBlankSec =>
-        HavingCacheSec(condShape.cols)
+        HavingCacheSec(condShape.conds)
       
       case HavingSec(conds) =>
-        HavingMixedSec(conds, condShape.cols)
+        HavingMixedSec(conds, condShape.conds)
       
       case section: Section =>
         section
@@ -71,7 +71,7 @@ case class SelectCollector[R](
     storedConditional(modifiedSections, condShape)
   }
 
-  def storedConditional[P](modifiedSections: Array[Section], condShape: condShape[P]) = {
+  def storedConditional[P](modifiedSections: Array[Section], condShape: CondShape[P]) = {
 
     val template = modifiedSections.map(_.render(prefix)).mkString(" ")
     val cacheArgs = modifiedSections.map(_.args).flatten.toVector

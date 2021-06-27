@@ -49,8 +49,6 @@ case class IntModelCol(info: ColInfo) extends ModelCol
 case class LongModelCol(info: ColInfo) extends ModelCol
                                           with LongColValue
                                           with NumericUpdateMethods[Long]
-                                          with UniversalFilters[Long]
-                                          with ComparativeFilters[Long]
 
 
 case class FloatModelCol(info: ColInfo) extends ModelCol

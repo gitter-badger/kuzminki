@@ -17,7 +17,7 @@
 package kuzminki.model
 
 
-trait StringFilters extends SelfRef {
+trait StringFilters extends SelfRef[String] {
 
   def like(value: String): Filter = FilterLike(self, value)
   def startsWith(value: String): Filter = FilterStartsWith(self, value)

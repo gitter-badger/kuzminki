@@ -17,7 +17,7 @@
 package kuzminki.model
 
 
-trait ComparativeFilters[T] extends SelfRef {
+trait ComparativeFilters[T] extends SelfRef[T] {
 
   def gt(value: T): Filter = FilterGt(self, value)
   def >(value: T): Filter = gt(value)
@@ -47,8 +47,8 @@ trait ComparativeFilters[T] extends SelfRef {
 
   // cache
 
-  def cacheEq = CacheEq(self)
-  def cacheNot = CacheNot(self)
+  def cacheGt = CacheGt(self)
+  def cacheLt = CacheLt(self)
 
   // sub agg
   /*

@@ -26,6 +26,7 @@ trait StringCol extends StringColValue
                    with UniversalMethods[String]
                    with StringFilters {
 
+  val self = this
   def asOpt = StringOptCol(this)
 }
 
@@ -34,6 +35,7 @@ trait CharCol extends CharColValue
                  with UsableCol
                  with UniversalMethods[Char] {
 
+  val self = this
   def asOpt = CharOptCol(this)
 }
 
@@ -42,6 +44,7 @@ trait BooleanCol extends BooleanColValue
                     with UsableCol
                     with UniversalMethods[Boolean] {
 
+  val self = this
   def asOpt = BooleanOptCol(this)
 }
 
@@ -51,15 +54,18 @@ trait ShortCol extends ShortColValue
                   with UniversalMethods[Short]
                   with ComparativeFilters[Short] {
 
+  val self = this
   def asOpt = ShortOptCol(this)
 }
 
 
 trait IntCol extends IntColValue
                 with UsableCol
+                with SelfRef[Int]
                 with UniversalMethods[Int]
                 with ComparativeFilters[Int] {
 
+  val self = this
   def asOpt = IntOptCol(this)
 }
 
@@ -69,6 +75,7 @@ trait LongCol extends LongColValue
                  with UniversalMethods[Long]
                  with ComparativeFilters[Long] {
 
+  val self = this
   def asOpt = LongOptCol(this)
 }
 
@@ -78,6 +85,7 @@ trait FloatCol extends FloatColValue
                   with UniversalMethods[Float]
                   with ComparativeFilters[Float] {
 
+  val self = this
   def asOpt = FloatOptCol(this)
 }
 
@@ -87,6 +95,7 @@ trait DoubleCol extends DoubleColValue
                    with UniversalMethods[Double]
                    with ComparativeFilters[Double] {
 
+  val self = this
   def asOpt = DoubleOptCol(this)
 }
 
@@ -96,6 +105,7 @@ trait NumericCol extends NumericColValue
                     with UniversalMethods[DecimalNumber]
                     with ComparativeFilters[DecimalNumber] {
 
+  val self = this
   def asOpt = NumericOptCol(this)
 }
 
@@ -105,6 +115,7 @@ trait BigDecimalCol extends BigDecimalColValue
                        with UniversalMethods[BigDecimal]
                        with ComparativeFilters[BigDecimal] {
 
+  val self = this
   def asOpt = BigDecimalOptCol(this)
 }
 
@@ -114,6 +125,7 @@ trait InstantCol extends InstantColValue
                     with UniversalMethods[Instant]
                     with ComparativeFilters[Instant] {
 
+  val self = this
   def asOpt = InstantOptCol(this)
 }
 
@@ -123,6 +135,7 @@ trait ZonedDateTimeCol extends ZonedDateTimeColValue
                           with UniversalMethods[ZonedDateTime]
                           with ComparativeFilters[ZonedDateTime] {
 
+  val self = this
   def asOpt = ZonedDateTimeOptCol(this)
 }
 
@@ -132,6 +145,7 @@ trait LocalDateTimeCol extends LocalDateTimeColValue
                           with UniversalMethods[LocalDateTime]
                           with ComparativeFilters[LocalDateTime] {
 
+  val self = this
   def asOpt = LocalDateTimeOptCol(this)
 }
 
@@ -141,6 +155,7 @@ trait LocalDateCol extends LocalDateColValue
                       with UniversalMethods[LocalDate]
                       with ComparativeFilters[LocalDate] {
 
+  val self = this
   def asOpt = LocalDateOptCol(this)
 }
 
@@ -150,6 +165,7 @@ trait UUIDCol extends UUIDColValue
                  with UniversalMethods[UUID]
                  with ComparativeFilters[UUID] {
 
+  val self = this
   def asOpt = UUIDOptCol(this)
 }
 

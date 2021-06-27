@@ -23,7 +23,7 @@ object WhereBlankSec extends TextOnly {
   def expression = ""
 }
 
-case class WhereCacheSec(cols: Seq[AnyCol]) extends CacheCondition {
+case class WhereCacheSec(cacheConds: Seq[Renderable]) extends CacheCondition {
   def expression = "WHERE %s"
 }
 
@@ -35,7 +35,7 @@ object HavingBlankSec extends TextOnly {
   def expression = ""
 }
 
-case class HavingCacheSec(cols: Seq[AnyCol]) extends CacheCondition {
+case class HavingCacheSec(cacheConds: Seq[Renderable]) extends CacheCondition {
   def expression = "HAVING %s"
 }
 

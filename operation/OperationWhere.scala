@@ -70,11 +70,10 @@ class OperationWhere[M](model: M, coll: OperationCollector) {
     }
   }
 
+/*
   private def cache[P](paramShape: ParamShape[P]) = {
     coll.add(
-      WhereSec(
-        paramShape.cols.map(CacheCond(_))
-      )
+      WhereSec(paramShape)
     ).cache(paramShape)
   }
 
@@ -97,6 +96,7 @@ class OperationWhere[M](model: M, coll: OperationCollector) {
   def cacheWhere5[P1, P2, P3, P4, P5](pick: M => Tuple5[TypeCol[P1], TypeCol[P2], TypeCol[P3], TypeCol[P4], TypeCol[P5]]) = {
     cache(new ParamShape5(pick(model)))
   }
+*/
 }
 
 

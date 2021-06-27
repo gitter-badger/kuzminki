@@ -17,4 +17,7 @@
 package kuzminki.model
 
 
-trait UsableCol extends AnyCol with SortingDirection with SelfRef 
+trait UsableCol extends AnyCol {
+  def asc = Asc(this)
+  def desc = Desc(this)
+}

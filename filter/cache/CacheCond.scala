@@ -17,24 +17,18 @@
 package kuzminki.model
 
 
-case class CacheCond(col: AnyCol) extends AnyCol with NoArgs {
-  def template = "%s = ?"
-  def render(prefix: Prefix) = template.format(col.render(prefix))
-}
-
-
-abstract class CacheOpr[T](operator: String) {
-  val col: TypeCol[T]
+abstract class CacheCond[T](col: TypeCol[T], operator: String) extends Renderable {
+  def conv = col.conv
   def template = s"%s $operator ?"
   def render(prefix: Prefix) = template.format(col.render(prefix))
   def args = col.args
 }
 
 
-case class CacheEq[T](col: TypeCol[T]) extends CacheOpr("=")
+case class CacheEq[T](col: TypeCol[T]) extends CacheCond(col, "=")
 
-case class CacheNot[T](col: TypeCol[T]) extends CacheOpr("!=")
+case class CacheNot[T](col: TypeCol[T]) extends CacheCond(col, "!=")
 
-case class CacheGt[T](col: TypeCol[T]) extends CacheOpr(">")
+case class CacheGt[T](col: TypeCol[T]) extends CacheCond(col, ">")
 
-case class CacheLt[T](col: TypeCol[T]) extends CacheOpr("<")
+case class CacheLt[T](col: TypeCol[T]) extends CacheCond(col, "<")

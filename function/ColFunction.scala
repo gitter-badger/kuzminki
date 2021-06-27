@@ -18,7 +18,6 @@ package kuzminki.model
 
 
 trait ColFunction extends UsableCol {
-  val self = this
   def template: String
 }
 

@@ -19,7 +19,6 @@ package kuzminki.model
 
 trait ModelCol extends UsableCol with NoArgs {          
   val info: ColInfo
-  val self = this
   val real = this
   def name = info.name
   def render(prefix: Prefix) = prefix.pick(info)

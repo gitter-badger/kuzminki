@@ -18,40 +18,7 @@ package kuzminki.model
 
 
 trait CondShape[P] {
-  def cols: Seq[AnyCol]
+  def conds: Seq[Renderable]
+  def conv: ParamConv[P]
 }
 
-
-class CondShape2[P1, P2](
-      shape: Tuple2[TypeCol[P1], TypeCol[P2]]
-    ) extends CondShape[Tuple2[P1, P2]]
-
-  def cols = {
-    shape match {
-      case (col1, col2) =>
-        Seq(col1, col2)
-    }
-  }
-
-  def param
-
-class ParamShape2[P1, P2](
-      shape: Tuple2[TypeCol[P1], TypeCol[P2]]
-    ) extends ParamShape[Tuple2[P1, P2]] {
-
-  def size = 2
-
-  def cols = {
-    shape match {
-      case (col1, col2) =>
-        Seq(col1, col2)
-    }
-  }
-
-  def conv = {
-    shape match {
-      case (col1, col2) =>
-        new ParamConv2(col1.conv, col2.conv)
-    }
-  }
-}

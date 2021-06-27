@@ -17,6 +17,7 @@
 package kuzminki.model
 
 
-class CondShapeSingle[P](cond: P) extends CondShape[P] {
+class CondShapeSingle[P](cond: CacheCond[P]) extends CondShape[P] {
   def conds = Seq(cond)
+  def conv = new ParamConvSingle(cond.conv)
 }

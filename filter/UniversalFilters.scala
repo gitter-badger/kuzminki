@@ -17,7 +17,7 @@
 package kuzminki.model
 
 
-trait UniversalFilters[T] extends SelfRef {
+trait UniversalFilters[T] extends SelfRef[T] {
   
   def matches(value: T): Filter = FilterMatches(self, value)
   def ===(value: T): Filter = matches(value)
