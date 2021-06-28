@@ -184,6 +184,23 @@ case class SelectCollector[R](
     new StoredSelectConditionAndOffset(db, template, args, condShape.conv, rowShape.conv)
   }
 
+  // subquery
+
+  def asSubquery = {
+    sections(0) match {
+      case SelectSec(parts) =>
+        parts(0) match {
+          case col: UsableCol =>
+          case _ =>
+            throw KuzminkiException("Subquery column cannot use modifiers")
+        }
+      case _ =>
+        throw KuzminkiException("Subquery is invalid")
+    }
+
+    new SelectSubquery(this)
+  }
+
   // render
 
   val notBlank: Section => Boolean = {

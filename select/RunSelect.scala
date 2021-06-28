@@ -45,6 +45,8 @@ class RunSelect[M, R](
 
   def source = cache.source
 
+  def asSubquery = coll.asSubquery
+
   // renderable
 
   def render(prefix: Prefix): String = coll.render

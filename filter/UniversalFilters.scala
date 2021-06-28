@@ -33,8 +33,8 @@ trait UniversalFilters[T] extends SelfRef[T] {
   def in(values: Seq[T]): Filter = FilterIn(self, values)
   def notIn(value: Seq[T]): Filter = FilterNotIn(self, value)
 
-  //def in(sub: SelectSubquery[T]): Filter = FilterInSubquery(self, sub)
-  //def notIn(sub: SelectSubquery[T]): Filter = FilterNotInSubquery(self, sub)
+  def in(sub: SelectSubquery[T]): Filter = FilterInSubquery(self, sub)
+  def notIn(sub: SelectSubquery[T]): Filter = FilterNotInSubquery(self, sub)
 
   // optional
 
