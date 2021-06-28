@@ -68,7 +68,7 @@ trait CacheCondition extends Section {
       cacheConds.map(_.render(prefix)).mkString(" AND ")
     )
   }
-  def args = Seq(Done)
+  def args = Seq(CacheCondArgs)
 }
 
 trait MixedCondition extends Section {
@@ -80,7 +80,7 @@ trait MixedCondition extends Section {
       both.map(_.render(prefix)).mkString(" AND ")
     )
   }
-  def args = conds.map(_.args).flatten ++ Seq(Done)
+  def args = conds.map(_.args).flatten ++ Seq(CacheCondArgs)
 }
 
 /*

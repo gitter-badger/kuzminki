@@ -23,69 +23,70 @@ import akka.Done
 import io.rdbc.sapi.SqlWithParams
 
 
-class StoredSelectWhere[P, R](
+class StoredSelectConditionAndOffset[P, R](
       db: Conn,
       template: String,
-      firstArgs: Vector[Any],
-      lastArgs: Vector[Any],
+      cacheArgs: Tuple3[Vector[Any], Vector[Any], Vector[Any]],
       paramConv: ParamConv[P],
       rowConv: RowConv[R]
     ) {
 
-  private def transformParams(params: P) = {
-    firstArgs ++ paramConv.fromShape(params) ++ lastArgs
+  private val (args1, args2, args3) = cacheArgs
+
+  private def transformParams(params: P, offset: Int) = {
+    args1 ++ paramConv.fromShape(params) ++ args2 ++ Vector(offset) ++ args3
   }
 
-  private def statement(params: P) = {
+  private def statement(params: P, offset: Int) = {
     SqlWithParams(
       template,
-      transformParams(params)
+      transformParams(params, offset)
     )
   }
   
-  def run(params: P) = {
-    db.select(statement(params)) { row =>
+  def run(params: P, offset: Int) = {
+    db.select(statement(params, offset)) { row =>
       rowConv.fromRow(row)
     }  
   }
 
-  def runAs[T](params: P)(implicit custom: R => T) = {
-    db.select(statement(params)) { row =>
+  def runAs[T](params: P, offset: Int)(implicit custom: R => T) = {
+    db.select(statement(params, offset)) { row =>
       custom(
         rowConv.fromRow(row)
       )
     }  
   }
 
-  def headOpt(params: P) = {
-    db.selectHeadOption(statement(params)) { row =>
+  def headOpt(params: P, offset: Int) = {
+    db.selectHeadOption(statement(params, offset)) { row =>
       rowConv.fromRow(row)
     }
   }
 
-  def headOptAs[T](params: P)(implicit custom: R => T) = {
-    db.selectHeadOption(statement(params)) { row =>
+  def headOptAs[T](params: P, offset: Int)(implicit custom: R => T) = {
+    db.selectHeadOption(statement(params, offset)) { row =>
       custom(
         rowConv.fromRow(row)
       )
     }  
   }
 
-  def runCount(params: P) = {
-    db.count(statement(params))
+  def runCount(params: P, offset: Int) = {
+    db.count(statement(params, offset))
   }
 
-  def source(params: P) = {
-    db.streamAsSource(statement(params)) { row =>
+  def source(params: P, offset: Int) = {
+    db.streamAsSource(statement(params, offset)) { row =>
       rowConv.fromRow(row)
     }
   }
 
   def render(prefix: Prefix) = template
   
-  def args = firstArgs ++ lastArgs
+  def args = args1 ++ args2 ++ args3
 
-  def sql(handler: String => Unit): StoredSelectWhere[P, R] = {
+  def sql(handler: String => Unit): StoredSelectConditionAndOffset[P, R] = {
     handler(template)
     this
   }

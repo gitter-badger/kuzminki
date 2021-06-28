@@ -23,7 +23,6 @@ class Where[M, R](
     ) {
 
   private def toOrderBy(section: Section) = {
-    coll.canUseWhere()
     new OrderBy(
       model,
       coll.add(section)
@@ -73,7 +72,6 @@ class Where[M, R](
   // group by
 
   private def toHaving(cols: Seq[UsableCol]) = {
-    //coll.canUseHaving()
     new Having(
       model,
       coll.add(GroupBySec(cols))

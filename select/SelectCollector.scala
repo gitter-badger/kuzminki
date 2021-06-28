@@ -33,11 +33,50 @@ case class SelectCollector[R](
 
   def cache = new StoredSelect(db, statement, rowShape.conv)
 
-  def cacheWhere[P](condShape: CondShape[P]) = {
+  // helpers
 
-    //canUseWhere()
+  private def validataWhere(): Unit = {
     
-    val modifiedSections = sections.map {
+    sections.foreach {
+    
+      case HavingSec(_) =>
+        throw KuzminkiException("HAVING is defined in query")
+    
+      case HavingBlankSec =>
+        throw KuzminkiException("HAVING is defined in query")
+    
+      case _ =>
+    }
+  }
+
+  private def validataHaving(): Unit = {
+   
+    sections.foreach {
+   
+      case WhereSec(_) =>
+        throw KuzminkiException("WHERE is defined in query")
+   
+      case WhereBlankSec =>
+        throw KuzminkiException("WHERE is defined in query")
+   
+      case _ =>
+    }
+  }
+
+  private def validataOffset(): Unit = {
+    
+    sections.foreach {
+    
+      case sec: OffsetSec =>
+        throw KuzminkiException("OFFSET is already defined")
+    
+      case _ =>
+    }
+  }
+
+  private def insertWhereCacheSec[P](modifiedSections: Array[Section], condShape: CondShape[P]) = {
+
+    modifiedSections.map {
       
       case WhereBlankSec =>
         WhereCacheSec(condShape.conds)
@@ -48,68 +87,101 @@ case class SelectCollector[R](
       case section: Section =>
         section
     }
+  }
 
-    storedConditional(modifiedSections, condShape)
+  private def insertOffsetCacheSec(modifiedSections: Array[Section]) = {
+    
+    modifiedSections.last match {
+    
+      case limitSec: LimitSec =>
+        modifiedSections.dropRight(1) ++ Array(OffsetCacheSec, limitSec)
+    
+      case _ =>
+        modifiedSections :+ OffsetCacheSec
+    }
+  }
+
+  private def argSplit(args: Vector[Any], splitter: CacheArgs) = {
+    val index = args.indexOf(splitter)
+    val args1 = args.take(index)
+    val args2 = args.takeRight(args.size - index - 1)
+    (args1, args2)
+  }
+
+  private def renderForCache[P](modifiedSections: Array[Section]) = {
+    
+    val template = modifiedSections.map(_.render(prefix)).mkString(" ")
+    
+    val args = modifiedSections.map(_.args).flatten.toVector
+
+    val argParts = argSplit(args, CacheCondArgs)
+    
+    (template, argParts)
+  }
+
+  private def renderForCacheWithOffset[P](modifiedSections: Array[Section]) = {
+
+    val (template, argsTwoParts) = renderForCache(modifiedSections)
+
+    val argsThreeParts = argsTwoParts match {
+      case (args1, rest) =>
+        argSplit(rest, CacheOffsetArgs) match {
+          case (args2, args3) =>
+            (args1, args2, args3)
+        }
+    }
+
+    (template, argsThreeParts)
+  }
+
+  def cacheWhere[P](condShape: CondShape[P]) = {
+
+    validataWhere()
+
+    val sectionsWithWhere = insertWhereCacheSec(sections, condShape)
+
+    val (template, args) = renderForCache(sectionsWithWhere)
+
+    new StoredSelectCondition(db, template, args, condShape.conv, rowShape.conv)
+  }
+
+  def cacheWhereWithOffset[P](condShape: CondShape[P]) = {
+
+    validataWhere()
+    validataOffset()
+
+    val sectionsWithWhere = insertWhereCacheSec(sections, condShape)
+
+    val sectionsWithWhereAndOffset = insertOffsetCacheSec(sectionsWithWhere)
+
+    val (template, args) = renderForCacheWithOffset(sectionsWithWhereAndOffset)
+
+    new StoredSelectConditionAndOffset(db, template, args, condShape.conv, rowShape.conv)
   }
 
   def cacheHaving[P](condShape: CondShape[P]) = {
 
-    //canUseHaving()
-    
-    val modifiedSections = sections.map {
-      
-      case HavingBlankSec =>
-        HavingCacheSec(condShape.conds)
-      
-      case HavingSec(conds) =>
-        HavingMixedSec(conds, condShape.conds)
-      
-      case section: Section =>
-        section
-    }
+    validataHaving()
 
-    storedConditional(modifiedSections, condShape)
+    val sectionsWithHaving = insertWhereCacheSec(sections, condShape)
+
+    val (template, args) = renderForCache(sectionsWithHaving)
+
+    new StoredSelectCondition(db, template, args, condShape.conv, rowShape.conv)
   }
 
-  def storedConditional[P](modifiedSections: Array[Section], condShape: CondShape[P]) = {
+  def cacheHavingWithOffset[P](condShape: CondShape[P]) = {
 
-    val template = modifiedSections.map(_.render(prefix)).mkString(" ")
-    val cacheArgs = modifiedSections.map(_.args).flatten.toVector
+    validataHaving()
+    validataOffset()
 
-    val (firstArgs, lastArgs) = cacheArgs.splitAt(cacheArgs.indexOf(Done)) match {
-      case (first, last) =>
-        (first, last.tail) 
-    }
+    val sectionsWithHaving = insertWhereCacheSec(sections, condShape)
 
-    new StoredSelectWhere(db, template, firstArgs, lastArgs, condShape.conv, rowShape.conv)
-  }
+    val sectionsWithHavingAndOffset = insertOffsetCacheSec(sectionsWithHaving)
 
-  // check
+    val (template, args) = renderForCacheWithOffset(sectionsWithHavingAndOffset)
 
-  val isAggrigation: AnyCol => Boolean = {
-    case col: Aggregation => true
-    case col: AnyCol => false
-  }
-
-  def canUseWhere() {
-    rowShape.cols.count(isAggrigation) match {
-      case 0 =>
-      case num: Int if num == rowShape.cols.size =>
-      case _ =>
-        throw KuzminkiException(
-          "WHERE cannot be used here, use HAVING"
-        )
-    }
-  }
-
-  def canUseHaving() {
-    rowShape.cols.count(isAggrigation) match {
-      case num: Int if num > 0 && num < rowShape.cols.size  =>
-      case _ =>
-        throw KuzminkiException(
-          "HAVING cannot be used here, use WHERE"
-        )
-    }
+    new StoredSelectConditionAndOffset(db, template, args, condShape.conv, rowShape.conv)
   }
 
   // render

@@ -19,6 +19,11 @@ package kuzminki.model
 import akka.Done
 
 
+sealed trait CacheArgs
+object CacheCondArgs extends CacheArgs
+object CacheOffsetArgs extends CacheArgs
+
+
 object WhereBlankSec extends TextOnly {
   def expression = ""
 }
@@ -43,6 +48,10 @@ case class HavingMixedSec(conds: Seq[Renderable], cacheConds: Seq[Renderable]) e
   def expression = "HAVING %s"
 }
 
+object OffsetCacheSec extends Section with NoRender {
+  def expression = "OFFSET ?"
+  def args = Seq(CacheOffsetArgs)
+}
 
 
 
