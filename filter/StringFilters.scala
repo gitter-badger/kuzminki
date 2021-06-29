@@ -55,3 +55,13 @@ trait StringFilters extends SelfRef[String] {
   def reNotIMatch(opt: Option[String]): Option[Filter] = opt.map(reNotIMatch)
   def !~*(opt: Option[String]): Option[Filter] = opt.map(reMatch)
 }
+
+
+
+
+
+
+
+
+
+

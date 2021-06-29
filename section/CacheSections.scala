@@ -24,7 +24,7 @@ object CacheCondArgs extends CacheArgs
 object CacheOffsetArgs extends CacheArgs
 
 
-object WhereBlankSec extends TextOnly {
+object WhereBlankSec extends Section with NoRender with NoArgs {
   def expression = ""
 }
 
@@ -36,7 +36,7 @@ case class WhereMixedSec(conds: Seq[Renderable], cacheConds: Seq[Renderable]) ex
   def expression = "WHERE %s"
 }
 
-object HavingBlankSec extends TextOnly {
+object HavingBlankSec extends Section with NoRender with NoArgs {
   def expression = ""
 }
 

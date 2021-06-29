@@ -16,9 +16,8 @@
 
 package kuzminki.model
 
-/*
-trait SortingDirection extends SelfRef {
-  def asc = Asc(self)
-  def desc = Desc(self)
+
+class AggregationSubquery(coll: SelectCollector[_]) extends Renderable {
+  def render(prefix: Prefix) = coll.render
+  def args = coll.args
 }
-*/

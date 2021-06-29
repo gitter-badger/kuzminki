@@ -52,7 +52,8 @@ trait BooleanCol extends BooleanColValue
 trait ShortCol extends ShortColValue
                   with UsableCol
                   with UniversalMethods[Short]
-                  with ComparativeFilters[Short] {
+                  with ComparativeFilters[Short]
+                  with AggregationSubqueryFilters[Short] {
 
   val self = this
   def asOpt = ShortOptCol(this)
@@ -63,7 +64,8 @@ trait IntCol extends IntColValue
                 with UsableCol
                 with SelfRef[Int]
                 with UniversalMethods[Int]
-                with ComparativeFilters[Int] {
+                with ComparativeFilters[Int]
+                with AggregationSubqueryFilters[Int] {
 
   val self = this
   def asOpt = IntOptCol(this)
@@ -73,7 +75,8 @@ trait IntCol extends IntColValue
 trait LongCol extends LongColValue
                  with UsableCol
                  with UniversalMethods[Long]
-                 with ComparativeFilters[Long] {
+                 with ComparativeFilters[Long]
+                 with AggregationSubqueryFilters[Long] {
 
   val self = this
   def asOpt = LongOptCol(this)
@@ -83,7 +86,8 @@ trait LongCol extends LongColValue
 trait FloatCol extends FloatColValue
                   with UsableCol
                   with UniversalMethods[Float]
-                  with ComparativeFilters[Float] {
+                  with ComparativeFilters[Float]
+                  with AggregationSubqueryFilters[Float] {
 
   val self = this
   def asOpt = FloatOptCol(this)
@@ -93,7 +97,8 @@ trait FloatCol extends FloatColValue
 trait DoubleCol extends DoubleColValue
                    with UsableCol
                    with UniversalMethods[Double]
-                   with ComparativeFilters[Double] {
+                   with ComparativeFilters[Double]
+                   with AggregationSubqueryFilters[Double] {
 
   val self = this
   def asOpt = DoubleOptCol(this)
@@ -103,7 +108,8 @@ trait DoubleCol extends DoubleColValue
 trait NumericCol extends NumericColValue
                     with UsableCol
                     with UniversalMethods[DecimalNumber]
-                    with ComparativeFilters[DecimalNumber] {
+                    with ComparativeFilters[DecimalNumber]
+                    with AggregationSubqueryFilters[DecimalNumber] {
 
   val self = this
   def asOpt = NumericOptCol(this)
@@ -113,7 +119,8 @@ trait NumericCol extends NumericColValue
 trait BigDecimalCol extends BigDecimalColValue
                        with UsableCol
                        with UniversalMethods[BigDecimal]
-                       with ComparativeFilters[BigDecimal] {
+                       with ComparativeFilters[BigDecimal]
+                       with AggregationSubqueryFilters[BigDecimal] {
 
   val self = this
   def asOpt = BigDecimalOptCol(this)

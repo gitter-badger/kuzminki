@@ -74,7 +74,7 @@ case class SelectCollector[R](
     }
   }
 
-  private def insertWhereCacheSec[P](modifiedSections: Array[Section], condShape: CondShape[P]) = {
+  private def replaceWhereSec[P](modifiedSections: Array[Section], condShape: CondShape[P]) = {
 
     modifiedSections.map {
       
@@ -83,6 +83,21 @@ case class SelectCollector[R](
       
       case WhereSec(conds) =>
         WhereMixedSec(conds, condShape.conds)
+      
+      case section: Section =>
+        section
+    }
+  }
+
+  private def replaceHavingSec[P](modifiedSections: Array[Section], condShape: CondShape[P]) = {
+
+    modifiedSections.map {
+      
+      case HavingBlankSec =>
+        HavingCacheSec(condShape.conds)
+      
+      case HavingSec(conds) =>
+        HavingMixedSec(conds, condShape.conds)
       
       case section: Section =>
         section
@@ -102,10 +117,18 @@ case class SelectCollector[R](
   }
 
   private def argSplit(args: Vector[Any], splitter: CacheArgs) = {
+
     val index = args.indexOf(splitter)
-    val args1 = args.take(index)
-    val args2 = args.takeRight(args.size - index - 1)
-    (args1, args2)
+    val count = args.count(_ == splitter)
+
+    if (count != 1) {
+      throw KuzminkiException("Invalid query")
+    }
+
+    args.splitAt(index) match {
+      case (args1, args2) =>
+        (args1, args2.tail)
+    }
   }
 
   private def renderForCache[P](modifiedSections: Array[Section]) = {
@@ -138,7 +161,7 @@ case class SelectCollector[R](
 
     validataWhere()
 
-    val sectionsWithWhere = insertWhereCacheSec(sections, condShape)
+    val sectionsWithWhere = replaceWhereSec(sections, condShape)
 
     val (template, args) = renderForCache(sectionsWithWhere)
 
@@ -150,7 +173,7 @@ case class SelectCollector[R](
     validataWhere()
     validataOffset()
 
-    val sectionsWithWhere = insertWhereCacheSec(sections, condShape)
+    val sectionsWithWhere = replaceWhereSec(sections, condShape)
 
     val sectionsWithWhereAndOffset = insertOffsetCacheSec(sectionsWithWhere)
 
@@ -163,7 +186,7 @@ case class SelectCollector[R](
 
     validataHaving()
 
-    val sectionsWithHaving = insertWhereCacheSec(sections, condShape)
+    val sectionsWithHaving = replaceHavingSec(sections, condShape)
 
     val (template, args) = renderForCache(sectionsWithHaving)
 
@@ -175,7 +198,7 @@ case class SelectCollector[R](
     validataHaving()
     validataOffset()
 
-    val sectionsWithHaving = insertWhereCacheSec(sections, condShape)
+    val sectionsWithHaving = replaceHavingSec(sections, condShape)
 
     val sectionsWithHavingAndOffset = insertOffsetCacheSec(sectionsWithHaving)
 
@@ -186,19 +209,33 @@ case class SelectCollector[R](
 
   // subquery
 
-  def asSubquery = {
+  private def firstColumn = {
     sections(0) match {
       case SelectSec(parts) =>
-        parts(0) match {
-          case col: UsableCol =>
-          case _ =>
-            throw KuzminkiException("Subquery column cannot use modifiers")
-        }
+        parts(0)
       case _ =>
         throw KuzminkiException("Subquery is invalid")
     }
+  }
+
+  def asSubquery = {
+    firstColumn match {
+      case col: UsableCol =>
+      case _ =>
+        throw KuzminkiException("Subquery column cannot use modifiers")
+    }
 
     new SelectSubquery(this)
+  }
+  
+  def asAggregation = {
+    firstColumn match {
+      case col: Aggregation =>
+      case _ =>
+        throw KuzminkiException("Subquery column must be an aggregation function")
+    }
+
+    new AggregationSubquery(this)
   }
 
   // render

@@ -47,6 +47,8 @@ class RunSelect[M, R](
 
   def asSubquery = coll.asSubquery
 
+  def asAggregation = coll.asAggregation
+
   // renderable
 
   def render(prefix: Prefix): String = coll.render
