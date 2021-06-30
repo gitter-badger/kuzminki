@@ -20,7 +20,7 @@ package kuzminki.model
 class OperationWhere[M](
       model: M,
       coll: OperationCollector
-    ) {
+    ) extends CacheOperationWhereMethods(model, coll) {
 
   def all() = new RunOperation(model, coll)
 

@@ -1,11 +1,10 @@
 package kuzminki.model
 
 
-class UpdateCacheWhere[M, A](model: M, coll: OperationCollector, changes: PartShape[A]) {
+abstract class CacheOperationWhereMethods[M](model: M, coll: OperationCollector) {
 
-  private def next[B](filters: PartShape[B]) = {
-    coll.add(UpdateCacheWhereSec(filters.parts))
-    coll.cacheUpdate(model, changes, filters)
+  private def next[A](changes: PartShape[A]) {
+    coll.cacheOperation(model, changes)
   }
 
   def cacheWhere1[P](

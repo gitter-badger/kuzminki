@@ -23,6 +23,10 @@ case class OperationCollector(db: Conn, sections: Array[Section]) extends Collec
 
   def extend(added: Array[Section]) = this.copy(sections = sections ++ added)
 
+  def cacheOperation[M, P](model: M, filters: PartShape[P]) = {
+    new StoredOperation(render, args.toVector, filters.conv, db)
+  }
+
   def cacheUpdate[M, P1, P2](model: M, changes: PartShape[P1], filters: PartShape[P2]) = {
     new StoredUpdate(render, changes.conv, filters.conv, db)
   }

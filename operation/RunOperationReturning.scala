@@ -30,12 +30,6 @@ class RunOperationReturning[R](coll: OperationCollector, rowConv: RowConv[R]) {
     }  
   }
 
-  def first() = {
-    coll.db.selectHeadOption(coll.statement) { row =>
-      rowConv.fromRow(row)
-    }
-  }
-
   def runAs[T](implicit custom: R => T) = {
     coll.db.select(coll.statement) { row =>
       custom(
@@ -44,7 +38,13 @@ class RunOperationReturning[R](coll: OperationCollector, rowConv: RowConv[R]) {
     }  
   }
 
-  def firstAs[T](implicit custom: R => T) = {
+  def headOpt() = {
+    coll.db.selectHeadOption(coll.statement) { row =>
+      rowConv.fromRow(row)
+    }
+  }
+
+  def headOptAs[T](implicit custom: R => T) = {
     coll.db.selectHeadOption(coll.statement) { row =>
       custom(
         rowConv.fromRow(row)
@@ -52,8 +52,43 @@ class RunOperationReturning[R](coll: OperationCollector, rowConv: RowConv[R]) {
     }  
   }
 
+  def head() = {
+    coll.db.selectHeadOption(coll.statement) { row =>
+      rowConv.fromRow(row)
+    }
+  }
+
+  def headAs[T](implicit custom: R => T) = {
+    coll.db.selectHeadOption(coll.statement) { row =>
+      custom(
+        rowConv.fromRow(row)
+      )
+    }  
+  }
+
+  def source = {
+    coll.db.streamAsSource(coll.statement) { row =>
+      rowConv.fromRow(row)
+    }
+  }
+
+  def render(prefix: Prefix) = coll.render
+  
+  def args = coll.args
+  
   def sql(handler: String => Unit) = {
     handler(coll.render)
     this
   }
 }
+
+
+
+
+
+
+
+
+
+
+

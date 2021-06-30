@@ -21,14 +21,14 @@ import akka.{NotUsed, Done}
 import io.rdbc.sapi.SqlWithParams
 
 
-class StoredUpdate[P1, P2](
+class StoredOperation[P1, P2](
       template: String,
-      changes: ParamConv[P1],
+      args: Vector[Any],
       filters: ParamConv[P2],
       db: Conn) {
 
   private def transform(params: Tuple2[P1, P2]) = {
-    changes.fromShape(params._1) ++ filters.fromShape(params._2)
+    args ++ filters.fromShape(params._2)
   }
 
   private def statement(params: Tuple2[P1, P2]) = {
