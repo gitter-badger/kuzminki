@@ -17,20 +17,7 @@
 package kuzminki.model
 
 
-trait UpdateMethods[T] extends SelfRef[T] {
-  val real: ModelCol
-  def ==>(value: T) = SetValue(real, value)
-  def setToNull = SetToNull(real)
-  def cacheSet = CacheSet(self)
-}
-
-trait NumericUpdateMethods[T] extends SelfRef[T] {
-  val real: ModelCol
-  def ==>(value: T) = SetValue(real, value)
-  def setToNull = SetToNull(real)
-  def +=(value: T) = Increment(real, value)
-  def -=(value: T) = Decrement(real, value)
-  def cacheSet = CacheSet(self)
-  def cacheIncrement = CacheIncrement(self)
-  def cacheDecrement = CacheDecrement(self)
+class PartShapeSingle[P](cond: CachePart[P]) extends PartShape[P] {
+  def parts = Seq(cond)
+  def conv = new ParamConvSingle(cond.conv)
 }

@@ -29,6 +29,11 @@ case class SetValue(col: ModelCol, value: Any) extends Assign {
 }
 
 case class SetToNull(col: ModelCol) extends Assign {
+
+  if (col.hasNull == false) {
+    throw KuzminkiException(s"Column [${col.name} does not have null")
+  }
+  
   def format(name: String) = s"$name = NULL"
   def args = Seq.empty[Any]
 }

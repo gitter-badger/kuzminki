@@ -71,7 +71,11 @@ object Model {
 abstract class Model(val __name: String) extends ModelRead with ModelWrite {
 
   def column[T](name: String)(implicit creator: ColInfo => TypeCol[T]) = {
-    creator(ColInfo(name, __name))
+    creator(ColInfo(name, __name, false))
+  }
+
+  def columnWithNull[T](name: String)(implicit creator: ColInfo => TypeCol[T]) = {
+    creator(ColInfo(name, __name, true))
   }
 }
 

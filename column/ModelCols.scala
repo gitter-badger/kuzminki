@@ -23,17 +23,17 @@ import io.rdbc.sapi._
 
 case class StringModelCol(info: ColInfo) extends ModelCol
                                             with StringCol
-                                            with UpdateMethod[String]
+                                            with UpdateMethods[String]
 
 
 case class CharModelCol(info: ColInfo) extends ModelCol
                                           with CharCol
-                                          with UpdateMethod[Char]
+                                          with UpdateMethods[Char]
 
 
 case class BooleanModelCol(info: ColInfo) extends ModelCol
                                              with BooleanCol
-                                             with UpdateMethod[Boolean]
+                                             with UpdateMethods[Boolean]
 
 
 case class ShortModelCol(info: ColInfo) extends ModelCol
@@ -73,27 +73,27 @@ case class BigDecimalModelCol(info: ColInfo) extends ModelCol
 
 case class InstantModelCol(info: ColInfo) extends ModelCol
                                              with InstantCol
-                                             with UpdateMethod[Instant]
+                                             with UpdateMethods[Instant]
 
 
 case class ZonedDateTimeModelCol(info: ColInfo) extends ModelCol
                                                    with ZonedDateTimeCol
-                                                   with UpdateMethod[ZonedDateTime]
+                                                   with UpdateMethods[ZonedDateTime]
 
 
 case class LocalDateTimeModelCol(info: ColInfo) extends ModelCol
                                                    with LocalDateTimeCol
-                                                   with UpdateMethod[LocalDateTime]
+                                                   with UpdateMethods[LocalDateTime]
 
 
 case class LocalDateModelCol(info: ColInfo) extends ModelCol
                                                with LocalDateColValue
-                                               with UpdateMethod[LocalDate]
+                                               with UpdateMethods[LocalDate]
 
 
 case class UUIDModelCol(info: ColInfo) extends ModelCol
                                           with UUIDCol
-                                          with UpdateMethod[UUID]
+                                          with UpdateMethods[UUID]
 
 // option
 

@@ -17,20 +17,29 @@
 package kuzminki.model
 
 
-trait UpdateMethods[T] extends SelfRef[T] {
-  val real: ModelCol
-  def ==>(value: T) = SetValue(real, value)
-  def setToNull = SetToNull(real)
-  def cacheSet = CacheSet(self)
+trait CacheChange[T] extends CachePart[T] {
+  val col: TypeCol[T]
+  def format(name: String): String
+  def render(prefix: Prefix) = format(col.render(prefix))
 }
 
-trait NumericUpdateMethods[T] extends SelfRef[T] {
-  val real: ModelCol
-  def ==>(value: T) = SetValue(real, value)
-  def setToNull = SetToNull(real)
-  def +=(value: T) = Increment(real, value)
-  def -=(value: T) = Decrement(real, value)
-  def cacheSet = CacheSet(self)
-  def cacheIncrement = CacheIncrement(self)
-  def cacheDecrement = CacheDecrement(self)
+
+case class CacheSet[T](col: TypeCol[T]) extends CacheChange[T] {
+  def format(name: String) = s"$name = ?"
 }
+
+case class CacheIncrement[T](col: TypeCol[T]) extends CacheChange[T] {
+  def format(name: String) = s"$name = $name + ?"
+}
+
+case class CacheDecrement[T](col: TypeCol[T]) extends CacheChange[T] {
+  def format(name: String) = s"$name = $name - ?"
+}
+
+
+
+
+
+
+
+

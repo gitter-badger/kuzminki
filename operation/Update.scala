@@ -17,7 +17,10 @@
 package kuzminki.model
 
 
-class Update[M <: Model](model: M, db: Conn) {
+class Update[M <: Model](
+      model: M,
+      db: Conn
+    ) extends CacheSetMethods(model, db) {
 
   def set(pick: M => Seq[Assign]) = {
     new OperationWhere(

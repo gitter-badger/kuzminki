@@ -21,6 +21,7 @@ trait ModelCol extends UsableCol with NoArgs {
   val info: ColInfo
   val real = this
   def name = info.name
+  def hasNull = info.hasNull
   def render(prefix: Prefix) = prefix.pick(info)
 }
 

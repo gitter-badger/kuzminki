@@ -17,18 +17,49 @@
 package kuzminki.model
 
 
-abstract class CacheCond[T](col: TypeCol[T], operator: String) extends Renderable {
+trait CachePart[T] extends Renderable {
+  def conv: ValConv[T]
+  def template: String
+}
+
+
+trait CacheFilter[T] extends CachePart[T] {
+  val col: TypeCol[T]
+  def template: String
   def conv = col.conv
-  def template = s"%s $operator ?"
   def render(prefix: Prefix) = template.format(col.render(prefix))
   def args = col.args
 }
 
 
-case class CacheEq[T](col: TypeCol[T]) extends CacheCond(col, "=")
+case class CacheEq[T](col: TypeCol[T]) extends CacheFilter[T] {
+  def template = s"%s = ?"
+}
 
-case class CacheNot[T](col: TypeCol[T]) extends CacheCond(col, "!=")
+case class CacheNot[T](col: TypeCol[T]) extends CacheFilter[T] {
+  def template = s"%s = ?"
+}
 
-case class CacheGt[T](col: TypeCol[T]) extends CacheCond(col, ">")
+case class CacheGt[T](col: TypeCol[T]) extends CacheFilter[T] {
+  def template = s"%s = ?"
+}
 
-case class CacheLt[T](col: TypeCol[T]) extends CacheCond(col, "<")
+case class CacheLt[T](col: TypeCol[T]) extends CacheFilter[T] {
+  def template = s"%s = ?"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

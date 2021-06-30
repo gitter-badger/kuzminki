@@ -38,3 +38,43 @@ case class UpdateSetSec(parts: Seq[Assign]) extends MultiRender {
   def expression = "SET %s"
   def glue = ", "
 }
+
+// cache
+
+case class UpdateCacheSetSec(parts: Seq[Renderable]) extends Section with NoArgs {
+  def expression = "SET %s"
+  def render(prefix: Prefix) = expression.format(parts.map(_.render(prefix)).mkString(", "))
+}
+
+case class UpdateCacheWhereSec(parts: Seq[Renderable]) extends Section with NoArgs {
+  def expression = "WHERE %s"
+  def render(prefix: Prefix) = expression.format(parts.map(_.render(prefix)).mkString(", "))
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

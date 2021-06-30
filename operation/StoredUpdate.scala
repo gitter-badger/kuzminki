@@ -21,44 +21,63 @@ import akka.{NotUsed, Done}
 import io.rdbc.sapi.SqlWithParams
 
 
-class StoredOperation[S](
+class StoredUpdate[P1, P2](
       template: String,
-      args: Vector[Any],
-      conv: ParamConv[S],
+      changeConv: ParamConv[P1],
+      filterConv: ParamConv[P2],
       db: Conn) {
 
   protected def render = template
 
-  private def transform(data: S) = {
-    args ++ conv.fromShape(data)
+  private def transform(params: Tuple2[P1, P2]) = {
+    changeConv.fromShape(params._1) ++ filterConv.fromShape(params._2)
   }
 
-  private def statement(data: S) = {
+  private def statement(params: Tuple2[P1, P2]) = {
     SqlWithParams(
       template,
-      transform(data)
+      transform(params)
     )
   }
 
-  def run(data: S) = {
-    db.exec(statement(data))
+  def run(changeParams: P1, filterParams: P2) = {
+    db.exec(
+      statement(
+        (changeParams, filterParams)
+      )
+    )
   }
 
-  def runNum(data: S) = {
-    db.execNum(statement(data))
+  def runNum(changeParams: P1, filterParams: P2) = {
+    db.execNum(
+      statement(
+        (changeParams, filterParams)
+      )
+    )
   }
 
-  def fromSource[T](source: Source[S, T]) = {
+  def fromSource[T](source: Source[Tuple2[P1, P2], T]) = {
     db.fromSource(
       template,
       source.map(transform)
     )
   }
 
-  def streamList(data: List[S]) = fromSource(Source(data))
+  def streamList(params: List[Tuple2[P1, P2]]) = fromSource(Source(params))
 
   def sql(handler: String => Unit) = {
     handler(template)
     this
   }
 }
+
+
+
+
+
+
+
+
+
+
+

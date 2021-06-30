@@ -74,30 +74,30 @@ case class SelectCollector[R](
     }
   }
 
-  private def replaceWhereSec[P](modifiedSections: Array[Section], condShape: CondShape[P]) = {
+  private def replaceWhereSec[P](modifiedSections: Array[Section], partShape: PartShape[P]) = {
 
     modifiedSections.map {
       
       case WhereBlankSec =>
-        WhereCacheSec(condShape.conds)
+        WhereCacheSec(partShape.parts)
       
       case WhereSec(conds) =>
-        WhereMixedSec(conds, condShape.conds)
+        WhereMixedSec(conds, partShape.parts)
       
       case section: Section =>
         section
     }
   }
 
-  private def replaceHavingSec[P](modifiedSections: Array[Section], condShape: CondShape[P]) = {
+  private def replaceHavingSec[P](modifiedSections: Array[Section], partShape: PartShape[P]) = {
 
     modifiedSections.map {
       
       case HavingBlankSec =>
-        HavingCacheSec(condShape.conds)
+        HavingCacheSec(partShape.parts)
       
       case HavingSec(conds) =>
-        HavingMixedSec(conds, condShape.conds)
+        HavingMixedSec(conds, partShape.parts)
       
       case section: Section =>
         section
@@ -157,54 +157,54 @@ case class SelectCollector[R](
     (template, argsThreeParts)
   }
 
-  def cacheWhere[P](condShape: CondShape[P]) = {
+  def cacheWhere[P](partShape: PartShape[P]) = {
 
     validataWhere()
 
-    val sectionsWithWhere = replaceWhereSec(sections, condShape)
+    val sectionsWithWhere = replaceWhereSec(sections, partShape)
 
     val (template, args) = renderForCache(sectionsWithWhere)
 
-    new StoredSelectCondition(db, template, args, condShape.conv, rowShape.conv)
+    new StoredSelectCondition(db, template, args, partShape.conv, rowShape.conv)
   }
 
-  def cacheWhereWithOffset[P](condShape: CondShape[P]) = {
+  def cacheWhereWithOffset[P](partShape: PartShape[P]) = {
 
     validataWhere()
     validataOffset()
 
-    val sectionsWithWhere = replaceWhereSec(sections, condShape)
+    val sectionsWithWhere = replaceWhereSec(sections, partShape)
 
     val sectionsWithWhereAndOffset = insertOffsetCacheSec(sectionsWithWhere)
 
     val (template, args) = renderForCacheWithOffset(sectionsWithWhereAndOffset)
 
-    new StoredSelectConditionAndOffset(db, template, args, condShape.conv, rowShape.conv)
+    new StoredSelectConditionAndOffset(db, template, args, partShape.conv, rowShape.conv)
   }
 
-  def cacheHaving[P](condShape: CondShape[P]) = {
+  def cacheHaving[P](partShape: PartShape[P]) = {
 
     validataHaving()
 
-    val sectionsWithHaving = replaceHavingSec(sections, condShape)
+    val sectionsWithHaving = replaceHavingSec(sections, partShape)
 
     val (template, args) = renderForCache(sectionsWithHaving)
 
-    new StoredSelectCondition(db, template, args, condShape.conv, rowShape.conv)
+    new StoredSelectCondition(db, template, args, partShape.conv, rowShape.conv)
   }
 
-  def cacheHavingWithOffset[P](condShape: CondShape[P]) = {
+  def cacheHavingWithOffset[P](partShape: PartShape[P]) = {
 
     validataHaving()
     validataOffset()
 
-    val sectionsWithHaving = replaceHavingSec(sections, condShape)
+    val sectionsWithHaving = replaceHavingSec(sections, partShape)
 
     val sectionsWithHavingAndOffset = insertOffsetCacheSec(sectionsWithHaving)
 
     val (template, args) = renderForCacheWithOffset(sectionsWithHavingAndOffset)
 
-    new StoredSelectConditionAndOffset(db, template, args, condShape.conv, rowShape.conv)
+    new StoredSelectConditionAndOffset(db, template, args, partShape.conv, rowShape.conv)
   }
 
   // subquery
