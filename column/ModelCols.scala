@@ -47,7 +47,7 @@ case class IntModelCol(info: ColInfo) extends ModelCol
 
 
 case class LongModelCol(info: ColInfo) extends ModelCol
-                                          with LongColValue
+                                          with LongCol
                                           with NumericUpdateMethods[Long]
 
 
@@ -87,7 +87,7 @@ case class LocalDateTimeModelCol(info: ColInfo) extends ModelCol
 
 
 case class LocalDateModelCol(info: ColInfo) extends ModelCol
-                                               with LocalDateColValue
+                                               with LocalDateCol
                                                with UpdateMethods[LocalDate]
 
 

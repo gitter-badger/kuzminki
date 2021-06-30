@@ -19,8 +19,11 @@ package kuzminki.model
 
 trait CacheChange[T] extends CachePart[T] {
   val col: TypeCol[T]
+  def template = ""
   def format(name: String): String
+  def conv = col.conv
   def render(prefix: Prefix) = format(col.render(prefix))
+  def args = Seq.empty[Any]
 }
 
 
