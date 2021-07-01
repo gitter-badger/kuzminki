@@ -18,41 +18,41 @@ package kuzminki.model
 
 
 object Cast {
-  def asString(col: UsableCol) = CastString(col)
-  def asNumeric(col: UsableCol) = CastNumeric(col)
-  def asFloat(col: UsableCol) = CastFloat(col)
-  def asDouble(col: UsableCol) = CastDouble(col)
-  def asShort(col: UsableCol) = CastShort(col)
-  def asInt(col: UsableCol) = CastInt(col)
-  def asLong(col: UsableCol) = CastLong(col)
+  def asString(col: AnyCol) = CastString(col)
+  def asNumeric(col: AnyCol) = CastNumeric(col)
+  def asFloat(col: AnyCol) = CastFloat(col)
+  def asDouble(col: AnyCol) = CastDouble(col)
+  def asShort(col: AnyCol) = CastShort(col)
+  def asInt(col: AnyCol) = CastInt(col)
+  def asLong(col: AnyCol) = CastLong(col)
 }
 
 
-case class CastString(underlying: UsableCol) extends StringFunctionSingle {
+case class CastString(underlying: AnyCol) extends StringFunctionSingle {
   val template = "%s::text"
 }
 
-case class CastNumeric(underlying: UsableCol) extends StringFunctionSingle {
+case class CastNumeric(underlying: AnyCol) extends StringFunctionSingle {
   val template = "%s::numeric"
 }
 
-case class CastFloat(underlying: UsableCol) extends StringFunctionSingle {
+case class CastFloat(underlying: AnyCol) extends StringFunctionSingle {
   val template = "%s::real"
 }
 
-case class CastDouble(underlying: UsableCol) extends StringFunctionSingle {
+case class CastDouble(underlying: AnyCol) extends StringFunctionSingle {
   val template = "%s::float8"
 }
 
-case class CastShort(underlying: UsableCol) extends StringFunctionSingle {
+case class CastShort(underlying: AnyCol) extends StringFunctionSingle {
   val template = "%s::smallint"
 }
 
-case class CastInt(underlying: UsableCol) extends StringFunctionSingle {
+case class CastInt(underlying: AnyCol) extends StringFunctionSingle {
   val template = "%s::int"
 }
 
-case class CastLong(underlying: UsableCol) extends StringFunctionSingle {
+case class CastLong(underlying: AnyCol) extends StringFunctionSingle {
   val template = "%s::text"
 }
 

@@ -17,7 +17,10 @@
 package kuzminki.model
 
 
-trait UsableCol extends AnyCol {
-  def asc = Asc(this)
-  def desc = Desc(this)
+trait NumericMethods[T] extends SelfRef[T] {
+  val real: ModelCol
+  def +=(value: T) = Increment(real, value)
+  def -=(value: T) = Decrement(real, value)
+  def cacheIncrement = CacheIncrement(self)
+  def cacheDecrement = CacheDecrement(self)
 }

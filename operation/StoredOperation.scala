@@ -21,47 +21,43 @@ import akka.{NotUsed, Done}
 import io.rdbc.sapi.SqlWithParams
 
 
-class StoredOperation[P1, P2](
+class StoredOperation[P](
       template: String,
       args: Vector[Any],
-      filters: ParamConv[P2],
+      filters: ParamConv[P],
       db: Conn) {
 
-  private def transform(params: Tuple2[P1, P2]) = {
-    args ++ filters.fromShape(params._2)
+  private def transform(params: P) = {
+    args ++ filters.fromShape(params)
   }
 
-  private def statement(params: Tuple2[P1, P2]) = {
+  private def statement(params: P) = {
     SqlWithParams(
       template,
       transform(params)
     )
   }
 
-  def run(changeArgs: P1, filterArgs: P2) = {
+  def run(params: P) = {
     db.exec(
-      statement(
-        (changeArgs, filterArgs)
-      )
+      statement(params)
     )
   }
 
-  def runNum(changeArgs: P1, filterArgs: P2) = {
+  def runNum(params: P) = {
     db.execNum(
-      statement(
-        (changeArgs, filterArgs)
-      )
+      statement(params)
     )
   }
 
-  def fromSource[T](source: Source[Tuple2[P1, P2], T]) = {
+  def fromSource[T](source: Source[P, T]) = {
     db.fromSource(
       template,
       source.map(transform)
     )
   }
 
-  def streamList(params: List[Tuple2[P1, P2]]) = fromSource(Source(params))
+  def streamList(params: List[P]) = fromSource(Source(params))
 
   def sql(handler: String => Unit) = {
     handler(template)

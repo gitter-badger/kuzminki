@@ -22,63 +22,63 @@ import io.rdbc.sapi._
 
 
 
-case class StringOptCol(underlying: UsableCol) extends StringOptColValue
+case class StringOptCol(underlying: AnyCol) extends StringOptColValue
                                                   with OptColTransformMethods[String]
 
 
-case class CharOptCol(underlying: UsableCol) extends CharOptColValue
+case class CharOptCol(underlying: AnyCol) extends CharOptColValue
                                                 with OptColTransformMethods[Char]
 
 
-case class BooleanOptCol(underlying: UsableCol) extends BooleanOptColValue
+case class BooleanOptCol(underlying: AnyCol) extends BooleanOptColValue
                                                    with OptColTransformMethods[Boolean]
 
 
-case class ShortOptCol(underlying: UsableCol) extends ShortOptColValue
+case class ShortOptCol(underlying: AnyCol) extends ShortOptColValue
                                                  with OptColTransformMethods[Short]
 
 
-case class IntOptCol(underlying: UsableCol) extends IntOptColValue
+case class IntOptCol(underlying: AnyCol) extends IntOptColValue
                                                with OptColTransformMethods[Int]
 
 
-case class LongOptCol(underlying: UsableCol) extends LongOptColValue
+case class LongOptCol(underlying: AnyCol) extends LongOptColValue
                                                 with OptColTransformMethods[Long]
 
 
-case class FloatOptCol(underlying: UsableCol) extends FloatOptColValue
+case class FloatOptCol(underlying: AnyCol) extends FloatOptColValue
                                                  with OptColTransformMethods[Float]
 
 
-case class DoubleOptCol(underlying: UsableCol) extends DoubleOptColValue
+case class DoubleOptCol(underlying: AnyCol) extends DoubleOptColValue
                                                   with OptColTransformMethods[Double]
 
 
-case class NumericOptCol(underlying: UsableCol) extends NumericOptColValue
+case class NumericOptCol(underlying: AnyCol) extends NumericOptColValue
                                                    with OptColTransformMethods[DecimalNumber]
 
 
-case class BigDecimalOptCol(underlying: UsableCol) extends BigDecimalOptColValue
+case class BigDecimalOptCol(underlying: AnyCol) extends BigDecimalOptColValue
                                                       with OptColTransformMethods[BigDecimal]
 
 
-case class InstantOptCol(underlying: UsableCol) extends InstantOptColValue
+case class InstantOptCol(underlying: AnyCol) extends InstantOptColValue
                                                    with OptColTransformMethods[Instant]
 
 
-case class ZonedDateTimeOptCol(underlying: UsableCol) extends ZonedDateTimeOptColValue
+case class ZonedDateTimeOptCol(underlying: AnyCol) extends ZonedDateTimeOptColValue
                                                          with OptColTransformMethods[ZonedDateTime]
 
 
-case class LocalDateTimeOptCol(underlying: UsableCol) extends LocalDateTimeOptColValue
+case class LocalDateTimeOptCol(underlying: AnyCol) extends LocalDateTimeOptColValue
                                                          with OptColTransformMethods[LocalDateTime]
 
 
-case class LocalDateOptCol(underlying: UsableCol) extends LocalDateOptColValue
+case class LocalDateOptCol(underlying: AnyCol) extends LocalDateOptColValue
                                                      with OptColTransformMethods[LocalDate]
 
 
-case class UUIDOptCol(underlying: UsableCol) extends UUIDOptColValue
+case class UUIDOptCol(underlying: AnyCol) extends UUIDOptColValue
                                                 with OptColTransformMethods[UUID]
 
 

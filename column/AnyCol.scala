@@ -17,4 +17,7 @@
 package kuzminki.model
 
 
-trait AnyCol extends Renderable
+trait AnyCol extends Renderable {
+  def asc = Asc(this)
+  def desc = Desc(this)
+}

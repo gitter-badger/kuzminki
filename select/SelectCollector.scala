@@ -207,37 +207,6 @@ case class SelectCollector[R](
     new StoredSelectConditionAndOffset(db, template, args, partShape.conv, rowShape.conv)
   }
 
-  // subquery
-
-  private def firstColumn = {
-    sections(0) match {
-      case SelectSec(parts) =>
-        parts(0)
-      case _ =>
-        throw KuzminkiException("Subquery is invalid")
-    }
-  }
-
-  def asSubquery = {
-    firstColumn match {
-      case col: UsableCol =>
-      case _ =>
-        throw KuzminkiException("Subquery column cannot use modifiers")
-    }
-
-    new SelectSubquery(this)
-  }
-  
-  def asAggregation = {
-    firstColumn match {
-      case col: Aggregation =>
-      case _ =>
-        throw KuzminkiException("Subquery column must be an aggregation function")
-    }
-
-    new AggregationSubquery(this)
-  }
-
   // render
 
   val notBlank: Section => Boolean = {

@@ -22,7 +22,6 @@ import io.rdbc.sapi._
 
 
 trait StringCol extends StringColValue
-                   with UsableCol
                    with UniversalMethods[String]
                    with StringFilters {
 
@@ -32,7 +31,6 @@ trait StringCol extends StringColValue
 
 
 trait CharCol extends CharColValue
-                 with UsableCol
                  with UniversalMethods[Char] {
 
   val self = this
@@ -41,7 +39,6 @@ trait CharCol extends CharColValue
 
 
 trait BooleanCol extends BooleanColValue
-                    with UsableCol
                     with UniversalMethods[Boolean] {
 
   val self = this
@@ -50,7 +47,6 @@ trait BooleanCol extends BooleanColValue
 
 
 trait ShortCol extends ShortColValue
-                  with UsableCol
                   with UniversalMethods[Short]
                   with ComparativeFilters[Short]
                   with AggregationSubqueryFilters[Short] {
@@ -61,7 +57,6 @@ trait ShortCol extends ShortColValue
 
 
 trait IntCol extends IntColValue
-                with UsableCol
                 with SelfRef[Int]
                 with UniversalMethods[Int]
                 with ComparativeFilters[Int]
@@ -73,7 +68,6 @@ trait IntCol extends IntColValue
 
 
 trait LongCol extends LongColValue
-                 with UsableCol
                  with UniversalMethods[Long]
                  with ComparativeFilters[Long]
                  with AggregationSubqueryFilters[Long] {
@@ -84,7 +78,6 @@ trait LongCol extends LongColValue
 
 
 trait FloatCol extends FloatColValue
-                  with UsableCol
                   with UniversalMethods[Float]
                   with ComparativeFilters[Float]
                   with AggregationSubqueryFilters[Float] {
@@ -95,7 +88,6 @@ trait FloatCol extends FloatColValue
 
 
 trait DoubleCol extends DoubleColValue
-                   with UsableCol
                    with UniversalMethods[Double]
                    with ComparativeFilters[Double]
                    with AggregationSubqueryFilters[Double] {
@@ -106,7 +98,6 @@ trait DoubleCol extends DoubleColValue
 
 
 trait NumericCol extends NumericColValue
-                    with UsableCol
                     with UniversalMethods[DecimalNumber]
                     with ComparativeFilters[DecimalNumber]
                     with AggregationSubqueryFilters[DecimalNumber] {
@@ -117,7 +108,6 @@ trait NumericCol extends NumericColValue
 
 
 trait BigDecimalCol extends BigDecimalColValue
-                       with UsableCol
                        with UniversalMethods[BigDecimal]
                        with ComparativeFilters[BigDecimal]
                        with AggregationSubqueryFilters[BigDecimal] {
@@ -128,7 +118,6 @@ trait BigDecimalCol extends BigDecimalColValue
 
 
 trait InstantCol extends InstantColValue
-                    with UsableCol
                     with UniversalMethods[Instant]
                     with ComparativeFilters[Instant] {
 
@@ -138,7 +127,6 @@ trait InstantCol extends InstantColValue
 
 
 trait ZonedDateTimeCol extends ZonedDateTimeColValue
-                          with UsableCol
                           with UniversalMethods[ZonedDateTime]
                           with ComparativeFilters[ZonedDateTime] {
 
@@ -148,7 +136,6 @@ trait ZonedDateTimeCol extends ZonedDateTimeColValue
 
 
 trait LocalDateTimeCol extends LocalDateTimeColValue
-                          with UsableCol
                           with UniversalMethods[LocalDateTime]
                           with ComparativeFilters[LocalDateTime] {
 
@@ -158,7 +145,6 @@ trait LocalDateTimeCol extends LocalDateTimeColValue
 
 
 trait LocalDateCol extends LocalDateColValue
-                      with UsableCol
                       with UniversalMethods[LocalDate]
                       with ComparativeFilters[LocalDate] {
 
@@ -168,7 +154,6 @@ trait LocalDateCol extends LocalDateColValue
 
 
 trait UUIDCol extends UUIDColValue
-                 with UsableCol
                  with UniversalMethods[UUID]
                  with ComparativeFilters[UUID] {
 

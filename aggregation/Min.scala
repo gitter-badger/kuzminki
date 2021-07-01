@@ -19,10 +19,10 @@ package kuzminki.model
 
 object Min {
   protected val template = "min(%s)"
-  def numeric(col: UsableCol) = AggNumeric(col, template)
-  def float(col: UsableCol) = AggFloat(col, template)
-  def double(col: UsableCol) = AggDouble(col, template)
-  def instant(col: UsableCol) = AggInstant(col, template)
+  def numeric(col: AnyCol) = AggNumeric(col, template)
+  def float(col: AnyCol) = AggFloat(col, template)
+  def double(col: AnyCol) = AggDouble(col, template)
+  def instant(col: AnyCol) = AggInstant(col, template)
 }
 
 

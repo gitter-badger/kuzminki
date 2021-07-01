@@ -21,12 +21,12 @@ object Count {
   def all = Count(AllCols)
 }
 
-object AllCols extends UsableCol with NoArgs {
+object AllCols extends AnyCol with NoArgs {
   val self = this
   def render(prefix: Prefix) = "*"
 }
 
-case class Count(underlying: UsableCol) extends LongFunctionSingle {
+case class Count(underlying: AnyCol) extends LongFunctionSingle {
   def template = "count(%s)"
 }
 

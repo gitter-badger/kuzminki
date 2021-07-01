@@ -45,9 +45,36 @@ class RunSelect[M, R](
 
   def source = cache.source
 
-  def asSubquery = coll.asSubquery
+  // subquery
 
-  def asAggregation = coll.asAggregation
+  private def firstColumn = {
+    coll.sections(0) match {
+      case SelectSec(parts) =>
+        parts(0)
+      case _ =>
+        throw KuzminkiException("Subquery is invalid")
+    }
+  }
+  
+  def asSubquery = {
+    firstColumn match {
+      case col: AnyCol =>
+      case _ =>
+        throw KuzminkiException("Subquery column cannot use modifiers")
+    }
+
+    new SelectSubquery(coll)
+  }
+  
+  def asAggregation = {
+    firstColumn match {
+      case col: Aggregation =>
+      case _ =>
+        throw KuzminkiException("Subquery column must be an aggregation function")
+    }
+
+    new AggregationSubquery(coll)
+  }
 
   // renderable
 

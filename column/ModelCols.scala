@@ -23,77 +23,84 @@ import io.rdbc.sapi._
 
 case class StringModelCol(info: ColInfo) extends ModelCol
                                             with StringCol
-                                            with UpdateMethods[String]
+                                            with ModelTypeCol[String]
 
 
 case class CharModelCol(info: ColInfo) extends ModelCol
                                           with CharCol
-                                          with UpdateMethods[Char]
+                                          with ModelTypeCol[Char]
 
 
 case class BooleanModelCol(info: ColInfo) extends ModelCol
                                              with BooleanCol
-                                             with UpdateMethods[Boolean]
+                                             with ModelTypeCol[Boolean]
 
 
 case class ShortModelCol(info: ColInfo) extends ModelCol
                                            with ShortCol
-                                           with NumericUpdateMethods[Short]
+                                           with ModelTypeCol[Short]
+                                           with NumericMethods[Short]
 
 
 case class IntModelCol(info: ColInfo) extends ModelCol
                                          with IntCol
-                                         with NumericUpdateMethods[Int]
+                                         with ModelTypeCol[Int]
+                                         with NumericMethods[Int]
 
 
 case class LongModelCol(info: ColInfo) extends ModelCol
                                           with LongCol
-                                          with NumericUpdateMethods[Long]
+                                          with ModelTypeCol[Long]
+                                          with NumericMethods[Long]
 
 
 case class FloatModelCol(info: ColInfo) extends ModelCol
                                            with FloatCol
-                                           with NumericUpdateMethods[Float]
+                                           with ModelTypeCol[Float]
+                                           with NumericMethods[Float]
 
 
 case class DoubleModelCol(info: ColInfo) extends ModelCol
                                             with DoubleCol
-                                            with NumericUpdateMethods[Double]
+                                            with ModelTypeCol[Double]
+                                            with NumericMethods[Double]
 
 
 case class NumericModelCol(info: ColInfo) extends ModelCol
                                              with NumericCol
-                                             with NumericUpdateMethods[DecimalNumber]
+                                             with ModelTypeCol[DecimalNumber]
+                                             with NumericMethods[DecimalNumber]
 
 
 case class BigDecimalModelCol(info: ColInfo) extends ModelCol
                                                 with BigDecimalCol
-                                                with NumericUpdateMethods[BigDecimal]
+                                                with ModelTypeCol[BigDecimal]
+                                                with NumericMethods[BigDecimal]
 
 
 case class InstantModelCol(info: ColInfo) extends ModelCol
                                              with InstantCol
-                                             with UpdateMethods[Instant]
+                                             with ModelTypeCol[Instant]
 
 
 case class ZonedDateTimeModelCol(info: ColInfo) extends ModelCol
                                                    with ZonedDateTimeCol
-                                                   with UpdateMethods[ZonedDateTime]
+                                                   with ModelTypeCol[ZonedDateTime]
 
 
 case class LocalDateTimeModelCol(info: ColInfo) extends ModelCol
                                                    with LocalDateTimeCol
-                                                   with UpdateMethods[LocalDateTime]
+                                                   with ModelTypeCol[LocalDateTime]
 
 
 case class LocalDateModelCol(info: ColInfo) extends ModelCol
                                                with LocalDateCol
-                                               with UpdateMethods[LocalDate]
+                                               with ModelTypeCol[LocalDate]
 
 
 case class UUIDModelCol(info: ColInfo) extends ModelCol
                                           with UUIDCol
-                                          with UpdateMethods[UUID]
+                                          with ModelTypeCol[UUID]
 
 // option
 

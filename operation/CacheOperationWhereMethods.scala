@@ -3,7 +3,7 @@ package kuzminki.model
 
 abstract class CacheOperationWhereMethods[M](model: M, coll: OperationCollector) {
 
-  private def next[A](changes: PartShape[A]) {
+  private def next[A](changes: PartShape[A]) = {
     coll.cacheOperation(model, changes)
   }
 

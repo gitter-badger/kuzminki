@@ -19,46 +19,46 @@ package kuzminki.model
 
 object Round {
 
-  def numeric(col: UsableCol) = RoundNumeric(col)
-  def numeric(col: UsableCol, size: Int) = RoundDigitsNumeric(col, size)
+  def numeric(col: AnyCol) = RoundNumeric(col)
+  def numeric(col: AnyCol, size: Int) = RoundDigitsNumeric(col, size)
 
-  def float(col: UsableCol) = RoundFloat(col)
-  def float(col: UsableCol, size: Int) = RoundDigitsFloat(col, size)
+  def float(col: AnyCol) = RoundFloat(col)
+  def float(col: AnyCol, size: Int) = RoundDigitsFloat(col, size)
 
-  def double(col: UsableCol) = RoundDouble(col)
-  def double(col: UsableCol, size: Int) = RoundDigitsDouble(col, size)
+  def double(col: AnyCol) = RoundDouble(col)
+  def double(col: AnyCol, size: Int) = RoundDigitsDouble(col, size)
 }
 
 
-trait RoundInteger extends UsableCol {
+trait RoundInteger extends AnyCol {
   val template = "round(%s)"
   def asString = Cast.asString(this)
 }
 
-case class RoundNumeric(underlying: UsableCol) extends NumericFunctionSingle
+case class RoundNumeric(underlying: AnyCol) extends NumericFunctionSingle
                                                   with RoundInteger
 
-case class RoundFloat(underlying: UsableCol) extends FloatFunctionSingle
+case class RoundFloat(underlying: AnyCol) extends FloatFunctionSingle
                                                 with RoundInteger
 
-case class RoundDouble(underlying: UsableCol) extends DoubleFunctionSingle
+case class RoundDouble(underlying: AnyCol) extends DoubleFunctionSingle
                                                  with RoundInteger
 
 
-trait RoundDecimal extends UsableCol with UnderlyingFunctionRender {
+trait RoundDecimal extends AnyCol with UnderlyingFunctionRender {
   val size: Int
   val template = "round(%s, ?)"
   def args = underlying.args ++ Seq(size)
   def asString = Cast.asString(this)
 }
 
-case class RoundDigitsNumeric(underlying: UsableCol, size: Int) extends NumericFunction
+case class RoundDigitsNumeric(underlying: AnyCol, size: Int) extends NumericFunction
                                                                    with RoundDecimal
 
-case class RoundDigitsFloat(underlying: UsableCol, size: Int) extends FloatFunction
+case class RoundDigitsFloat(underlying: AnyCol, size: Int) extends FloatFunction
                                                                  with RoundDecimal
 
-case class RoundDigitsDouble(underlying: UsableCol, size: Int) extends DoubleFunction
+case class RoundDigitsDouble(underlying: AnyCol, size: Int) extends DoubleFunction
                                                                   with RoundDecimal
 
 

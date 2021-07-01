@@ -22,17 +22,17 @@ trait WhereNotExists[M <: Model, S] {
   protected val model: M
   protected val coll: InsertCollector[S]
 
-  def whereNotExistsOne(pick: M => ModelCol) = {
+  def whereNotExistsOne[T](pick: M => TypeCol[T]) = {
     whereNotExistsApply(
       Seq(pick(model))
     )
   }
 
-  def whereNotExistsAll(pick: M => Seq[ModelCol]) = {
+  def whereNotExists(pick: M => Seq[TypeCol[_]]) = {
     whereNotExistsApply(pick(model))
   }
 
-  private def whereNotExistsApply(uniqueCols: Seq[ModelCol]) = {
+  private def whereNotExistsApply(uniqueCols: Seq[TypeCol[_]]) = {
 
     if (uniqueCols.isEmpty) {
       throw KuzminkiException("whereNotExists")

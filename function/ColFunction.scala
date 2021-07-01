@@ -17,7 +17,7 @@
 package kuzminki.model
 
 
-trait ColFunction extends UsableCol {
+trait ColFunction extends AnyCol {
   def template: String
 }
 
