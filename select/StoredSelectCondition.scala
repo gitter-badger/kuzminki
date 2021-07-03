@@ -32,13 +32,6 @@ class StoredSelectCondition[P, R](
     ) {
 
   private def transformParams(params: P) = {
-    println("-------------------")
-    println(template)
-    println(cacheArgs._1 ++ paramConv.fromShape(params) ++ cacheArgs._2)
-    println(cacheArgs._1)
-    println(cacheArgs._2)
-    println("-------------------")
-
     cacheArgs._1 ++ paramConv.fromShape(params) ++ cacheArgs._2
   }
 

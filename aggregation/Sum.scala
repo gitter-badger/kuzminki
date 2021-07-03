@@ -18,9 +18,60 @@ package kuzminki.model
 
 
 object Sum {
-  protected val template = "sum(%s)"
-  def numeric(col: AnyCol) = AggNumeric(col, template)
-  def float(col: AnyCol) = AggFloat(col, template)
-  def double(col: AnyCol) = AggDouble(col, template)
+  def numeric(col: NumericCol) = SumNumeric(col)
+  def float(col: FloatCol) = SumFloat(col)
+  def double(col: DoubleCol) = SumDouble(col)
+  def short(col: ShortCol) = SumLong(col)
+  def int(col: IntCol) = SumLong(col)
+  def long(col: LongCol) = SumNumeric(col)
 }
+
+
+case class SumNumeric(underlying: AnyCol) extends NumericFunctionSingle
+                                             with Aggregation {
+  val template = "sum(%s)"
+  def asString = Cast.asString(this)
+  def round = Round.numeric(this)
+  def round(prec: Int) = Round.numeric(this, prec)
+}
+
+case class SumLong(underlying: AnyCol) extends LongFunctionSingle
+                                          with Aggregation {
+  val template = "sum(%s)"
+  def asString = Cast.asString(this)
+}
+
+case class SumFloat(underlying: AnyCol) extends FloatFunctionSingle
+                                           with Aggregation {
+  val template = "sum(%s)"
+  def asString = Cast.asString(this)
+  def round = Round.float(this)
+}
+
+case class SumDouble(underlying: AnyCol) extends DoubleFunctionSingle
+                                            with Aggregation {
+  val template = "sum(%s)"
+  def asString = Cast.asString(this)
+  def round = Round.double(this)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

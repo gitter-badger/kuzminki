@@ -18,29 +18,30 @@ package kuzminki.model
 
 
 object Avg {
-  protected val template = "avg(%s)"
-  def numeric(col: AnyCol) = AggNumeric(col, template)
-  def float(col: AnyCol) = AggDouble(col, template)
-  def double(col: AnyCol) = AggDouble(col, template)
+  def numeric(col: NumericCol) = AvgNumeric(col)
+  def float(col: FloatCol) = AvgDouble(col)
+  def double(col: DoubleCol) = AvgDouble(col)
+  def short(col: ShortCol) = AvgNumeric(col)
+  def int(col: IntCol) = AvgNumeric(col)
+  def long(col: LongCol) = AvgNumeric(col)
 }
-  
 
 
+case class AvgNumeric(underlying: AnyCol) extends NumericFunctionSingle
+                                             with Aggregation {
+  val template = "avg(%s)"
+  def asString = Cast.asString(this)
+  def round = Round.numeric(this)
+  def round(prec: Int) = Round.numeric(this, prec)
+}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+case class AvgDouble(underlying: AnyCol) extends DoubleFunctionSingle
+                                            with Aggregation {
+  val template = "avg(%s)"
+  def asString = Cast.asString(this)
+  def round = Round.double(this)
+}
 
 
 

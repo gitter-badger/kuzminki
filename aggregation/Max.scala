@@ -18,15 +18,46 @@ package kuzminki.model
 
 
 object Max {
-  protected val template = "max(%s)"
-  def numeric(col: AnyCol) = AggNumeric(col, template)
-  def float(col: AnyCol) = AggFloat(col, template)
-  def double(col: AnyCol) = AggDouble(col, template)
-  def int(col: AnyCol) = AggInt(col, template)
-  def instant(col: AnyCol) = AggInstant(col, template)
+  def numeric(col: NumericCol) = MaxNumeric(col)
+  def float(col: FloatCol) = MaxFloat(col)
+  def double(col: DoubleCol) = MaxDouble(col)
+  def int(col: IntCol) = MaxInt(col)
+  def instant(col: InstantCol) = MaxInstant(col)
 }
 
 
+case class MaxNumeric(underlying: AnyCol) extends NumericFunctionSingle
+                                             with Aggregation {
+  val template = "max(%s)"
+  def asString = Cast.asString(this)
+  def round = Round.numeric(this)
+  def round(prec: Int) = Round.numeric(this, prec)
+}
+
+case class MaxInt(underlying: AnyCol) extends IntFunctionSingle
+                                         with Aggregation {
+  val template = "max(%s)"
+  def asString = Cast.asString(this)
+}
+
+case class MaxFloat(underlying: AnyCol) extends FloatFunctionSingle
+                                           with Aggregation {
+  val template = "max(%s)"
+  def asString = Cast.asString(this)
+  def round = Round.float(this)
+}
+
+case class MaxDouble(underlying: AnyCol) extends DoubleFunctionSingle
+                                            with Aggregation {
+  val template = "max(%s)"
+  def asString = Cast.asString(this)
+  def round = Round.double(this)
+}
+
+case class MaxInstant(underlying: AnyCol) extends InstantFunctionSingle
+                                             with Aggregation {
+  val template = "max(%s)"
+}
 
 
 

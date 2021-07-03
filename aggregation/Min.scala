@@ -18,22 +18,46 @@ package kuzminki.model
 
 
 object Min {
-  protected val template = "min(%s)"
-  def numeric(col: AnyCol) = AggNumeric(col, template)
-  def float(col: AnyCol) = AggFloat(col, template)
-  def double(col: AnyCol) = AggDouble(col, template)
-  def instant(col: AnyCol) = AggInstant(col, template)
+  def numeric(col: NumericCol) = MinNumeric(col)
+  def float(col: FloatCol) = MinFloat(col)
+  def double(col: DoubleCol) = MinDouble(col)
+  def int(col: IntCol) = MinInt(col)
+  def instant(col: InstantCol) = MinInstant(col)
 }
 
 
+case class MinNumeric(underlying: AnyCol) extends NumericFunctionSingle
+                                             with Aggregation {
+  val template = "min(%s)"
+  def asString = Cast.asString(this)
+  def round = Round.numeric(this)
+  def round(prec: Int) = Round.numeric(this, prec)
+}
 
+case class MinInt(underlying: AnyCol) extends IntFunctionSingle
+                                         with Aggregation {
+  val template = "min(%s)"
+  def asString = Cast.asString(this)
+}
 
+case class MinFloat(underlying: AnyCol) extends FloatFunctionSingle
+                                           with Aggregation {
+  val template = "min(%s)"
+  def asString = Cast.asString(this)
+  def round = Round.float(this)
+}
 
+case class MinDouble(underlying: AnyCol) extends DoubleFunctionSingle
+                                            with Aggregation {
+  val template = "min(%s)"
+  def asString = Cast.asString(this)
+  def round = Round.double(this)
+}
 
-
-
-
-
+case class MinInstant(underlying: AnyCol) extends InstantFunctionSingle
+                                             with Aggregation {
+  val template = "min(%s)"
+}
 
 
 

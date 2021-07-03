@@ -19,7 +19,7 @@ package kuzminki.model
 
 class JoinOn[A <: Model, B <: Model, R](join: Join[A, B], coll: SelectCollector[R]) {
 
-  def joinOn(pickLeft: A => AnyCol, pickRight: B => AnyCol) = {
+  def joinOn(pickLeft: A => ModelCol, pickRight: B => ModelCol) = {
     new Where(
       join,
       coll.extend(Array(
