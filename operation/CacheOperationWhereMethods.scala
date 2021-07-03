@@ -3,8 +3,10 @@ package kuzminki.model
 
 abstract class CacheOperationWhereMethods[M](model: M, coll: OperationCollector) {
 
-  private def next[A](changes: PartShape[A]) = {
-    coll.cacheOperation(model, changes)
+  private def next[A](filters: PartShape[A]) = {
+    coll
+      .add(UpdateCacheWhereSec(filters.parts))
+      .cacheOperation(model, filters)
   }
 
   def cacheWhere1[P](

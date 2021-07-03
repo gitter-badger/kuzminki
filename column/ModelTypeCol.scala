@@ -23,7 +23,7 @@ trait ModelTypeCol[T] extends TypeCol[T]
   val real: ModelCol
   def ==>(value: T) = SetValue(real, value)
   def setToNull = SetToNull(real)
-  def cacheSet = CacheSet(self)
+  def cacheAssign = CacheSet(self)
 }
 
 

@@ -16,8 +16,12 @@
 
 package kuzminki.model
 
+import io.rdbc.sapi.SqlWithParams
 
-case class OperationCollector(db: Conn, sections: Array[Section]) extends CollectOperation {
+
+case class OperationCollector(db: Conn, sections: Array[Section]) {
+
+  val prefix = Prefix.forModel
 
   def add(section: Section) = this.copy(sections = sections :+ section)
 
@@ -30,4 +34,10 @@ case class OperationCollector(db: Conn, sections: Array[Section]) extends Collec
   def cacheUpdate[M, P1, P2](model: M, changes: PartShape[P1], filters: PartShape[P2]) = {
     new StoredUpdate(render, changes.conv, filters.conv, db)
   }
+
+  def render = sections.map(_.render(prefix)).mkString(" ")
+  
+  def args = sections.toSeq.map(_.args).flatten.toVector
+  
+  def statement = SqlWithParams(render, args)
 }
