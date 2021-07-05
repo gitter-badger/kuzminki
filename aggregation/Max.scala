@@ -21,7 +21,9 @@ object Max {
   def numeric(col: NumericCol) = MaxNumeric(col)
   def float(col: FloatCol) = MaxFloat(col)
   def double(col: DoubleCol) = MaxDouble(col)
+  def short(col: ShortCol) = MaxShort(col)
   def int(col: IntCol) = MaxInt(col)
+  def long(col: LongCol) = MaxLong(col)
   def instant(col: InstantCol) = MaxInstant(col)
 }
 
@@ -34,8 +36,20 @@ case class MaxNumeric(underlying: AnyCol) extends NumericFunctionSingle
   def round(prec: Int) = Round.numeric(this, prec)
 }
 
+case class MaxShort(underlying: AnyCol) extends ShortFunctionSingle
+                                           with Aggregation {
+  val template = "max(%s)"
+  def asString = Cast.asString(this)
+}
+
 case class MaxInt(underlying: AnyCol) extends IntFunctionSingle
                                          with Aggregation {
+  val template = "max(%s)"
+  def asString = Cast.asString(this)
+}
+
+case class MaxLong(underlying: AnyCol) extends LongFunctionSingle
+                                          with Aggregation {
   val template = "max(%s)"
   def asString = Cast.asString(this)
 }

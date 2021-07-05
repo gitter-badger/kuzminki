@@ -19,7 +19,7 @@ package kuzminki.model
 
 
 object StringFn {
-  def concat(cols: Seq[TypeCol[_]]) = StringFnConcat(cols)
+  def concat(cols: TypeCol[_]*) = StringFnConcat(cols)
 }
 
 

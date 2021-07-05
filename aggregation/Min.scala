@@ -21,7 +21,9 @@ object Min {
   def numeric(col: NumericCol) = MinNumeric(col)
   def float(col: FloatCol) = MinFloat(col)
   def double(col: DoubleCol) = MinDouble(col)
+  def short(col: ShortCol) = MinShort(col)
   def int(col: IntCol) = MinInt(col)
+  def long(col: LongCol) = MinLong(col)
   def instant(col: InstantCol) = MinInstant(col)
 }
 
@@ -34,8 +36,20 @@ case class MinNumeric(underlying: AnyCol) extends NumericFunctionSingle
   def round(prec: Int) = Round.numeric(this, prec)
 }
 
+case class MinShort(underlying: AnyCol) extends ShortFunctionSingle
+                                           with Aggregation {
+  val template = "min(%s)"
+  def asString = Cast.asString(this)
+}
+
 case class MinInt(underlying: AnyCol) extends IntFunctionSingle
                                          with Aggregation {
+  val template = "min(%s)"
+  def asString = Cast.asString(this)
+}
+
+case class MinLong(underlying: AnyCol) extends LongFunctionSingle
+                                          with Aggregation {
   val template = "min(%s)"
   def asString = Cast.asString(this)
 }
