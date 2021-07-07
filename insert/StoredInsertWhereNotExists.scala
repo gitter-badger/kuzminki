@@ -38,7 +38,7 @@ class StoredInsertWhereNotExists[P](
     db.execNum(statement(params))
   }
 
-  def fromSource(source: Source[P, NotUsed]) = {
+  def fromSource[T](source: Source[P, T]) = {
     db.fromSource(
       template,
       source.map(tansformParams)

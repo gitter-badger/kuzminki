@@ -56,7 +56,7 @@ object implicits {
   implicit val toNumericModelCol: TypeCol[DecimalNumber] => NumericModelCol = col => col.asInstanceOf[NumericModelCol]
   implicit val toBigDecimalModelCol: TypeCol[BigDecimal] => BigDecimalModelCol = col => col.asInstanceOf[BigDecimalModelCol]
 
-  implicit val toInstantModelCol: TypeCol[Instant] => InstantModelCol = col => col.asInstanceOf[InstantCol]
+  implicit val toInstantModelCol: TypeCol[Instant] => InstantModelCol = col => col.asInstanceOf[InstantModelCol]
   implicit val toZonedDateTimeModelCol: TypeCol[ZonedDateTime] => ZonedDateTimeModelCol = col => col.asInstanceOf[ZonedDateTimeModelCol]
   implicit val toLocalDateTimeModelCol: TypeCol[LocalDateTime] => LocalDateTimeModelCol = col => col.asInstanceOf[LocalDateTimeModelCol]
   implicit val toLocalDateModelCol: TypeCol[LocalDate] => LocalDateModelCol = col => col.asInstanceOf[LocalDateModelCol]
