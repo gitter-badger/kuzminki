@@ -109,19 +109,19 @@ case class FilterSimilarTo(col: AnyCol, arg: String) extends SingleArgFilter {
 }
 
 case class FilterReMatch(col: AnyCol, arg: String) extends SingleArgFilter {
-  def template = "%s SIMILAR TO ?"
+  def template = "%s ~ ?"
 }
 
 case class FilterReIMatch(col: AnyCol, arg: String) extends SingleArgFilter {
-  def template = "%s SIMILAR TO ?"
+  def template = "%s ~* ?"
 }
 
 case class FilterReNotMatch(col: AnyCol, arg: String) extends SingleArgFilter {
-  def template = "%s SIMILAR TO ?"
+  def template = "%s !~ ?"
 }
 
 case class FilterReNotImatch(col: AnyCol, arg: String) extends SingleArgFilter {
-  def template = "%s SIMILAR TO ?"
+  def template = "%s !~* ?"
 }
 
 // sub query

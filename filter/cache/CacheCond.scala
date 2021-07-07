@@ -37,15 +37,15 @@ case class CacheEq[T](col: TypeCol[T]) extends CacheFilter[T] {
 }
 
 case class CacheNot[T](col: TypeCol[T]) extends CacheFilter[T] {
-  def template = s"%s = ?"
+  def template = s"%s != ?"
 }
 
 case class CacheGt[T](col: TypeCol[T]) extends CacheFilter[T] {
-  def template = s"%s = ?"
+  def template = s"%s > ?"
 }
 
 case class CacheLt[T](col: TypeCol[T]) extends CacheFilter[T] {
-  def template = s"%s = ?"
+  def template = s"%s < ?"
 }
 
 
