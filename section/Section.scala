@@ -14,7 +14,9 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.section
+
+import kuzminki.render.Renderable
 
 
 trait Section extends Renderable {

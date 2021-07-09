@@ -14,21 +14,21 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.insert
 
-import akka.stream.scaladsl._
-import akka.{NotUsed, Done}
+import akka.stream.scaladsl.Source
 import io.rdbc.sapi.SqlWithParams
+import kuzminki.rdbc.Driver
+import kuzminki.shape.ParamConv
 
 
 class StoredInsert[P](
       protected val template: String,
       protected val paramConv: ParamConv[P],
-                    db: Conn
+                    db: Driver
     ) extends InsertStatement[P]
          with InsertParams[P]
-         with InsertList[P]
-         with InsertPrinting {
+         with InsertList[P] {
 
   def run(params: P) = {
     db.exec(statement(params))

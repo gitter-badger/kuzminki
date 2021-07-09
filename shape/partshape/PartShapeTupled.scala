@@ -1,6 +1,6 @@
+package kuzminki.shape
 
-
-package kuzminki.model
+import kuzminki.filter.CachePart
 
 
 class PartShape2[P1, P2](

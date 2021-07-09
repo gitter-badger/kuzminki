@@ -14,7 +14,9 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.column
+
+import kuzminki.assign.{SetValue, SetToNull, CacheSet}
 
 
 trait ModelTypeCol[T] extends TypeCol[T]

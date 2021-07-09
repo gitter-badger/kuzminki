@@ -14,10 +14,9 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.insert
 
-import akka.stream.scaladsl._
-import akka.{NotUsed, Done}
+import akka.stream.scaladsl.Source
 
 
 class RunInsertWhereNotExists[M, P](
@@ -32,7 +31,7 @@ class RunInsertWhereNotExists[M, P](
 
   def runNum(params: P) = cache.runNum(params)
 
-  def fromSource(source: Source[P, NotUsed]) = cache.fromSource(source)
+  def fromSource[T](source: Source[P, T]) = cache.fromSource(source)
 
   def streamList(paramsList: List[P]) = cache.streamList(paramsList)
 

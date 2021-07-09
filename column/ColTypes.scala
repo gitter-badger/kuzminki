@@ -14,11 +14,11 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.column
 
-import java.time._
+import java.time.{Instant, LocalDate, LocalDateTime, ZonedDateTime}
 import java.util.UUID
-import io.rdbc.sapi._
+import io.rdbc.sapi.DecimalNumber
 
 
 trait StringCol extends StringColValue

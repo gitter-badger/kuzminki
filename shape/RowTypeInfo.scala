@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.shape
 
 import scala.reflect.{classTag, ClassTag}
 import scala.reflect.runtime.universe._
+import kuzminki.column.TypeCol
+
 
 case class RowTypeInfo[T](cols: Seq[TypeCol[_]], cTag: ClassTag[T], tTag: TypeTag[T])

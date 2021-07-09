@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.insert
 
 import io.rdbc.sapi.SqlWithParams
+import kuzminki.rdbc.Driver
+import kuzminki.shape.{ParamConv, RowConv}
 
 
 class StoredUpsertReturning[P, R](
@@ -24,10 +26,9 @@ class StoredUpsertReturning[P, R](
       protected val paramConv: ParamConv[P],
       protected val reuse: Reuse,
                     rowConv: RowConv[R],
-                    db: Conn
+                    db: Driver
     ) extends InsertParamsReuse[P]
-         with InsertStatement[P]
-         with InsertPrinting {
+         with InsertStatement[P] {
 
   def run(params: P) = {
     db.selectHead(statement(params)) { row =>

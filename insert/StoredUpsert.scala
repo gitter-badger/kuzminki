@@ -14,19 +14,20 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.insert
 
 import io.rdbc.sapi.SqlWithParams
+import kuzminki.rdbc.Driver
+import kuzminki.shape.ParamConv
 
 
 class StoredUpsert[P](
       protected val template: String,
       protected val paramConv: ParamConv[P],
       protected val reuse: Reuse,
-                    db: Conn
+                    db: Driver
     ) extends InsertParamsReuse[P]
-         with InsertStatement[P]
-         with InsertPrinting {
+         with InsertStatement[P] {
 
   def run(params: P) = {
     db.exec(statement(params))

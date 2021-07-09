@@ -14,19 +14,20 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.insert
 
 import io.rdbc.sapi.SqlWithParams
+import kuzminki.rdbc.Driver
+import kuzminki.shape.{ParamConv, RowConv}
 
 
 class StoredInsertDoNothingReturning[P, R](
       protected val template: String,
       protected val paramConv: ParamConv[P],
                     rowConv: RowConv[R],
-                    db: Conn
+                    db: Driver
     ) extends InsertStatement[P]
-         with InsertParams[P]
-         with InsertPrinting {
+         with InsertParams[P] {
 
   def run(params: P) = {
     db.selectHeadOption(statement(params)) { row =>

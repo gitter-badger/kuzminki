@@ -14,7 +14,10 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.select
+
+import kuzminki.section.select.OrderBySec
+import kuzminki.sorting.Sorting
 
 
 class OrderBy[M, R](model: M, coll: SelectCollector[R]) extends Offset(model, coll) {

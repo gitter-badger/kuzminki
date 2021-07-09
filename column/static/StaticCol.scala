@@ -14,12 +14,10 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.column
 
+import kuzminki.render.{Renderable, Prefix}
 
-object Static {
-  def string(value: String) = StaticStringCol(value)
-}
 
 trait StaticCol extends Renderable {
   val value: Any

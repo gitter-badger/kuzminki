@@ -14,16 +14,14 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.function.string
+
+import kuzminki.function.types.StringFunction
+import kuzminki.column.TypeCol
+import kuzminki.render.Prefix
 
 
-
-object StringFn {
-  def concat(cols: TypeCol[_]*) = StringFnConcat(cols)
-}
-
-
-case class StringFnConcat(cols: Seq[TypeCol[_]]) extends StringFunction {
+case class StringConcat(cols: Seq[TypeCol[_]]) extends StringFunction {
   def template = "concat(%s)"
   def render(prefix: Prefix) = {
     template.format(

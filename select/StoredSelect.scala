@@ -14,17 +14,16 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.select
 
-
-import scala.concurrent.Future
-import akka.stream.scaladsl._
-import akka.Done
 import io.rdbc.sapi.SqlWithParams
+import kuzminki.rdbc.Driver
+import kuzminki.render.Prefix
+import kuzminki.shape.RowConv
 
 
 class StoredSelect[R](
-      db: Conn,
+      db: Driver,
       statement: SqlWithParams,
       rowConv: RowConv[R]
     ) {

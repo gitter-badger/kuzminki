@@ -14,12 +14,15 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.shape
 
 import scala.language.implicitConversions
 import scala.util.{ Try, Success, Failure }
 import scala.reflect.{classTag, ClassTag}
 import scala.reflect.runtime.universe._
+
+import kuzminki.api.KuzminkiException
+import kuzminki.column._
 
 
 trait RowTypeNames {

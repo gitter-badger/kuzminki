@@ -14,7 +14,15 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.select
+
+import kuzminki.api.{Model, Join}
+import kuzminki.model.ModelTable
+import kuzminki.column.ModelCol
+import kuzminki.section.select.{
+  InnerJoinSec,
+  OnSec
+}
 
 
 class JoinOn[A <: Model, B <: Model, R](join: Join[A, B], coll: SelectCollector[R]) {

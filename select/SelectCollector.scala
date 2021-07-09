@@ -14,26 +14,27 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.select
 
-import akka.Done
-import io.rdbc.sapi.SqlWithParams
-
+import kuzminki.api.KuzminkiException
+import kuzminki.render.{RenderCollector, Prefix}
+import kuzminki.rdbc.Driver
+import kuzminki.section._
+import kuzminki.section.select._
+import kuzminki.shape._
 
 case class SelectCollector[R](
-      db: Conn,
+      db: Driver,
       prefix: Prefix,
       rowShape: RowShape[R],
       sections: Array[Section]
-    ) {
+    ) extends RenderCollector {
 
   def add(section: Section) = this.copy(sections = sections :+ section)
 
   def extend(added: Array[Section]) = this.copy(sections = sections ++ added)
 
   def cache = new StoredSelect(db, statement, rowShape.conv)
-
-  // helpers
 
   private def validataWhere(): Unit = {
     
@@ -206,20 +207,6 @@ case class SelectCollector[R](
 
     new StoredSelectConditionAndOffset(db, template, args, partShape.conv, rowShape.conv)
   }
-
-  // render
-
-  val notBlank: Section => Boolean = {
-    case WhereBlankSec => false
-    case HavingBlankSec => false
-    case _ => true
-  }
-
-  def render = sections.filter(notBlank).map(_.render(prefix)).mkString(" ")
-
-  def args = sections.toSeq.map(_.args).flatten.toVector
-
-  def statement = SqlWithParams(render, args)
 }
 
 

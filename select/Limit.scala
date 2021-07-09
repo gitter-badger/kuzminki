@@ -14,7 +14,9 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.select
+
+import kuzminki.section.select.LimitSec
 
 
 class Limit[M, R](model: M, coll: SelectCollector[R]) extends RunSelect(model, coll) {

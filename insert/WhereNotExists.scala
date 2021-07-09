@@ -14,8 +14,15 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.insert
 
+import kuzminki.api.Model
+import kuzminki.api.KuzminkiException
+import kuzminki.column.TypeCol
+import kuzminki.model.ModelTable
+import kuzminki.filter.types.FilterMatchesNoArg
+import kuzminki.section.select.WhereSec
+import kuzminki.section.insert._
 
 trait WhereNotExists[M <: Model, S] {
 
@@ -53,3 +60,12 @@ trait WhereNotExists[M <: Model, S] {
     )
   }
 }
+
+
+
+
+
+
+
+
+

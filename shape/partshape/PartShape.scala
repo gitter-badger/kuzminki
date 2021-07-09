@@ -14,8 +14,9 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.shape
 
+import kuzminki.render.Renderable
 
 trait PartShape[P] {
   def parts: Seq[Renderable]

@@ -14,12 +14,18 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.operation
 
-import io.rdbc.sapi.SqlWithParams
+import kuzminki.rdbc.Driver
+import kuzminki.render.{RenderCollector, Prefix}
+import kuzminki.section.Section
+import kuzminki.shape.PartShape
 
 
-case class OperationCollector(db: Conn, sections: Array[Section]) {
+case class OperationCollector(
+      db: Driver,
+      sections: Array[Section]
+    ) extends RenderCollector {
 
   val prefix = Prefix.forModel
 
@@ -34,10 +40,4 @@ case class OperationCollector(db: Conn, sections: Array[Section]) {
   def cacheUpdate[M, P1, P2](model: M, changes: PartShape[P1], filters: PartShape[P2]) = {
     new StoredUpdate(render, changes.conv, filters.conv, db)
   }
-
-  def render = sections.map(_.render(prefix)).mkString(" ")
-  
-  def args = sections.toSeq.map(_.args).flatten.toVector
-  
-  def statement = SqlWithParams(render, args)
 }

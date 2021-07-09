@@ -14,12 +14,15 @@
 * limitations under the License.
 */
 
-package kuzminki.model
-
+package kuzminki.select
 
 import scala.concurrent.Future
-import akka.stream.scaladsl._
-import akka.Done
+import akka.stream.scaladsl.Source
+import kuzminki.api.KuzminkiException
+import kuzminki.render.Prefix
+import kuzminki.column.AnyCol
+import kuzminki.aggregate.Aggregation
+import kuzminki.section.select._
 
 
 class RunSelect[M, R](

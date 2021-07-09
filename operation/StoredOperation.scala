@@ -14,18 +14,19 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.operation
 
-import akka.stream.scaladsl._
-import akka.{NotUsed, Done}
+import akka.stream.scaladsl.Source
 import io.rdbc.sapi.SqlWithParams
+import kuzminki.rdbc.Driver
+import kuzminki.shape.ParamConv
 
 
 class StoredOperation[P](
       template: String,
       args: Vector[Any],
       filters: ParamConv[P],
-      db: Conn) {
+      db: Driver) {
 
   private def transform(params: P) = {
     args ++ filters.fromShape(params)

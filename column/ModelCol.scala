@@ -14,7 +14,9 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.column
+
+import kuzminki.render.{NoArgs, Prefix}
 
 
 trait ModelCol extends AnyCol with NoArgs {          

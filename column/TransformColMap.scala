@@ -14,7 +14,9 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.column
+
+import kuzminki.conv.ModyfyConv
 
 
 case class TransformColMap[T, R](

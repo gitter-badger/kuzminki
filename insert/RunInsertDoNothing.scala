@@ -14,10 +14,7 @@
 * limitations under the License.
 */
 
-package kuzminki.model
-
-import akka.stream.scaladsl._
-import akka.{NotUsed, Done}
+package kuzminki.insert
 
 
 class RunInsertDoNothing[M, P](

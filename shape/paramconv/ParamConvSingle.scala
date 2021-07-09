@@ -14,7 +14,9 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.shape
+
+import kuzminki.conv.ValConv
 
 
 class ParamConvSingle[P](col: ValConv[P]) extends ParamConv[P] {

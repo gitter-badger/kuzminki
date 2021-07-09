@@ -14,7 +14,11 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.operation
+
+import kuzminki.api.KuzminkiException
+import kuzminki.section.operation.WhereSec
+import kuzminki.filter.Filter
 
 
 class OperationWhere[M](

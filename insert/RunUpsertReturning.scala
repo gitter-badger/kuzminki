@@ -14,7 +14,9 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.insert
+
+import kuzminki.shape.RowShape
 
 
 class RunUpsertReturning[P, R](

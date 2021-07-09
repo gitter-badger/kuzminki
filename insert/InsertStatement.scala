@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.insert
 
 import io.rdbc.sapi.SqlWithParams
 

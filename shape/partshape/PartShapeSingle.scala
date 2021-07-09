@@ -14,7 +14,9 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.shape
+
+import kuzminki.filter.CachePart
 
 
 class PartShapeSingle[P](cond: CachePart[P]) extends PartShape[P] {

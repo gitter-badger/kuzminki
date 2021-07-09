@@ -14,11 +14,10 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.function.types
 
-
-import java.time._
-import io.rdbc.sapi.DecimalNumber
+import kuzminki.function.ColFunction
+import kuzminki.column._
 
 
 trait StringFunction extends ColFunction with StringCol

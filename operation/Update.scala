@@ -14,12 +14,18 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.operation
+
+import kuzminki.api.Model
+import kuzminki.rdbc.Driver
+import kuzminki.model.ModelTable
+import kuzminki.assign.Assign
+import kuzminki.section.operation.{UpdateSec, UpdateSetSec}
 
 
 class Update[M <: Model](
       model: M,
-      db: Conn
+      db: Driver
     ) extends CacheSetMethods(model, db) {
 
   def set(pick: M => Seq[Assign]) = {

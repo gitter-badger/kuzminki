@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.insert
 
 import io.rdbc.sapi.SqlWithParams
+import kuzminki.rdbc.Driver
+import kuzminki.shape.{ParamConv, RowConv}
 
 
 class StoredInsertWhereNotExistsReturning[P, R](
@@ -24,10 +26,9 @@ class StoredInsertWhereNotExistsReturning[P, R](
       protected val paramConv: ParamConv[P],
       protected val reuse: Reuse,
                     rowConv: RowConv[R],
-                    db: Conn
+                    db: Driver
     ) extends InsertStatement[P]
-         with InsertParamsReuse[P]
-         with InsertPrinting {
+         with InsertParamsReuse[P] {
 
   def run(params: P) = {
     db.selectHeadOption(statement(params)) { row =>

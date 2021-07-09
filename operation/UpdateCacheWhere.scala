@@ -1,4 +1,9 @@
-package kuzminki.model
+package kuzminki.operation
+
+import kuzminki.api.Model
+import kuzminki.filter.CachePart
+import kuzminki.section.operation.UpdateCacheWhereSec
+import kuzminki.shape._
 
 
 class UpdateCacheWhere[M, A](model: M, coll: OperationCollector, changes: PartShape[A]) {

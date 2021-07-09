@@ -14,7 +14,9 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.function
+
+import kuzminki.render.{UnderlyingFunctionRender, UnderlyingArgs, UnderlyingRef}
 
 
 trait SingleColFunction extends ColFunction

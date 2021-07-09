@@ -14,7 +14,9 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.column
+
+import kuzminki.render.UnderlyingRenderAndArgs
 
 
 trait OptColTransformMethods[T] extends TypeOptCol[T] with UnderlyingRenderAndArgs{

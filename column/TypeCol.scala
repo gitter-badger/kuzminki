@@ -14,8 +14,9 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.column
 
+import kuzminki.conv.ValConv
 
 trait TypeCol[T] extends AnyCol {
   def conv: ValConv[T]

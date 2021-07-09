@@ -14,16 +14,21 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.operation
+
+import kuzminki.api.Model
+import kuzminki.rdbc.Driver
+import kuzminki.model.ModelTable
+import kuzminki.section.operation.DeleteFromSec
 
 
 object Delete {
 
-  def from[M <: Model](model: M, conn: Conn) = {
+  def from[M <: Model](model: M, db: Driver) = {
     new OperationWhere(
       model,
       OperationCollector(
-        conn,
+        db,
         Array(
           DeleteFromSec(ModelTable(model))
         )

@@ -14,17 +14,18 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.select
 
-
-import scala.concurrent.Future
-import akka.stream.scaladsl._
-import akka.Done
 import io.rdbc.sapi.SqlWithParams
+import io.rdbc.sapi.SqlWithParams
+import kuzminki.rdbc.Driver
+import kuzminki.render.Prefix
+import kuzminki.shape.ParamConv
+import kuzminki.shape.RowConv
 
 
 class StoredSelectConditionAndOffset[P, R](
-      db: Conn,
+      db: Driver,
       template: String,
       cacheArgs: Tuple3[Vector[Any], Vector[Any], Vector[Any]],
       paramConv: ParamConv[P],

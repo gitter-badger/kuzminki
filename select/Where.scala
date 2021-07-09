@@ -14,7 +14,12 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.select
+
+import kuzminki.column.AnyCol
+import kuzminki.filter.Filter
+import kuzminki.section.Section
+import kuzminki.section.select.{WhereSec, WhereBlankSec, GroupBySec}
 
 
 class Where[M, R](

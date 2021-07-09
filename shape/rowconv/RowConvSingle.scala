@@ -14,9 +14,10 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.shape
 
 import io.rdbc.sapi.Row
+import kuzminki.conv.ValConv
 
 
 class RowConvSingle[R](col: ValConv[R]) extends RowConv[R] {

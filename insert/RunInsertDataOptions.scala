@@ -14,7 +14,11 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.insert
+
+import kuzminki.api.Model
+import kuzminki.column.ModelCol
+import kuzminki.section.insert.{InsertOnConflictSec, InsertDoNothingSec}
 
 
 class RunInsertDataOptions[M <: Model](

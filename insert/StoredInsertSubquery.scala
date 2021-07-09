@@ -14,12 +14,13 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.insert
 
 import io.rdbc.sapi.SqlWithParams
+import kuzminki.rdbc.Driver
 
 
-class StoredInsertSubquery(statement: SqlWithParams, db: Conn) {
+class StoredInsertSubquery(statement: SqlWithParams, db: Driver) {
 
   def run() = {
     db.exec(statement)

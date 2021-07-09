@@ -14,9 +14,10 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.shape
 
 import scala.reflect.{classTag, ClassTag}
+import kuzminki.column.TypeCol
 
 
 class ParamShapeWrite[P](val cols: Seq[TypeCol[_]], tag: ClassTag[P]) extends ParamShape[P] {

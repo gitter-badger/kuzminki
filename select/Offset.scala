@@ -14,7 +14,9 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.select
+
+import kuzminki.section.select.OffsetSec
 
 
 class Offset[M, R](model: M, coll: SelectCollector[R]) extends Limit(model, coll) {

@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.column
 
 
 case class ColInfo(name: String, table: String, hasNull: Boolean)

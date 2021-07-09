@@ -14,13 +14,19 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.insert
+
+import kuzminki.rdbc.Driver
+import kuzminki.render.{RenderCollector, Prefix}
+import kuzminki.section.Section
 
 
 case class InsertDataCollector(
-      db: Conn,
+      db: Driver,
       sections: Array[Section]
-    ) extends CollectOperation {
+    ) extends RenderCollector {
+
+  val prefix = Prefix.forModel
 
   def add(section: Section) = this.copy(sections = sections :+ section)
 

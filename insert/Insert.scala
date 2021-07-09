@@ -14,10 +14,19 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.insert
+
+import kuzminki.api.Model
+import kuzminki.model.ModelTable
+import kuzminki.column.TypeCol
+import kuzminki.rdbc.Driver
+import kuzminki.assign.SetValue
+import kuzminki.section.Section
+import kuzminki.section.insert._
+import kuzminki.shape._
 
 
-class Insert[M <: Model](model: M, db: Conn) {
+class Insert[M <: Model](model: M, db: Driver) {
 
   def data(pick: M => Seq[SetValue]) = {
     new RunInsertDataOptions(

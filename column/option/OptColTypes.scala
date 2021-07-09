@@ -14,72 +14,72 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.column
 
-import java.time._
+import java.time.{Instant, LocalDate, LocalDateTime, ZonedDateTime}
 import java.util.UUID
-import io.rdbc.sapi._
+import io.rdbc.sapi.DecimalNumber
 
 
 
 case class StringOptCol(underlying: AnyCol) extends StringOptColValue
-                                                  with OptColTransformMethods[String]
+                                               with OptColTransformMethods[String]
 
 
 case class CharOptCol(underlying: AnyCol) extends CharOptColValue
-                                                with OptColTransformMethods[Char]
+                                             with OptColTransformMethods[Char]
 
 
 case class BooleanOptCol(underlying: AnyCol) extends BooleanOptColValue
-                                                   with OptColTransformMethods[Boolean]
+                                                with OptColTransformMethods[Boolean]
 
 
 case class ShortOptCol(underlying: AnyCol) extends ShortOptColValue
-                                                 with OptColTransformMethods[Short]
+                                              with OptColTransformMethods[Short]
 
 
 case class IntOptCol(underlying: AnyCol) extends IntOptColValue
-                                               with OptColTransformMethods[Int]
+                                            with OptColTransformMethods[Int]
 
 
 case class LongOptCol(underlying: AnyCol) extends LongOptColValue
-                                                with OptColTransformMethods[Long]
+                                             with OptColTransformMethods[Long]
 
 
 case class FloatOptCol(underlying: AnyCol) extends FloatOptColValue
-                                                 with OptColTransformMethods[Float]
+                                              with OptColTransformMethods[Float]
 
 
 case class DoubleOptCol(underlying: AnyCol) extends DoubleOptColValue
-                                                  with OptColTransformMethods[Double]
+                                               with OptColTransformMethods[Double]
 
 
 case class NumericOptCol(underlying: AnyCol) extends NumericOptColValue
-                                                   with OptColTransformMethods[DecimalNumber]
+                                                with OptColTransformMethods[DecimalNumber]
 
 
 case class BigDecimalOptCol(underlying: AnyCol) extends BigDecimalOptColValue
-                                                      with OptColTransformMethods[BigDecimal]
+                                                   with OptColTransformMethods[BigDecimal]
 
 
 case class InstantOptCol(underlying: AnyCol) extends InstantOptColValue
-                                                   with OptColTransformMethods[Instant]
+                                                with OptColTransformMethods[Instant]
 
 
 case class ZonedDateTimeOptCol(underlying: AnyCol) extends ZonedDateTimeOptColValue
-                                                         with OptColTransformMethods[ZonedDateTime]
+                                                      with OptColTransformMethods[ZonedDateTime]
 
 
 case class LocalDateTimeOptCol(underlying: AnyCol) extends LocalDateTimeOptColValue
-                                                         with OptColTransformMethods[LocalDateTime]
+                                                      with OptColTransformMethods[LocalDateTime]
 
 
 case class LocalDateOptCol(underlying: AnyCol) extends LocalDateOptColValue
-                                                     with OptColTransformMethods[LocalDate]
+                                                  with OptColTransformMethods[LocalDate]
 
 
 case class UUIDOptCol(underlying: AnyCol) extends UUIDOptColValue
-                                                with OptColTransformMethods[UUID]
+                                             with OptColTransformMethods[UUID]
 
 
 

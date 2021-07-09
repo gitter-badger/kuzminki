@@ -14,7 +14,11 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.select
+
+import kuzminki.filter.Filter
+import kuzminki.section.Section
+import kuzminki.section.select.{HavingSec, HavingBlankSec}
 
 
 class Having[M, R](

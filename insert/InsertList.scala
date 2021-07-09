@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.insert
 
 import io.rdbc.sapi.SqlWithParams
+import kuzminki.api.KuzminkiException
+import kuzminki.shape.ParamConv
 
 
 trait InsertList[P] {

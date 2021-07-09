@@ -14,7 +14,10 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.insert
+
+import kuzminki.api.KuzminkiException
+import kuzminki.column.AnyCol
 
 
 object Reuse {
@@ -52,3 +55,8 @@ object NoChange extends Reuse {
   val indexes = Vector.empty[Int]
   def extend(values: Vector[Any]) = values
 }
+
+
+
+
+

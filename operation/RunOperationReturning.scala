@@ -14,12 +14,11 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.operation
 
-
-import scala.concurrent.Future
-import akka.stream.scaladsl._
-import akka.Done
+import kuzminki.shape.RowConv
+import kuzminki.render.Prefix
+import kuzminki.rdbc.Driver
 
 
 class RunOperationReturning[R](coll: OperationCollector, rowConv: RowConv[R]) {

@@ -14,18 +14,19 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.operation
 
-import akka.stream.scaladsl._
-import akka.{NotUsed, Done}
+import akka.stream.scaladsl.Source
 import io.rdbc.sapi.SqlWithParams
+import kuzminki.rdbc.Driver
+import kuzminki.shape.ParamConv
 
 
 class StoredUpdate[P1, P2](
       template: String,
       changes: ParamConv[P1],
       filters: ParamConv[P2],
-      db: Conn) {
+      db: Driver) {
 
   private def transform(params: Tuple2[P1, P2]) = {
     changes.fromShape(params._1) ++ filters.fromShape(params._2)

@@ -14,7 +14,10 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.column
+
+import kuzminki.render.Renderable
+import kuzminki.sorting.{Asc, Desc}
 
 
 trait AnyCol extends Renderable {

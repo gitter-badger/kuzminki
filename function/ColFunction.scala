@@ -14,7 +14,9 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.function
+
+import kuzminki.column.AnyCol
 
 
 trait ColFunction extends AnyCol {

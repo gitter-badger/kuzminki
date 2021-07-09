@@ -14,8 +14,10 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.insert
 
+import kuzminki.select.SelectSubquery
+import kuzminki.section.insert.InsertSubquerySec
 
 trait InsertSubquery[M, P] {
   

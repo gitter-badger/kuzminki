@@ -14,9 +14,7 @@
 * limitations under the License.
 */
 
-package kuzminki.model
-
-import io.rdbc.sapi.Row
+package kuzminki.column
 
 
 trait TypeOptCol[T] extends TypeCol[Option[T]] with AnyCol

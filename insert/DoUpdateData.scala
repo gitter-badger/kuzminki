@@ -14,7 +14,11 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.insert
+
+import kuzminki.column.ModelCol
+import kuzminki.assign.SetValue
+import kuzminki.section.insert._
 
 
 class DoUpdateData[M](

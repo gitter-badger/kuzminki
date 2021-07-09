@@ -1,7 +1,14 @@
-package kuzminki.model
+package kuzminki.operation
+
+import kuzminki.api.Model
+import kuzminki.rdbc.Driver
+import kuzminki.model.ModelTable
+import kuzminki.section.operation.{UpdateSec, UpdateCacheSetSec}
+import kuzminki.filter.CachePart
+import kuzminki.shape._
 
 
-abstract class CacheSetMethods[M <: Model](model: M, db: Conn) {
+abstract class CacheSetMethods[M <: Model](model: M, db: Driver) {
 
   private def next[S1](changes: PartShape[S1]) = {
     new UpdateCacheWhere(

@@ -14,7 +14,9 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.shape
+
+import kuzminki.column.AnyCol
 
 
 trait ParamShape[P] {

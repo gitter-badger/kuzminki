@@ -18,6 +18,8 @@ package kuzminki.model
 
 import scala.reflect.{classTag, ClassTag}
 import scala.reflect.runtime.universe._
+import kuzminki.column.TypeCol
+import kuzminki.shape._
 
 
 trait ModelRead {

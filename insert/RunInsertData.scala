@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-package kuzminki.model
+package kuzminki.insert
 
 
 class RunInsertData(coll: InsertDataCollector) {
