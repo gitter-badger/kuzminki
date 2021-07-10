@@ -23,7 +23,7 @@ import kuzminki.render.{Renderable, Prefix}
 
 trait CacheFilter[T] extends CachePart[T] {
   val col: TypeCol[T]
-  def template: String
+  val template: String
   def conv = col.conv
   def render(prefix: Prefix) = template.format(col.render(prefix))
   def args = col.args
@@ -31,19 +31,19 @@ trait CacheFilter[T] extends CachePart[T] {
 
 
 case class CacheEq[T](col: TypeCol[T]) extends CacheFilter[T] {
-  def template = s"%s = ?"
+  val template = s"%s = ?"
 }
 
 case class CacheNot[T](col: TypeCol[T]) extends CacheFilter[T] {
-  def template = s"%s != ?"
+  val template = s"%s != ?"
 }
 
 case class CacheGt[T](col: TypeCol[T]) extends CacheFilter[T] {
-  def template = s"%s > ?"
+  val template = s"%s > ?"
 }
 
 case class CacheLt[T](col: TypeCol[T]) extends CacheFilter[T] {
-  def template = s"%s < ?"
+  val template = s"%s < ?"
 }
 
 

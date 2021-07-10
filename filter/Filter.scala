@@ -20,7 +20,7 @@ import kuzminki.render.Renderable
 
 
 trait Filter extends Renderable {
-  def template: String
+  val template: String
 }
 
 

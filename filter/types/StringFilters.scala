@@ -20,33 +20,38 @@ import kuzminki.column.AnyCol
 
 
 case class FilterLike(col: AnyCol, arg: String) extends SingleArgFilter {
-  def template = "%s LIKE concat('%%', ?, '%%')"
+  val template = "%s LIKE concat('%%', ?, '%%')"
 }
 
 case class FilterStartsWith(col: AnyCol, arg: String) extends SingleArgFilter {
-  def template = "%s LIKE concat(?, '%%')"
+  val template = "%s LIKE concat(?, '%%')"
 }
 
 case class FilterEndsWith(col: AnyCol, arg: String) extends SingleArgFilter {
-  def template = "%s LIKE concat('%%', ?)"
+  val template = "%s LIKE concat('%%', ?)"
 }
 
 case class FilterSimilarTo(col: AnyCol, arg: String) extends SingleArgFilter {
-  def template = "%s SIMILAR TO ?"
+  val template = "%s SIMILAR TO ?"
 }
 
 case class FilterReMatch(col: AnyCol, arg: String) extends SingleArgFilter {
-  def template = "%s ~ ?"
+  val template = "%s ~ ?"
 }
 
 case class FilterReIMatch(col: AnyCol, arg: String) extends SingleArgFilter {
-  def template = "%s ~* ?"
+  val template = "%s ~* ?"
 }
 
 case class FilterReNotMatch(col: AnyCol, arg: String) extends SingleArgFilter {
-  def template = "%s !~ ?"
+  val template = "%s !~ ?"
 }
 
 case class FilterReNotImatch(col: AnyCol, arg: String) extends SingleArgFilter {
-  def template = "%s !~* ?"
+  val template = "%s !~* ?"
 }
+
+
+
+
+

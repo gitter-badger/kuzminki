@@ -33,7 +33,7 @@ object And {
 
 case class And(filters: Filter*) extends AndOrFilter {
   
-  def glue = " AND "
+  val glue = " AND "
 
   filters.foreach {
     case f: And => throw KuzminkiException("And cannot be within And")

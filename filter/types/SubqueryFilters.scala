@@ -20,9 +20,9 @@ import kuzminki.column.AnyCol
 import kuzminki.render.Renderable
 
 case class FilterInSubquery(col: AnyCol, sub: Renderable) extends SubqueryFilter {
-  def template = "%s = ANY(%s)"
+  val template = "%s = ANY(%s)"
 }
 
 case class FilterNotInSubquery(col: AnyCol, sub: Renderable) extends SubqueryFilter {
-  def template = "%s != ANY(%s)"
+  val template = "%s != ANY(%s)"
 }

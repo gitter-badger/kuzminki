@@ -33,7 +33,7 @@ object Or {
 
 case class Or(filters: Filter*) extends AndOrFilter {
 
-  def glue = " OR "
+  val glue = " OR "
 
   filters.foreach {
     case f: Or => throw KuzminkiException("Or cannot be within Or")

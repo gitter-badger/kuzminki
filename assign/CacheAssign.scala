@@ -23,7 +23,7 @@ import kuzminki.render.{Renderable, Prefix}
 
 trait CacheAssign[T] extends CachePart[T] {
   val col: TypeCol[T]
-  def template = ""
+  val template = ""
   def conv = col.conv
   def args = Seq.empty[Any]
 }

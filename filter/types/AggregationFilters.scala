@@ -21,25 +21,25 @@ import kuzminki.render.Renderable
 
 
 case class FilterAggMatches(col: AnyCol, sub: Renderable) extends SubqueryFilter {
-  def template = "%s = (%s)"
+  val template = "%s = (%s)"
 }
 
 case class FilterAggNot(col: AnyCol, sub: Renderable) extends SubqueryFilter {
-  def template = "%s != (%s)"
+  val template = "%s != (%s)"
 }
 
 case class FilterAggGt(col: AnyCol, sub: Renderable) extends SubqueryFilter {
-  def template = "%s > (%s)"
+  val template = "%s > (%s)"
 }
 
 case class FilterAggGte(col: AnyCol, sub: Renderable) extends SubqueryFilter {
-  def template = "%s >= (%s)"
+  val template = "%s >= (%s)"
 }
 
 case class FilterAggLt(col: AnyCol, sub: Renderable) extends SubqueryFilter {
-  def template = "%s < (%s)"
+  val template = "%s < (%s)"
 }
 
 case class FilterAggLte(col: AnyCol, sub: Renderable) extends SubqueryFilter {
-  def template = "%s <= (%s)"
+  val template = "%s <= (%s)"
 }

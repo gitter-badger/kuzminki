@@ -20,5 +20,5 @@ import kuzminki.column.AnyCol
 
 
 case class FilterMatchesNoArg(col: AnyCol) extends NoArgFilter {
-  def template = "%s = ?"
+  val template = "%s = ?"
 }

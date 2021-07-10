@@ -20,17 +20,17 @@ import kuzminki.column.AnyCol
 
 
 case class FilterGt(col: AnyCol, arg: Any) extends SingleArgFilter {
-  def template = "%s > ?"
+  val template = "%s > ?"
 }
 
 case class FilterLt(col: AnyCol, arg: Any) extends SingleArgFilter {
-  def template = "%s < ?"
+  val template = "%s < ?"
 }
 
 case class FilterGte(col: AnyCol, arg: Any) extends SingleArgFilter {
-  def template = "%s >= ?"
+  val template = "%s >= ?"
 }
 
 case class FilterLte(col: AnyCol, arg: Any) extends SingleArgFilter {
-  def template = "%s <= ?"
+  val template = "%s <= ?"
 }

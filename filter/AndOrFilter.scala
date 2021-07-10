@@ -21,8 +21,8 @@ import kuzminki.render.Prefix
 
 trait AndOrFilter extends Filter {
   val filters: Seq[Filter]
-  def template = "(%s)"
-  def glue: String
+  val template = "(%s)"
+  val glue: String
   def render(prefix: Prefix) = {
     filters match {
       case Seq(first) =>
