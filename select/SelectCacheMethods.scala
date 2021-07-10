@@ -1,6 +1,5 @@
 package kuzminki.select
 
-import kuzminki.filter.CachePart
 import kuzminki.shape._
 
 

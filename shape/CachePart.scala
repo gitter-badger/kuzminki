@@ -14,10 +14,10 @@
 * limitations under the License.
 */
 
-package kuzminki.filter
+package kuzminki.shape
 
-import kuzminki.conv.ValConv
 import kuzminki.render.Renderable
+import kuzminki.conv.ValConv
 
 
 trait CachePart[T] extends Renderable {

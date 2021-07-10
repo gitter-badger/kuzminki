@@ -18,5 +18,5 @@ package kuzminki.render
 
 
 trait PassArgs extends ColRef {
-  val args = col.args
+  def args = col.args
 }

@@ -1,7 +1,5 @@
 package kuzminki.shape
 
-import kuzminki.filter.CachePart
-
 
 class PartShape2[P1, P2](
       shape: Tuple2[CachePart[P1], CachePart[P2]]

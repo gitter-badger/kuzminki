@@ -20,6 +20,6 @@ import kuzminki.column.AnyCol
 
 
 trait ColFunction extends AnyCol {
-  def template: String
+  val template: String
 }
 

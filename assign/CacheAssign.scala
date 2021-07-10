@@ -17,7 +17,7 @@
 package kuzminki.assign
 
 import kuzminki.column.TypeCol
-import kuzminki.filter.CachePart
+import kuzminki.shape.CachePart
 import kuzminki.render.{Renderable, Prefix}
 
 

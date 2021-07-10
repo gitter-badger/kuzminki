@@ -4,7 +4,6 @@ import kuzminki.api.Model
 import kuzminki.rdbc.Driver
 import kuzminki.model.ModelTable
 import kuzminki.section.operation.{UpdateSec, UpdateCacheSetSec}
-import kuzminki.filter.CachePart
 import kuzminki.shape._
 
 

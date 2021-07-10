@@ -18,6 +18,6 @@ package kuzminki.render
 
 
 trait UnderlyingFunctionRender extends UnderlyingRef {
-  def template: String
+  val template: String
   def render(prefix: Prefix) = template.format(underlying.render(prefix))
 }

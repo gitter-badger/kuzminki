@@ -18,6 +18,7 @@ package kuzminki.filter
 
 import kuzminki.column.TypeCol
 import kuzminki.conv.ValConv
+import kuzminki.shape.CachePart
 import kuzminki.render.{Renderable, Prefix}
 
 

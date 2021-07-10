@@ -22,7 +22,7 @@ import kuzminki.render.Prefix
 
 
 case class StringConcat(cols: Seq[TypeCol[_]]) extends StringFunction {
-  def template = "concat(%s)"
+  val template = "concat(%s)"
   def render(prefix: Prefix) = {
     template.format(
       cols.map(_.render(prefix)).mkString(", ")

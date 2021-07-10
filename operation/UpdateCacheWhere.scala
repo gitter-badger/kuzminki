@@ -1,7 +1,6 @@
 package kuzminki.operation
 
 import kuzminki.api.Model
-import kuzminki.filter.CachePart
 import kuzminki.section.operation.UpdateCacheWhereSec
 import kuzminki.shape._
 

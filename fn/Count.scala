@@ -26,6 +26,6 @@ object Count {
 }
 
 case class Count(underlying: AnyCol) extends LongFunctionSingle {
-  def template = "count(%s)"
+  val template = "count(%s)"
 }
 

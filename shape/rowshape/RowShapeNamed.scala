@@ -16,8 +16,11 @@
 
 package kuzminki.shape
 
+import io.rdbc.sapi.Row
+import kuzminki.column.TypeCol
 
-class PartShapeSingle[P](cond: CachePart[P]) extends PartShape[P] {
-  def parts = Seq(cond)
-  def conv = new ParamConvSingle(cond.conv)
+
+class RowShapeNamed(val pairs: Seq[Tuple2[String, TypeCol[_]]]) extends RowShape[Seq[Tuple2[String, Any]]] {
+  val cols = pairs.map(_._2)
+  def conv = new RowConvNamed(pairs.map(p => (p._1, p._2.conv)))
 }

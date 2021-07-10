@@ -16,8 +16,20 @@
 
 package kuzminki.shape
 
+import io.rdbc.sapi.Row
+import kuzminki.conv.ValConv
 
-class PartShapeSingle[P](cond: CachePart[P]) extends PartShape[P] {
-  def parts = Seq(cond)
-  def conv = new ParamConvSingle(cond.conv)
+
+class RowConvNamed(val pairs: Seq[Tuple2[String, ValConv[_]]]) extends RowConv[Seq[Tuple2[String, Any]]] {
+
+  private val indexedPairs = pairs.zipWithIndex.map {
+    case (pair, index) => (pair._1, pair._2, index)
+  }
+
+  def fromRow(row: Row) = {
+    indexedPairs.map {
+      case (name, conv, index) =>
+        (name, conv.get(row, index))
+    }
+  }
 }
