@@ -23,22 +23,22 @@ trait FilterSections {
 
   case class WhereSec(parts: Seq[Renderable]) extends NotEmpty(parts) with MultiPartRender {
     def error = "WHERE cannot be empty"
-    def expression = "WHERE %s"
-    def glue = " AND "
+    val expression = "WHERE %s"
+    val glue = " AND "
   }
 
   object WhereBlankSec extends Section with NoRender with NoArgs {
-    def expression = ""
+    val expression = ""
   }
 
   case class HavingSec(parts: Seq[Renderable]) extends NotEmpty(parts) with MultiPartRender {
     def error = "HAVING cannot be empty"
-    def expression = "HAVING %s"
-    def glue = " AND "
+    val expression = "HAVING %s"
+    val glue = " AND "
   }
 
   object HavingBlankSec extends Section with NoRender with NoArgs {
-    def expression = ""
+    val expression = ""
   }
 }
 

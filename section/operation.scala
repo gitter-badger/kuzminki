@@ -25,31 +25,31 @@ import kuzminki.render.{Renderable, Prefix, NoArgs}
 package object operation extends FilterSections with ReturningSections {
 
   case class CountFromSec(part: ModelTable) extends SinglePartRender {
-    def expression = "SELECT count(*) FROM %s"
+    val expression = "SELECT count(*) FROM %s"
   }
 
   case class DeleteFromSec(part: ModelTable) extends SinglePartRender {
-    def expression = "DELETE FROM %s"
+    val expression = "DELETE FROM %s"
   }
 
   case class UpdateSec(part: ModelTable) extends SinglePartRender {
-    def expression = "UPDATE %s"
+    val expression = "UPDATE %s"
   }
 
   case class UpdateSetSec(parts: Seq[Assign]) extends MultiPartRender {
-    def expression = "SET %s"
-    def glue = ", "
+    val expression = "SET %s"
+    val glue = ", "
   }
 
   // cache
 
   case class UpdateCacheSetSec(parts: Seq[Renderable]) extends Section with NoArgs {
-    def expression = "SET %s"
+    val expression = "SET %s"
     def render(prefix: Prefix) = expression.format(parts.map(_.render(prefix)).mkString(", "))
   }
 
   case class UpdateCacheWhereSec(parts: Seq[Renderable]) extends Section with NoArgs {
-    def expression = "WHERE %s"
+    val expression = "WHERE %s"
     def render(prefix: Prefix) = expression.format(parts.map(_.render(prefix)).mkString(", "))
   }
 }

@@ -26,96 +26,96 @@ package object select extends FilterSections {
 
   case class SelectSec(parts: Seq[AnyCol]) extends NotEmpty(parts) with MultiPartRender {
     def error = "no columns selected"
-    def expression = "SELECT %s"
-    def glue = ", "
+    val expression = "SELECT %s"
+    val glue = ", "
   }
 
   case class FromSec(part: ModelTable) extends SinglePartRender {
-    def expression = "FROM %s"
+    val expression = "FROM %s"
   }
 
   case class GroupBySec(parts: Seq[AnyCol]) extends NotEmpty(parts) with MultiPartRender {
     def error = "WHERE BY cannot be empty"
-    def expression = "GROUP BY %s"
-    def glue = ", "
+    val expression = "GROUP BY %s"
+    val glue = ", "
   }
 
   case class OrderBySec(parts: Seq[Sorting]) extends NotEmpty(parts) with MultiPartRender {
     def error = "ORDER BY cannot be empty"
-    def expression = "ORDER BY %s"
-    def glue = ", "
+    val expression = "ORDER BY %s"
+    val glue = ", "
   }
 
   case class OffsetSec(arg: Int) extends SingleArgRender {
-    def expression = "OFFSET ?"
+    val expression = "OFFSET ?"
   }
 
   case class LimitSec(arg: Int) extends SingleArgRender {
-    def expression = "LIMIT ?"
+    val expression = "LIMIT ?"
   }
 
   // cache
 
   case class WhereCacheSec(cacheConds: Seq[Renderable]) extends CacheCondition {
-    def expression = "WHERE %s"
+    val expression = "WHERE %s"
   }
 
   case class WhereMixedSec(conds: Seq[Renderable], cacheConds: Seq[Renderable]) extends MixedCondition {
-    def expression = "WHERE %s"
+    val expression = "WHERE %s"
   }
 
   case class HavingCacheSec(cacheConds: Seq[Renderable]) extends CacheCondition {
-    def expression = "HAVING %s"
+    val expression = "HAVING %s"
   }
 
   case class HavingMixedSec(conds: Seq[Renderable], cacheConds: Seq[Renderable]) extends MixedCondition {
-    def expression = "HAVING %s"
+    val expression = "HAVING %s"
   }
 
   object OffsetCacheSec extends Section with NoRender {
-    def expression = "OFFSET ?"
+    val expression = "OFFSET ?"
     def args = Seq(CacheOffsetArgs)
   }
 
   // join
 
   case class OnSec(leftCol: AnyCol, rightCol: AnyCol) extends Section with NoArgs {
-    def expression = "ON %s = %s"
+    val expression = "ON %s = %s"
     def render(prefix: Prefix) = expression.format(leftCol.render(prefix), rightCol.render(prefix))
   }
 
   case class InnerJoinSec(part: ModelTable) extends SinglePartRender {
-    def expression = "INNER JOIN %s"
+    val expression = "INNER JOIN %s"
   }
 
 
   case class LeftJoinSec(part: ModelTable) extends SinglePartRender {
-    def expression = "LEFT JOIN %s"
+    val expression = "LEFT JOIN %s"
   }
 
 
   case class LeftOuterJoinSec(part: ModelTable) extends SinglePartRender {
-    def expression = "LEFT OUTER JOIN %s"
+    val expression = "LEFT OUTER JOIN %s"
   }
 
 
   case class RightJoinSec(part: ModelTable) extends SinglePartRender {
-    def expression = "RIGHT JOIN %s"
+    val expression = "RIGHT JOIN %s"
   }
 
 
   case class RightOuterJoinSec(part: ModelTable) extends SinglePartRender {
-    def expression = "RIGHT OUTER JOIN %s"
+    val expression = "RIGHT OUTER JOIN %s"
   }
 
 
   case class FullOuterJoinSec(part: ModelTable) extends SinglePartRender {
-    def expression = "FULL OUTER JOIN %s"
+    val expression = "FULL OUTER JOIN %s"
   }
 
 
   case class CrossJoinSec(part: ModelTable) extends SinglePartRender {
-    def expression = "CROSS JOIN %s"
+    val expression = "CROSS JOIN %s"
   }
 }
 

@@ -26,11 +26,11 @@ import kuzminki.section.select.WhereSec
 package object insert extends ReturningSections {
 
   case class InsertIntoSec(part: ModelTable) extends SinglePartRender {
-    def expression = "INSERT INTO %s"
+    val expression = "INSERT INTO %s"
   }
 
   case class InsertDataSec(parts: Seq[SetValue]) extends Section with FillValues {
-    def expression = "(%s) VALUES (%s)"
+    val expression = "(%s) VALUES (%s)"
     def render(prefix: Prefix) = expression.format(
       parts.map(_.col.render(prefix)).mkString(", "),
       fillNoBrackets(parts.size)
@@ -39,23 +39,23 @@ package object insert extends ReturningSections {
   }
 
   case class InsertColumnsSec(parts: Seq[AnyCol]) extends MultiPartRender {
-    def expression = "(%s)"
-    def glue = ", "
+    val expression = "(%s)"
+    val glue = ", "
   }
 
   case class InsertValuesSec(values: Seq[Any]) extends Section with FillValues {
-    def expression = "VALUES %s"
+    val expression = "VALUES %s"
     def render(prefix: Prefix) = expression.format(fillBrackets(values.size))
     def args = values
   }
 
   case class InsertBlankValuesSec(size: Int) extends Section with FillValues with NoArgs {
-    def expression = "VALUES %s"
+    val expression = "VALUES %s"
     def render(prefix: Prefix) = expression.format(fillBrackets(size))
   }
 
   case class InsertMultipleValuesSec(valuesList: Seq[Seq[Any]]) extends Section with FillValues {
-    def expression = "VALUES %s"
+    val expression = "VALUES %s"
     def render(prefix: Prefix) = {
       expression.format(
         valuesList.map(values => fillBrackets(values.size)).mkString(", ")
@@ -65,7 +65,7 @@ package object insert extends ReturningSections {
   }
 
   case class InsertBlankWhereNotExistsSec(size: Int, table: ModelTable, where: WhereSec) extends Section with FillValues with NoArgs {
-    def expression = "SELECT %s WHERE NOT EXISTS (SELECT 1 FROM %s %s)"
+    val expression = "SELECT %s WHERE NOT EXISTS (SELECT 1 FROM %s %s)"
     def render(prefix: Prefix) = {
       expression.format(
         fillNoBrackets(size),
@@ -76,31 +76,31 @@ package object insert extends ReturningSections {
   }
 
   object InsertOnConflictSec extends TextOnlyRender {
-    def expression = "ON CONFLICT"
+    val expression = "ON CONFLICT"
   }
 
   case class InsertOnConflictColumnSec(part: AnyCol) extends SinglePartRender {
-    def expression = "ON CONFLICT (%s)"
+    val expression = "ON CONFLICT (%s)"
   }
 
   object InsertDoNothingSec extends TextOnlyRender {
-    def expression = "DO NOTHING"
+    val expression = "DO NOTHING"
   }
 
   case class InsertDoUpdateSec(parts: Seq[SetValue]) extends MultiPartRender {
-    def expression = "DO UPDATE SET %s"
-    def glue = ", "
+    val expression = "DO UPDATE SET %s"
+    val glue = ", "
   }
 
   case class InsertDoUpdateNoArgsSec(parts: Seq[SetUpsert]) extends Section with NoArgs {
-    def expression = "DO UPDATE SET %s"
+    val expression = "DO UPDATE SET %s"
     def render(prefix: Prefix) = expression.format(
       parts.map(_.render(prefix)).mkString(", ")
     )
   }
 
   case class InsertSubquerySec(part: Renderable) extends SinglePartRender {
-    def expression = "%s"
+    val expression = "%s"
   }
 }
 

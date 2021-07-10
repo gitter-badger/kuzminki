@@ -20,7 +20,7 @@ import kuzminki.render.Renderable
 
 
 trait Section extends Renderable {
-  def expression: String
+  val expression: String
 }
 
 

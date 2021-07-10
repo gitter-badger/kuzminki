@@ -39,7 +39,7 @@ trait SinglePartRender extends Section {
 
 trait MultiPartRender extends Section {
   val parts: Seq[Renderable]
-  def glue: String
+  val glue: String
   def render(prefix: Prefix) = expression.format(parts.map(_.render(prefix)).mkString(glue))
   def args = parts.map(_.args).flatten
 }
