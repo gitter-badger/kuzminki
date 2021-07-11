@@ -44,12 +44,6 @@ class Select[M <: Model](model: M, db: Driver) {
     )
   }
 
-  def colsNamed(pick: M => Seq[Tuple2[String, TypeCol[_]]]) = {
-    next(
-      new RowShapeNamed(pick(model))
-    )
-  }
-
   def cols1[R](pick: M => TypeCol[R]) = {
     next(
       new RowShapeSingle(pick(model))
