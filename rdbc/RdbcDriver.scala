@@ -84,8 +84,8 @@ class Driver(conf: SystemConfig)(implicit system: ActorSystem) extends LazyLoggi
 
   private val pool = RdbcPool.forConfig(conf, system.dispatcher)
 
-  def select[R](statement: SqlWithParams)(transform: Row => R): Future[List[R]] = {
-    pool.withConnection(_.statement(statement).executeForSet).map(_.toList).map { rows =>
+  def select[R](statement: SqlWithParams)(transform: Row => R): Future[Traversable[R]] = {
+    pool.withConnection(_.statement(statement).executeForSet).map { rows =>
       rows.map { row =>
         transform(row)
       }
@@ -144,6 +144,26 @@ class Driver(conf: SystemConfig)(implicit system: ActorSystem) extends LazyLoggi
         )
       }
     }
+  }
+
+  def rawSelect[R](statement: SqlWithParams): Future[Traversable[Row]] = {
+    pool.withConnection(_.statement(statement).executeForSet)
+  }
+
+  def rawSelectHead[R](statement: SqlWithParams): Future[Option[Row]] = {
+    pool.withConnection(_.statement(statement).executeForFirstRow)
+  }
+
+  def rawSelectHeadOpt[R](statement: SqlWithParams): Future[Row] = {
+    pool.withConnection(_.statement(statement).executeForFirstRow).map(_.get)
+  }
+
+  def rawExec(statement: SqlWithParams): Future[Unit] = {
+    pool.withConnection(_.statement(statement).execute)
+  }
+
+  def rawExecNum(statement: SqlWithParams): Future[Long] = {
+    pool.withConnection(_.statement(statement).executeForRowsAffected)
   }
 
   def shutdown(): Future[Unit] = pool.shutdown()

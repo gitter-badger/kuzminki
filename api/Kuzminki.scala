@@ -90,6 +90,16 @@ class Kuzminki(conf: SystemConfig)(implicit system: ActorSystem) {
     new SelectJoin(join, db).cols1(t => Count.all)
   }
 
+  def rawSelect(statement: SqlWithParams) = db.rawSelect(statement)
+
+  def rawSelectHead(statement: SqlWithParams) = db.rawSelectHead(statement)
+
+  def rawSelectHeadOpt(statement: SqlWithParams) = db.rawSelectHeadOpt(statement)
+
+  def rawExec(statement: SqlWithParams) = db.rawExec(statement)
+
+  def rawExecNum(statement: SqlWithParams) = db.rawExecNum(statement)
+
   def shutdown(): Future[Unit] = db.shutdown()
 }
 
