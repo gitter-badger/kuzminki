@@ -32,13 +32,7 @@ class SelectJoin[A <: Model, B <: Model](join: Join[A, B], db: Driver) {
     )
   }
 
-  def colsAs[R](pick: Join[A, B] => Seq[TypeCol[_]])(implicit typeReader: TypeReader[R]) = {
-    next(
-      new RowShapeType(pick(join), typeReader)
-    )
-  }
-
-  def colsAsSeq(pick: Join[A, B] => Seq[TypeCol[_]]) = {
+  def colsSeq(pick: Join[A, B] => Seq[TypeCol[_]]) = {
     next(
       new RowShapeSeq(pick(join))
     )

@@ -32,13 +32,7 @@ class Select[M <: Model](model: M, db: Driver) {
     )
   }
 
-  def colsAs[R](pick: M => Seq[TypeCol[_]])(implicit typeReader: TypeReader[R]) = {
-    next(
-      new RowShapeType(pick(model), typeReader)
-    )
-  }
-
-  def colsAsSeq(pick: M => Seq[TypeCol[_]]) = {
+  def colsSeq(pick: M => Seq[TypeCol[_]]) = {
     next(
       new RowShapeSeq(pick(model))
     )

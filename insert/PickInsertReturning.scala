@@ -26,13 +26,7 @@ trait PickInsertReturning[M, P] {
     )
   }
 
-  def returningAs[R](pick: M => Seq[TypeCol[_]])(implicit typeReader: TypeReader[R]) = {
-    next(
-      new RowShapeType(pick(model), typeReader)
-    )
-  }
-
-  def returningAsSeq(pick: M => Seq[TypeCol[_]]) = {
+  def returningSeq(pick: M => Seq[TypeCol[_]]) = {
     next(
       new RowShapeSeq(pick(model))
     )
