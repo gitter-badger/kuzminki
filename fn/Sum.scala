@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-package kuzminki.function
+package kuzminki.fn
 
 import kuzminki.column._
 import kuzminki.aggregate.sum._
