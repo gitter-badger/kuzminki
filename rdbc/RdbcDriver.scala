@@ -105,8 +105,8 @@ class Driver(pool: ConnectionPool)(implicit system: ActorSystem,  ec: ExecutionC
   private implicit val timeout = 5.seconds.timeout
   private val inf = Timeout(Duration.Inf)
 
-  def select[R](statement: SqlWithParams)(transform: Row => R): Future[Traversable[R]] = {
-    pool.withConnection(_.statement(statement).executeForSet).map { rows =>
+  def select[R](statement: SqlWithParams)(transform: Row => R): Future[Seq[R]] = {
+    pool.withConnection(_.statement(statement).executeForSet).map(_.rows).map { rows =>
       rows.map { row =>
         transform(row)
       }
@@ -167,8 +167,8 @@ class Driver(pool: ConnectionPool)(implicit system: ActorSystem,  ec: ExecutionC
     }
   }
 
-  def rawSelect[R](statement: SqlWithParams): Future[Traversable[Row]] = {
-    pool.withConnection(_.statement(statement).executeForSet)
+  def rawSelect[R](statement: SqlWithParams): Future[Seq[Row]] = {
+    pool.withConnection(_.statement(statement).executeForSet).map(_.rows)
   }
 
   def rawSelectHead[R](statement: SqlWithParams): Future[Option[Row]] = {

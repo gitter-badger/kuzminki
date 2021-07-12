@@ -27,6 +27,7 @@ import akka.actor.ActorSystem
 
 import io.rdbc.sapi.SqlWithParams
 
+import kuzminki.api._
 import kuzminki.rdbc.{Driver, DriverPool}
 import kuzminki.select.{Select, SelectJoin, Where, JoinOn}
 import kuzminki.insert.Insert
