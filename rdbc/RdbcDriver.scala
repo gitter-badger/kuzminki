@@ -16,54 +16,74 @@
 
 package kuzminki.rdbc
 
-import org.reactivestreams.Publisher
-
 import scala.concurrent.ExecutionContext
-import scala.concurrent.{Future, Promise}
+import scala.concurrent.Future
 import scala.util.{Try, Success, Failure}
 import scala.concurrent.duration._
 
-import com.typesafe.config.{Config => SystemConfig, ConfigFactory => SystemConfigFactory}
+import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 
 import akka.stream.scaladsl._
-import akka.stream.ActorMaterializer
-import akka.actor.{ActorRef, ActorSystem}
+import akka.stream.Materializer
+import akka.actor.ActorSystem
 import akka.{NotUsed, Done}
 
 import io.rdbc.sapi._
 
 import io.rdbc.pgsql.core.config.sapi.Auth
 import io.rdbc.pgsql.transport.netty.sapi.NettyPgConnectionFactory
-import io.rdbc.pgsql.transport.netty.sapi.NettyPgConnectionFactory.Config
+import io.rdbc.pgsql.transport.netty.sapi.NettyPgConnectionFactory.{Config => RdbcConfig}
 
 import io.rdbc.pool.sapi.ConnectionPool
 import io.rdbc.pool.sapi.ConnectionPoolConfig
 
-import org.reactivestreams.Publisher
 
-//import kuzminki.model.Conn
+case class DriverConf(host: String,
+                      db: String,
+                      user: String,
+                      pwd: String,
+                      threads: Option[Int],
+                      port: Option[Int])
 
-//import transport.actions.{Action, Batch}
+object DriverPool {
 
-
-
-object RdbcPool {
-
-  def forConfig(conf: SystemConfig, ec: ExecutionContext): ConnectionPool = {
+  def forConfig(conf: Config, ec: ExecutionContext) = {
     
     val host = conf.getString("host")
-    val port = conf.getInt("port")
     val user = conf.getString("user")
     val pwd = conf.getString("password")
     val db = conf.getString("db")
-    val threads = conf.getInt("threads")
 
-    val dbConfig = Config(host, port, Auth.password(user, pwd), Some(db))
+    val threads = Try[Int] {
+      conf.getInt("threads")
+    } match {
+      case Success(value) => Some(value)
+      case Failure(ex) => None
+    }
+
+    val port = Try[Int] {
+      conf.getInt("port")
+    } match {
+      case Success(value) => Some(value)
+      case Failure(ex) => None
+    }
+
+    create(DriverConf(host, user, pwd, db, threads, port), ec)
+  }
+
+  def create(conf: DriverConf, ec: ExecutionContext) = {
+
+    val dbConfig = RdbcConfig(
+      conf.host,
+      conf.port.getOrElse(5432),
+      Auth.password(conf.user, conf.pwd),
+      Some(conf.db)
+    )
     
     val poolConfig = ConnectionPoolConfig(
-      name = s"${db}-pool",
-      size = threads,
+      name = s"${conf.db}-pool",
+      size = conf.threads.getOrElse(10),
       ec = ec
     )
 
@@ -72,17 +92,18 @@ object RdbcPool {
 }
 
 
-class Driver(conf: SystemConfig)(implicit system: ActorSystem) extends LazyLogging {
+object Driver {
+  def create(pool: ConnectionPool, system: ActorSystem,  ec: ExecutionContext) = {
+    new Driver(pool)(system, ec)
+  }
+}
 
-  logger.info("Start")
 
-  implicit val ec = system.dispatcher
-  implicit val materializer = ActorMaterializer()(system)
-  implicit val timeout = 5.seconds.timeout
+class Driver(pool: ConnectionPool)(implicit system: ActorSystem,  ec: ExecutionContext) {
 
+  private implicit val materializer = Materializer(system)
+  private implicit val timeout = 5.seconds.timeout
   private val inf = Timeout(Duration.Inf)
-
-  private val pool = RdbcPool.forConfig(conf, system.dispatcher)
 
   def select[R](statement: SqlWithParams)(transform: Row => R): Future[Traversable[R]] = {
     pool.withConnection(_.statement(statement).executeForSet).map { rows =>
@@ -131,7 +152,7 @@ class Driver(conf: SystemConfig)(implicit system: ActorSystem) extends LazyLoggi
       pool.connection().map { conn =>
         Source.fromPublisher(
           conn.statement(statement).stream()(inf)
-        ).map(transform)
+        ).map(transform).alsoTo(Sink.onComplete(_ => conn.release()))
       }
     }
   }

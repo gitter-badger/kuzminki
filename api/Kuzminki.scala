@@ -20,39 +20,39 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 import scala.util.{Try, Success, Failure}
 import scala.concurrent.duration._
-import scala.reflect.ClassTag
 
-import com.typesafe.config.{Config => SystemConfig, ConfigFactory => SystemConfigFactory}
-import com.typesafe.scalalogging.LazyLogging
+import com.typesafe.config.Config
 
-import akka.stream.scaladsl._
-import akka.stream.ActorMaterializer
-import akka.actor.{ActorRef, ActorSystem}
-import akka.{NotUsed, Done}
+import akka.actor.ActorSystem
 
-import io.rdbc.sapi._
+import io.rdbc.sapi.SqlWithParams
 
-import io.rdbc.pgsql.core.config.sapi.Auth
-import io.rdbc.pgsql.transport.netty.sapi.NettyPgConnectionFactory
-import io.rdbc.pgsql.transport.netty.sapi.NettyPgConnectionFactory.Config
-
-import io.rdbc.pool.sapi.ConnectionPool
-import io.rdbc.pool.sapi.ConnectionPoolConfig
-
+import kuzminki.rdbc.{Driver, DriverPool}
 import kuzminki.select.{Select, SelectJoin, Where, JoinOn}
 import kuzminki.insert.Insert
 import kuzminki.operation.{Update, Delete, OperationWhere}
 import kuzminki.fn.Count
-import kuzminki.rdbc.Driver
 
 
-class Kuzminki(conf: SystemConfig)(implicit system: ActorSystem) {
+object Kuzminki {
 
-  implicit val ec = system.dispatcher
-  implicit val materializer = ActorMaterializer()(system)
-  implicit val timeout = 5.seconds.timeout
+  def forConfig(conf: Config)(implicit system: ActorSystem): Kuzminki = {
+    create(conf, system, system.dispatcher)
+  }
 
-  val db = new Driver(conf)
+  def create(conf: Config, system: ActorSystem): Kuzminki = {
+    create(conf, system, system.dispatcher)
+  }
+
+  def create(conf: Config, system: ActorSystem, ec: ExecutionContext): Kuzminki = {
+    val pool = DriverPool.forConfig(conf, ec)
+    val db = Driver.create(pool, system, ec)
+    new Kuzminki(db)
+  }
+}
+
+
+class Kuzminki(db: Driver) {
 
   def select[M <: Model](model: M): Select[M] = {
     new Select(model, db)
