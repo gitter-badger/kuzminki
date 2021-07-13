@@ -9,9 +9,9 @@ import kuzminki.section.select._
 import kuzminki.shape._
 
 
-class Select[M <: Model](model: M, db: Driver) {
+class Select[M <: Model](val model: M, db: Driver) {
 
-  private def next[R](rowShape: RowShape[R]) = {
+  def next[R](rowShape: RowShape[R]) = {
     new Where(
       model,
       SelectCollector(

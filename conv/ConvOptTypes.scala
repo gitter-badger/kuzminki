@@ -53,7 +53,7 @@ object DoubleOptConv extends ValOptConv[Double] {
   def get(row: Row, index: Int) = row.colOpt[Double](index)
 }
 
-object DecimalNumberOptConv extends ValOptConv[DecimalNumber] {
+object NumericOptConv extends ValOptConv[DecimalNumber] {
   def get(row: Row, index: Int) = row.colOpt[DecimalNumber](index)
 }
 

@@ -25,6 +25,7 @@ import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 
 import akka.stream.scaladsl._
+import akka.stream.ActorMaterializer
 import akka.stream.Materializer
 import akka.actor.ActorSystem
 import akka.{NotUsed, Done}
@@ -51,9 +52,9 @@ object DriverPool {
   def forConfig(conf: Config, ec: ExecutionContext) = {
     
     val host = conf.getString("host")
+    val db = conf.getString("db")
     val user = conf.getString("user")
     val pwd = conf.getString("password")
-    val db = conf.getString("db")
 
     val threads = Try[Int] {
       conf.getInt("threads")
@@ -69,10 +70,12 @@ object DriverPool {
       case Failure(ex) => None
     }
 
-    create(DriverConf(host, user, pwd, db, threads, port), ec)
+    create(DriverConf(host, db, user, pwd, threads, port), ec)
   }
 
   def create(conf: DriverConf, ec: ExecutionContext) = {
+
+    println(conf)
 
     val dbConfig = RdbcConfig(
       conf.host,
@@ -101,7 +104,7 @@ object Driver {
 
 class Driver(pool: ConnectionPool)(implicit system: ActorSystem,  ec: ExecutionContext) {
 
-  private implicit val materializer = Materializer(system)
+  private implicit val materializer = ActorMaterializer()
   private implicit val timeout = 5.seconds.timeout
   private val inf = Timeout(Duration.Inf)
 
