@@ -7,10 +7,10 @@ import kuzminki.shape._
 
 trait PickInsertReturning[M, P] {
 
-  protected val model: M
+  val model: M
   protected val coll: InsertCollector[P]
 
-  private def next[R](rowShape: RowShape[R]) = {
+  def next[R](rowShape: RowShape[R]) = {
     new RunInsertReturning(
       coll.extend(Array(
         InsertBlankValuesSec(coll.paramShape.size),

@@ -7,7 +7,7 @@ import kuzminki.shape._
 
 abstract class PickOperationReturning[M](model: M, coll: OperationCollector) { 
 
-  private def next[R](rowShape: RowShape[R]) = {
+  def next[R](rowShape: RowShape[R]) = {
     new RunOperationReturning(
       coll.add(ReturningSec(rowShape.cols)),
       rowShape.conv

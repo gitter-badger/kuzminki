@@ -22,7 +22,7 @@ import kuzminki.section.insert._
 
 trait OnConflict[M, P] {
 
-  protected val model: M
+  val model: M
   protected val coll: InsertCollector[P]
 
   def onConflictDoNothing = {

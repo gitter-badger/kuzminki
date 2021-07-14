@@ -18,7 +18,7 @@ package kuzminki.operation
 
 
 class RunOperation[M](
-      model: M,
+      val model: M,
       coll: OperationCollector
     ) extends PickOperationReturning(model, coll) {
   

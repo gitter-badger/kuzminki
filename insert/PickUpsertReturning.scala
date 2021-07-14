@@ -10,7 +10,7 @@ abstract class PickUpsertReturning[M, P](
       reuse: Reuse,
       coll: InsertCollector[P]) {
 
-  private def next[R](rowShape: RowShape[R]) = {
+  def next[R](rowShape: RowShape[R]) = {
     new RunUpsertReturning(
       reuse,
       coll.add(ReturningSec(rowShape.cols)),

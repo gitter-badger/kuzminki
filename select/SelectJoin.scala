@@ -9,9 +9,9 @@ import kuzminki.section.select._
 import kuzminki.shape._
 
 
-class SelectJoin[A <: Model, B <: Model](join: Join[A, B], db: Driver) {
+class SelectJoin[A <: Model, B <: Model](val join: Join[A, B], db: Driver) {
 
-  private def next[R](outShape: RowShape[R]) = {
+  def next[R](outShape: RowShape[R]) = {
     new JoinOn(
       join,
       SelectCollector(

@@ -8,9 +8,10 @@ import kuzminki.shape._
 abstract class PickInsertWhereNotExistsReturning[M, P](
       model: M,
       reuse: Reuse,
-      coll: InsertCollector[P]) {
+      coll: InsertCollector[P]
+    ) {
 
-  private def next[R](rowShape: RowShape[R]) = {
+  def next[R](rowShape: RowShape[R]) = {
     new RunInsertWhereNotExistsReturning(
       reuse,
       coll.add(ReturningSec(rowShape.cols)),

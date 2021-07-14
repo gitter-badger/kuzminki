@@ -21,7 +21,7 @@ import kuzminki.section.insert.InsertSubquerySec
 
 trait InsertSubquery[M, P] {
   
-  protected val model: M
+  val model: M
   protected val coll: InsertCollector[P]
 
   def fromSelect(sub: SelectSubquery[P]) = {

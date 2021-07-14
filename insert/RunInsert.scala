@@ -22,7 +22,7 @@ import kuzminki.section.insert.InsertBlankValuesSec
 
 
 class RunInsert[M <: Model, P](
-      protected val model: M,
+      val model: M,
       protected val coll: InsertCollector[P]
     ) extends PickInsertReturning[M, P]
          with WhereNotExists[M, P]

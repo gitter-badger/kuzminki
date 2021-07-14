@@ -18,7 +18,7 @@ package kuzminki.insert
 
 
 class RunInsertDoNothing[M, P](
-      model: M,
+      val model: M,
       coll: InsertCollector[P]
     ) extends PickInsertDoNothingReturning(model, coll) {
 

@@ -7,9 +7,10 @@ import kuzminki.shape._
 
 abstract class PickInsertDoNothingReturning[M, P](
       model: M,
-      coll: InsertCollector[P]) {
+      coll: InsertCollector[P]
+    ) {
 
-  private def next[R](rowShape: RowShape[R]) = {
+  def next[R](rowShape: RowShape[R]) = {
     new RunInsertDoNothingReturning(
       coll.add(ReturningSec(rowShape.cols)),
       rowShape

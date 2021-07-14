@@ -20,7 +20,7 @@ import akka.stream.scaladsl.Source
 
 
 class RunInsertWhereNotExists[M, P](
-      model: M,
+      val model: M,
       reuse: Reuse,
       coll: InsertCollector[P]
     ) extends PickInsertWhereNotExistsReturning(model, reuse, coll) {

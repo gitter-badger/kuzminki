@@ -26,7 +26,7 @@ import kuzminki.section.insert._
 
 trait WhereNotExists[M <: Model, S] {
 
-  protected val model: M
+  val model: M
   protected val coll: InsertCollector[S]
 
   def whereNotExistsOne[T](pick: M => TypeCol[T]) = {

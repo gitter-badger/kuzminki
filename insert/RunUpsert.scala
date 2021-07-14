@@ -18,7 +18,7 @@ package kuzminki.insert
 
 
 class RunUpsert[M, P](
-      model: M,
+      val model: M,
       reuse: Reuse,
       coll: InsertCollector[P]
     ) extends PickUpsertReturning(model, reuse, coll) {
