@@ -16,70 +16,67 @@
 
 package kuzminki.column
 
-import java.time.{Instant, LocalDate, LocalDateTime, ZonedDateTime}
-import java.util.UUID
-import io.rdbc.sapi.DecimalNumber
-
+import kuzminki.render.UnderlyingRenderAndArgs
 
 
 case class StringOptCol(underlying: AnyCol) extends StringOptColValue
-                                               with OptColTransformMethods[String]
+                                               with UnderlyingRenderAndArgs
 
 
 case class CharOptCol(underlying: AnyCol) extends CharOptColValue
-                                             with OptColTransformMethods[Char]
+                                             with UnderlyingRenderAndArgs
 
 
 case class BooleanOptCol(underlying: AnyCol) extends BooleanOptColValue
-                                                with OptColTransformMethods[Boolean]
+                                                with UnderlyingRenderAndArgs
 
 
 case class ShortOptCol(underlying: AnyCol) extends ShortOptColValue
-                                              with OptColTransformMethods[Short]
+                                             with UnderlyingRenderAndArgs
 
 
 case class IntOptCol(underlying: AnyCol) extends IntOptColValue
-                                            with OptColTransformMethods[Int]
+                                            with UnderlyingRenderAndArgs
 
 
 case class LongOptCol(underlying: AnyCol) extends LongOptColValue
-                                             with OptColTransformMethods[Long]
+                                             with UnderlyingRenderAndArgs
 
 
 case class FloatOptCol(underlying: AnyCol) extends FloatOptColValue
-                                              with OptColTransformMethods[Float]
+                                              with UnderlyingRenderAndArgs
 
 
 case class DoubleOptCol(underlying: AnyCol) extends DoubleOptColValue
-                                               with OptColTransformMethods[Double]
+                                               with UnderlyingRenderAndArgs
 
 
 case class NumericOptCol(underlying: AnyCol) extends NumericOptColValue
-                                                with OptColTransformMethods[DecimalNumber]
+                                                with UnderlyingRenderAndArgs
 
 
 case class BigDecimalOptCol(underlying: AnyCol) extends BigDecimalOptColValue
-                                                   with OptColTransformMethods[BigDecimal]
+                                                   with UnderlyingRenderAndArgs
 
 
 case class InstantOptCol(underlying: AnyCol) extends InstantOptColValue
-                                                with OptColTransformMethods[Instant]
+                                                with UnderlyingRenderAndArgs
 
 
 case class ZonedDateTimeOptCol(underlying: AnyCol) extends ZonedDateTimeOptColValue
-                                                      with OptColTransformMethods[ZonedDateTime]
+                                                      with UnderlyingRenderAndArgs
 
 
 case class LocalDateTimeOptCol(underlying: AnyCol) extends LocalDateTimeOptColValue
-                                                      with OptColTransformMethods[LocalDateTime]
+                                                      with UnderlyingRenderAndArgs
 
 
 case class LocalDateOptCol(underlying: AnyCol) extends LocalDateOptColValue
-                                                  with OptColTransformMethods[LocalDate]
+                                                  with UnderlyingRenderAndArgs
 
 
 case class UUIDOptCol(underlying: AnyCol) extends UUIDOptColValue
-                                             with OptColTransformMethods[UUID]
+                                             with UnderlyingRenderAndArgs
 
 
 

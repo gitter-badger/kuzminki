@@ -22,7 +22,7 @@ import io.rdbc.sapi.DecimalNumber
 
 
 trait StringCol extends StringColValue
-                   with UniversalMethods[String]
+                   with UniversalFilters[String]
                    with StringFilters {
 
   val self = this
@@ -31,7 +31,7 @@ trait StringCol extends StringColValue
 
 
 trait CharCol extends CharColValue
-                 with UniversalMethods[Char] {
+                 with UniversalFilters[Char] {
 
   val self = this
   def asOpt = CharOptCol(this)
@@ -39,7 +39,7 @@ trait CharCol extends CharColValue
 
 
 trait BooleanCol extends BooleanColValue
-                    with UniversalMethods[Boolean] {
+                    with UniversalFilters[Boolean] {
 
   val self = this
   def asOpt = BooleanOptCol(this)
@@ -47,7 +47,7 @@ trait BooleanCol extends BooleanColValue
 
 
 trait ShortCol extends ShortColValue
-                  with UniversalMethods[Short]
+                  with UniversalFilters[Short]
                   with ComparativeFilters[Short]
                   with AggregationSubqueryFilters[Short] {
 
@@ -58,7 +58,7 @@ trait ShortCol extends ShortColValue
 
 trait IntCol extends IntColValue
                 with SelfRef[Int]
-                with UniversalMethods[Int]
+                with UniversalFilters[Int]
                 with ComparativeFilters[Int]
                 with AggregationSubqueryFilters[Int] {
 
@@ -68,7 +68,7 @@ trait IntCol extends IntColValue
 
 
 trait LongCol extends LongColValue
-                 with UniversalMethods[Long]
+                 with UniversalFilters[Long]
                  with ComparativeFilters[Long]
                  with AggregationSubqueryFilters[Long] {
 
@@ -78,7 +78,7 @@ trait LongCol extends LongColValue
 
 
 trait FloatCol extends FloatColValue
-                  with UniversalMethods[Float]
+                  with UniversalFilters[Float]
                   with ComparativeFilters[Float]
                   with AggregationSubqueryFilters[Float] {
 
@@ -88,7 +88,7 @@ trait FloatCol extends FloatColValue
 
 
 trait DoubleCol extends DoubleColValue
-                   with UniversalMethods[Double]
+                   with UniversalFilters[Double]
                    with ComparativeFilters[Double]
                    with AggregationSubqueryFilters[Double] {
 
@@ -98,7 +98,7 @@ trait DoubleCol extends DoubleColValue
 
 
 trait NumericCol extends NumericColValue
-                    with UniversalMethods[DecimalNumber]
+                    with UniversalFilters[DecimalNumber]
                     with ComparativeFilters[DecimalNumber]
                     with AggregationSubqueryFilters[DecimalNumber] {
 
@@ -108,7 +108,7 @@ trait NumericCol extends NumericColValue
 
 
 trait BigDecimalCol extends BigDecimalColValue
-                       with UniversalMethods[BigDecimal]
+                       with UniversalFilters[BigDecimal]
                        with ComparativeFilters[BigDecimal]
                        with AggregationSubqueryFilters[BigDecimal] {
 
@@ -118,7 +118,7 @@ trait BigDecimalCol extends BigDecimalColValue
 
 
 trait InstantCol extends InstantColValue
-                    with UniversalMethods[Instant]
+                    with UniversalFilters[Instant]
                     with ComparativeFilters[Instant] {
 
   val self = this
@@ -127,7 +127,7 @@ trait InstantCol extends InstantColValue
 
 
 trait ZonedDateTimeCol extends ZonedDateTimeColValue
-                          with UniversalMethods[ZonedDateTime]
+                          with UniversalFilters[ZonedDateTime]
                           with ComparativeFilters[ZonedDateTime] {
 
   val self = this
@@ -136,7 +136,7 @@ trait ZonedDateTimeCol extends ZonedDateTimeColValue
 
 
 trait LocalDateTimeCol extends LocalDateTimeColValue
-                          with UniversalMethods[LocalDateTime]
+                          with UniversalFilters[LocalDateTime]
                           with ComparativeFilters[LocalDateTime] {
 
   val self = this
@@ -145,7 +145,7 @@ trait LocalDateTimeCol extends LocalDateTimeColValue
 
 
 trait LocalDateCol extends LocalDateColValue
-                      with UniversalMethods[LocalDate]
+                      with UniversalFilters[LocalDate]
                       with ComparativeFilters[LocalDate] {
 
   val self = this
@@ -154,7 +154,7 @@ trait LocalDateCol extends LocalDateColValue
 
 
 trait UUIDCol extends UUIDColValue
-                 with UniversalMethods[UUID]
+                 with UniversalFilters[UUID]
                  with ComparativeFilters[UUID] {
 
   val self = this
