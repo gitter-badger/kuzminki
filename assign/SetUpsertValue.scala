@@ -21,7 +21,7 @@ import kuzminki.render.{Renderable, Prefix, NoArgs}
 
 
 case class SetUpsert(col: ModelCol) extends Renderable with NoArgs {
-  def render(prefix: Prefix) = s"${col.name} = ?"
+  def render(prefix: Prefix) = "%s = ?".format(col.render(prefix))
 }
 
 

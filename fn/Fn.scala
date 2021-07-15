@@ -17,7 +17,7 @@
 package kuzminki.fn
 
 import kuzminki.column.TypeCol
-import kuzminki.render.{Prefix, UnderlyingRenderAndArgs}
+import kuzminki.render.{Prefix, UnderlyingFunctionRender, UnderlyingArgs}
 import kuzminki.function.ColFunction
 import kuzminki.function.types.StringFunction
 
@@ -88,7 +88,8 @@ package object general {
         start: Int,
         lenOpt: Option[Int]
       ) extends StringFunction
-        with UnderlyingRenderAndArgs {
+           with UnderlyingFunctionRender
+           with UnderlyingArgs {
 
     val template = lenOpt match {
       case Some(len) => s"substr(%s, $start, $len)"
@@ -102,32 +103,37 @@ package object general {
         from: String,
         to: String
       ) extends StringFunction
-        with UnderlyingRenderAndArgs {
+           with UnderlyingFunctionRender
+           with UnderlyingArgs {
 
     val template = s"replace(%s, '$from', '$to')"
   }
 
 
   case class Trim(underlying: TypeCol[String]) extends StringFunction
-                                                  with UnderlyingRenderAndArgs {
+                                                  with UnderlyingFunctionRender
+                                                  with UnderlyingArgs {
 
     val template = "replace(%s)"
   }
 
   case class Upper(underlying: TypeCol[String]) extends StringFunction
-                                                  with UnderlyingRenderAndArgs {
+                                                  with UnderlyingFunctionRender
+                                                  with UnderlyingArgs {
 
     val template = "upper(%s)"
   }
 
   case class Lower(underlying: TypeCol[String]) extends StringFunction
-                                                  with UnderlyingRenderAndArgs {
+                                                  with UnderlyingFunctionRender
+                                                  with UnderlyingArgs {
 
     val template = "replace(%s)"
   }
 
   case class Initcap(underlying: TypeCol[String]) extends StringFunction
-                                                  with UnderlyingRenderAndArgs {
+                                                  with UnderlyingFunctionRender
+                                                  with UnderlyingArgs {
 
     val template = "initcap(%s)"
   }

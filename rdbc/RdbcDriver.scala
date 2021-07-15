@@ -74,8 +74,6 @@ object DriverPool {
 
   def create(conf: DriverConf, ec: ExecutionContext) = {
 
-    println(conf)
-
     val dbConfig = RdbcConfig(
       conf.host,
       conf.port.getOrElse(5432),
