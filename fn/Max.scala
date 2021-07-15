@@ -37,7 +37,7 @@ package object max {
   object functions {
 
     case class MaxNumeric(underlying: AnyCol) extends NumericFunctionSingle
-                                             with Aggregation {
+                                                 with Aggregation {
       val template = "max(%s)"
       def asString = Cast.asString(this)
       def round = Round.numeric(this)

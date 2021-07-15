@@ -37,7 +37,7 @@ package object min {
   object functions {
 
     case class MinNumeric(underlying: AnyCol) extends NumericFunctionSingle
-                                             with Aggregation {
+                                                 with Aggregation {
       val template = "min(%s)"
       def asString = Cast.asString(this)
       def round = Round.numeric(this)
