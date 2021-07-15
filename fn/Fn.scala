@@ -17,8 +17,9 @@
 package kuzminki.fn
 
 import kuzminki.column.TypeCol
-import kuzminki.render.Prefix
+import kuzminki.render.{Prefix, UnderlyingRenderAndArgs}
 import kuzminki.function.ColFunction
+import kuzminki.function.types.StringFunction
 
 // coalesce
 
@@ -26,6 +27,18 @@ object Fn {
   import general._
 
   def coalesce[T](col: TypeCol[T], default: T) = Coalesce(col, default)
+
+  def concat(cols: TypeCol[_]*) = Concat(cols)
+
+  def concatWs(glue: String, cols: TypeCol[_]*) = ConcatWs(glue, cols)
+
+  def substr(col: TypeCol[String], start: Int) = Substr(col, start, None)
+
+  def substr(col: TypeCol[String], start: Int, len: Int) = Substr(col, start, Some(len))
+
+  def replace(col: TypeCol[String], from: String, to: String) = Replace(col, from, to)
+
+  def trim(col: TypeCol[String]) = Trim(col)
 }
 
 
@@ -39,4 +52,72 @@ package object general {
     def render(prefix: Prefix) = template.format(underlying.render(prefix))
     def args = underlying.args ++ Seq(default)
   }
+
+
+  case class Concat(cols: Seq[TypeCol[_]]) extends StringFunction {
+    val template = "concat(%s)"
+    def render(prefix: Prefix) = {
+      template.format(
+        cols.map(_.render(prefix)).mkString(", ")
+      )
+    }
+    def args = cols.map(_.args).flatten
+  }
+
+
+  case class ConcatWs(glue: String, cols: Seq[TypeCol[_]]) extends StringFunction {
+    val template = s"concat_ws('$glue', %s)"
+    def render(prefix: Prefix) = {
+      template.format(
+        cols.map(_.render(prefix)).mkString(", ")
+      )
+    }
+    def args = cols.map(_.args).flatten
+  }
+
+
+  case class Substr(
+        underlying: TypeCol[String],
+        start: Int,
+        lenOpt: Option[Int]
+      ) extends StringFunction
+        with UnderlyingRenderAndArgs {
+
+    val template = lenOpt match {
+      case Some(len) => s"substr(%s, $start, $len)"
+      case None => s"substr(%s, $start)"
+    }
+  }
+
+
+  case class Replace(
+        underlying: TypeCol[String],
+        from: String,
+        to: String
+      ) extends StringFunction
+        with UnderlyingRenderAndArgs {
+
+    val template = s"replace(%s, '$from', '$to')"
+  }
+
+
+  case class Trim(underlying: TypeCol[String]) extends StringFunction
+                                                  with UnderlyingRenderAndArgs {
+
+    val template = "replace(%s)"
+  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

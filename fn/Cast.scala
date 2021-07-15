@@ -17,10 +17,11 @@
 package kuzminki.fn
 
 import kuzminki.column.AnyCol
-import kuzminki.function.cast._
+import kuzminki.function.types._
 
 
 object Cast {
+  import cast._
   def asString(col: AnyCol) = CastString(col)
   def asNumeric(col: AnyCol) = CastNumeric(col)
   def asFloat(col: AnyCol) = CastFloat(col)
@@ -31,6 +32,36 @@ object Cast {
 }
 
 
+package object cast {
+
+  case class CastString(underlying: AnyCol) extends StringFunctionSingle {
+    val template = "%s::text"
+  }
+
+  case class CastNumeric(underlying: AnyCol) extends StringFunctionSingle {
+    val template = "%s::numeric"
+  }
+
+  case class CastFloat(underlying: AnyCol) extends StringFunctionSingle {
+    val template = "%s::real"
+  }
+
+  case class CastDouble(underlying: AnyCol) extends StringFunctionSingle {
+    val template = "%s::float8"
+  }
+
+  case class CastShort(underlying: AnyCol) extends StringFunctionSingle {
+    val template = "%s::smallint"
+  }
+
+  case class CastInt(underlying: AnyCol) extends StringFunctionSingle {
+    val template = "%s::int"
+  }
+
+  case class CastLong(underlying: AnyCol) extends StringFunctionSingle {
+    val template = "%s::text"
+  }
+}
 
 
 

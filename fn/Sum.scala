@@ -22,7 +22,7 @@ import kuzminki.function.types._
 
 
 object Sum {
-  import sum.functions._
+  import sum._
   def numeric(col: NumericCol) = SumNumeric(col)
   def float(col: FloatCol) = SumFloat(col)
   def double(col: DoubleCol) = SumDouble(col)
@@ -34,35 +34,40 @@ object Sum {
 
 package object sum {
   
-  object functions {
+  trait SumTemplate {
+    val template = "sum(%s)"
+  }
 
-    case class SumNumeric(underlying: AnyCol) extends NumericFunctionSingle
-                                                 with Aggregation {
-      val template = "sum(%s)"
-      def asString = Cast.asString(this)
-      def round = Round.numeric(this)
-      def round(prec: Int) = Round.numeric(this, prec)
-    }
+  case class SumNumeric(underlying: AnyCol) extends NumericFunctionSingle
+                                               with Aggregation
+                                               with SumTemplate {
 
-    case class SumLong(underlying: AnyCol) extends LongFunctionSingle
-                                              with Aggregation {
-      val template = "sum(%s)"
-      def asString = Cast.asString(this)
-    }
+    def asString = Cast.asString(this)
+    def round = Round.numeric(this)
+    def round(prec: Int) = Round.numeric(this, prec)
+  }
 
-    case class SumFloat(underlying: AnyCol) extends FloatFunctionSingle
-                                               with Aggregation {
-      val template = "sum(%s)"
-      def asString = Cast.asString(this)
-      def round = Round.float(this)
-    }
+  case class SumLong(underlying: AnyCol) extends LongFunctionSingle
+                                            with Aggregation
+                                            with SumTemplate {
 
-    case class SumDouble(underlying: AnyCol) extends DoubleFunctionSingle
-                                                with Aggregation {
-      val template = "sum(%s)"
-      def asString = Cast.asString(this)
-      def round = Round.double(this)
-    }
+    def asString = Cast.asString(this)
+  }
+
+  case class SumFloat(underlying: AnyCol) extends FloatFunctionSingle
+                                             with Aggregation
+                                             with SumTemplate {
+
+    def asString = Cast.asString(this)
+    def round = Round.float(this)
+  }
+
+  case class SumDouble(underlying: AnyCol) extends DoubleFunctionSingle
+                                              with Aggregation
+                                              with SumTemplate {
+
+    def asString = Cast.asString(this)
+    def round = Round.double(this)
   }
 }
 
