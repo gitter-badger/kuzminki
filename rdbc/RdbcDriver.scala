@@ -25,7 +25,6 @@ import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 
 import akka.stream.scaladsl._
-import akka.stream.ActorMaterializer
 import akka.stream.Materializer
 import akka.actor.ActorSystem
 import akka.{NotUsed, Done}
@@ -104,7 +103,7 @@ object Driver {
 
 class Driver(pool: ConnectionPool)(implicit system: ActorSystem,  ec: ExecutionContext) {
 
-  private implicit val materializer = ActorMaterializer()
+  private implicit val materializer = Materializer(system)
   private implicit val timeout = 5.seconds.timeout
   private val inf = Timeout(Duration.Inf)
 

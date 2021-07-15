@@ -52,13 +52,13 @@ class JoinPrefix(tableA: String, tableB: String) extends Prefix {
 
   def pick(info: ColInfo) = {
     info match {
-      case ColInfo(name, table, hasNull) if info.table == tableA =>
+      case ColInfo(name, table) if info.table == tableA =>
         prefixWrap.format(prefixA, name)
       
-      case ColInfo(name, table, hasNull) if info.table == tableB =>
+      case ColInfo(name, table) if info.table == tableB =>
         prefixWrap.format(prefixB, name)
       
-      case ColInfo(name, table, hasNull) =>
+      case ColInfo(name, table) =>
         throw KuzminkiException(
           "column %s of table %s is not found in join(%s, $s)".format(name, table, tableA, tableB)
         )
