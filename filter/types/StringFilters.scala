@@ -47,7 +47,7 @@ case class FilterReNotMatch(col: AnyCol, arg: String) extends SingleArgFilter {
   val template = "%s !~ ?"
 }
 
-case class FilterReNotImatch(col: AnyCol, arg: String) extends SingleArgFilter {
+case class FilterReNotIMatch(col: AnyCol, arg: String) extends SingleArgFilter {
   val template = "%s !~* ?"
 }
 

@@ -36,7 +36,7 @@ trait StringFilters extends SelfRef[String] {
   def reNotMatch(value: String): Filter = FilterReNotMatch(self, value)
   def !~(value: String): Filter = reNotMatch(value)
 
-  def reNotIMatch(value: String): Filter = FilterReNotImatch(self, value)
+  def reNotIMatch(value: String): Filter = FilterReNotIMatch(self, value)
   def !~*(value: String): Filter = reNotIMatch(value)
 
   // optional
@@ -57,6 +57,18 @@ trait StringFilters extends SelfRef[String] {
 
   def reNotIMatch(opt: Option[String]): Option[Filter] = opt.map(reNotIMatch)
   def !~*(opt: Option[String]): Option[Filter] = opt.map(reMatch)
+
+  // cache
+
+  def cacheLike = CacheLike(self)
+  def cacheStartsWith = CacheStartsWith(self)
+  def cacheEndsWith = CacheEndsWith(self)
+  def cacheSimilarTo = CacheSimilarTo(self)
+  
+  def cacheReMatch = CacheReMatch(self)
+  def cacheReIMatch = CacheReIMatch(self)
+  def cacheReNotMatch = CacheReNotMatch(self)
+  def cacheReNotIMatch = CacheReNotIMatch(self)
 }
 
 
