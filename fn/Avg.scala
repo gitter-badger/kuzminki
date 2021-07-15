@@ -17,10 +17,12 @@
 package kuzminki.fn
 
 import kuzminki.column._
-import kuzminki.aggregate.avg._
+import kuzminki.function.Aggregation
+import kuzminki.function.types._
 
 
 object Avg {
+  import avg.functions._
   def numeric(col: NumericCol) = AvgNumeric(col)
   def float(col: FloatCol) = AvgDouble(col)
   def double(col: DoubleCol) = AvgDouble(col)
@@ -28,3 +30,33 @@ object Avg {
   def int(col: IntCol) = AvgNumeric(col)
   def long(col: LongCol) = AvgNumeric(col)
 }
+
+
+package object avg {
+  
+  object functions {
+
+    case class AvgNumeric(underlying: AnyCol) extends NumericFunctionSingle
+                                                 with Aggregation {
+      val template = "avg(%s)"
+      def asString = Cast.asString(this)
+      def round = Round.numeric(this)
+      def round(prec: Int) = Round.numeric(this, prec)
+    }
+
+
+    case class AvgDouble(underlying: AnyCol) extends DoubleFunctionSingle
+                                                with Aggregation {
+      val template = "avg(%s)"
+      def asString = Cast.asString(this)
+      def round = Round.double(this)
+    }
+  }
+}
+
+
+
+
+
+
+

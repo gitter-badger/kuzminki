@@ -21,7 +21,7 @@ import akka.stream.scaladsl.Source
 import kuzminki.api.KuzminkiException
 import kuzminki.render.Prefix
 import kuzminki.column.AnyCol
-import kuzminki.aggregate.Aggregation
+import kuzminki.function.Aggregation
 import kuzminki.section.select._
 
 

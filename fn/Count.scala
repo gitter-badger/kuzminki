@@ -17,7 +17,7 @@
 package kuzminki.fn
 
 import kuzminki.column.AnyCol
-import kuzminki.aggregate.count._
+import kuzminki.render.{Prefix, NoArgs}
 import kuzminki.function.types.LongFunctionSingle
 
 
@@ -29,3 +29,7 @@ case class Count(underlying: AnyCol) extends LongFunctionSingle {
   val template = "count(%s)"
 }
 
+object CountAll extends AnyCol with NoArgs {
+  val self = this
+  def render(prefix: Prefix) = "*"
+}

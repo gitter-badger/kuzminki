@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-package kuzminki.aggregate
+package kuzminki.function
 
 
 trait Aggregation

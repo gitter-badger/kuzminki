@@ -14,41 +14,62 @@
 * limitations under the License.
 */
 
-package kuzminki.aggregate.sum
+package kuzminki.function
 
 import kuzminki.column.AnyCol
-import kuzminki.aggregate.Aggregation
 import kuzminki.fn.{Cast, Round}
 import kuzminki.function.types._
 
 
-case class SumNumeric(underlying: AnyCol) extends NumericFunctionSingle
-                                             with Aggregation {
-  val template = "sum(%s)"
+case class AggNumeric(underlying: AnyCol, template: String) extends NumericFunctionSingle
+                                                               with Aggregation {
   def asString = Cast.asString(this)
   def round = Round.numeric(this)
   def round(prec: Int) = Round.numeric(this, prec)
 }
 
-case class SumLong(underlying: AnyCol) extends LongFunctionSingle
-                                          with Aggregation {
-  val template = "sum(%s)"
+case class AggInt(underlying: AnyCol, template: String) extends IntFunctionSingle
+                                                           with Aggregation {
   def asString = Cast.asString(this)
 }
 
-case class SumFloat(underlying: AnyCol) extends FloatFunctionSingle
-                                           with Aggregation {
-  val template = "sum(%s)"
+case class AggFloat(underlying: AnyCol, template: String) extends FloatFunctionSingle
+                                                             with Aggregation {
   def asString = Cast.asString(this)
   def round = Round.float(this)
 }
 
-case class SumDouble(underlying: AnyCol) extends DoubleFunctionSingle
-                                            with Aggregation {
-  val template = "sum(%s)"
+case class AggDouble(underlying: AnyCol, template: String) extends DoubleFunctionSingle
+                                                              with Aggregation {
   def asString = Cast.asString(this)
   def round = Round.double(this)
 }
+
+case class AggInstant(underlying: AnyCol, template: String) extends InstantFunctionSingle
+                                                               with Aggregation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

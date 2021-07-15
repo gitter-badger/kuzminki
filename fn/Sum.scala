@@ -17,10 +17,12 @@
 package kuzminki.fn
 
 import kuzminki.column._
-import kuzminki.aggregate.sum._
+import kuzminki.function.Aggregation
+import kuzminki.function.types._
 
 
 object Sum {
+  import sum.functions._
   def numeric(col: NumericCol) = SumNumeric(col)
   def float(col: FloatCol) = SumFloat(col)
   def double(col: DoubleCol) = SumDouble(col)
@@ -29,6 +31,40 @@ object Sum {
   def long(col: LongCol) = SumNumeric(col)
 }
 
+
+package object sum {
+  
+  object functions {
+
+    case class SumNumeric(underlying: AnyCol) extends NumericFunctionSingle
+                                                 with Aggregation {
+      val template = "sum(%s)"
+      def asString = Cast.asString(this)
+      def round = Round.numeric(this)
+      def round(prec: Int) = Round.numeric(this, prec)
+    }
+
+    case class SumLong(underlying: AnyCol) extends LongFunctionSingle
+                                              with Aggregation {
+      val template = "sum(%s)"
+      def asString = Cast.asString(this)
+    }
+
+    case class SumFloat(underlying: AnyCol) extends FloatFunctionSingle
+                                               with Aggregation {
+      val template = "sum(%s)"
+      def asString = Cast.asString(this)
+      def round = Round.float(this)
+    }
+
+    case class SumDouble(underlying: AnyCol) extends DoubleFunctionSingle
+                                                with Aggregation {
+      val template = "sum(%s)"
+      def asString = Cast.asString(this)
+      def round = Round.double(this)
+    }
+  }
+}
 
 
 

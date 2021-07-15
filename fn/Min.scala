@@ -17,10 +17,12 @@
 package kuzminki.fn
 
 import kuzminki.column._
-import kuzminki.aggregate.min._
+import kuzminki.function.Aggregation
+import kuzminki.function.types._
 
 
 object Min {
+  import min.functions._
   def numeric(col: NumericCol) = MinNumeric(col)
   def float(col: FloatCol) = MinFloat(col)
   def double(col: DoubleCol) = MinDouble(col)
@@ -30,6 +32,56 @@ object Min {
   def instant(col: InstantCol) = MinInstant(col)
 }
 
+
+package object min {
+  object functions {
+
+    case class MinNumeric(underlying: AnyCol) extends NumericFunctionSingle
+                                             with Aggregation {
+      val template = "min(%s)"
+      def asString = Cast.asString(this)
+      def round = Round.numeric(this)
+      def round(prec: Int) = Round.numeric(this, prec)
+    }
+
+    case class MinShort(underlying: AnyCol) extends ShortFunctionSingle
+                                               with Aggregation {
+      val template = "min(%s)"
+      def asString = Cast.asString(this)
+    }
+
+    case class MinInt(underlying: AnyCol) extends IntFunctionSingle
+                                             with Aggregation {
+      val template = "min(%s)"
+      def asString = Cast.asString(this)
+    }
+
+    case class MinLong(underlying: AnyCol) extends LongFunctionSingle
+                                              with Aggregation {
+      val template = "min(%s)"
+      def asString = Cast.asString(this)
+    }
+
+    case class MinFloat(underlying: AnyCol) extends FloatFunctionSingle
+                                               with Aggregation {
+      val template = "min(%s)"
+      def asString = Cast.asString(this)
+      def round = Round.float(this)
+    }
+
+    case class MinDouble(underlying: AnyCol) extends DoubleFunctionSingle
+                                                with Aggregation {
+      val template = "min(%s)"
+      def asString = Cast.asString(this)
+      def round = Round.double(this)
+    }
+
+    case class MinInstant(underlying: AnyCol) extends InstantFunctionSingle
+                                                 with Aggregation {
+      val template = "min(%s)"
+    }
+  }
+}
 
 
 
