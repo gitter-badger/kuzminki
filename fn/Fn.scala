@@ -24,6 +24,7 @@ import kuzminki.function.types.StringFunction
 // coalesce
 
 object Fn {
+
   import general._
 
   def coalesce[T](col: TypeCol[T], default: T) = Coalesce(col, default)
@@ -39,6 +40,12 @@ object Fn {
   def replace(col: TypeCol[String], from: String, to: String) = Replace(col, from, to)
 
   def trim(col: TypeCol[String]) = Trim(col)
+
+  def upper(col: TypeCol[String]) = Upper(col)
+
+  def lower(col: TypeCol[String]) = Lower(col)
+
+  def initcap(col: TypeCol[String]) = Initcap(col)
 }
 
 
@@ -105,6 +112,24 @@ package object general {
                                                   with UnderlyingRenderAndArgs {
 
     val template = "replace(%s)"
+  }
+
+  case class Upper(underlying: TypeCol[String]) extends StringFunction
+                                                  with UnderlyingRenderAndArgs {
+
+    val template = "upper(%s)"
+  }
+
+  case class Lower(underlying: TypeCol[String]) extends StringFunction
+                                                  with UnderlyingRenderAndArgs {
+
+    val template = "replace(%s)"
+  }
+
+  case class Initcap(underlying: TypeCol[String]) extends StringFunction
+                                                  with UnderlyingRenderAndArgs {
+
+    val template = "initcap(%s)"
   }
 }
 
