@@ -17,4 +17,4 @@
 package kuzminki.column
 
 
-case class ColInfo(name: String, table: String, hasNull: Boolean)
+case class ColInfo(name: String, table: String)

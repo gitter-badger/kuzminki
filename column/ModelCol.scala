@@ -23,7 +23,6 @@ trait ModelCol extends AnyCol with NoArgs {
   val info: ColInfo
   val real = this
   def name = info.name
-  def hasNull = info.hasNull
   def render(prefix: Prefix) = prefix.pick(info)
 }
 

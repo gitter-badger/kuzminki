@@ -28,12 +28,7 @@ case class SetValue(col: ModelCol, value: Any) extends Assign {
   def args = Seq(value)
 }
 
-case class SetToNull(col: ModelCol) extends Assign {
-
-  if (col.hasNull == false) {
-    throw KuzminkiException(s"Column [${col.name} does not have null")
-  }
-  
+case class SetToNull(col: ModelCol) extends Assign {  
   def render(prefix: Prefix) = s"${col.name} = NULL"
   def args = Seq.empty[Any]
 }
